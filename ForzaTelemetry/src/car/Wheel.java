@@ -198,19 +198,13 @@ public class Wheel {
 		
 		if (driveTrain.equals("FWD") || driveTrain.equals("AWD")) {
 			wheelSpeed += this.getWheelRotationSpeedFrontLeft();
-			wheelCount ++;
-		}
-		if (driveTrain.equals("FWD") || driveTrain.equals("AWD")) {
 			wheelSpeed += this.getWheelRotationSpeedFrontRight();
-			wheelCount ++;
+			wheelCount += 2;
 		}
 		if (driveTrain.equals("RWD") || driveTrain.equals("AWD")) {
 			wheelSpeed += this.getWheelRotationSpeedRearLeft();
-			wheelCount ++;
-		}
-		if (driveTrain.equals("RWD") || driveTrain.equals("AWD")) {
 			wheelSpeed += this.getWheelRotationSpeedRearRight();
-			wheelCount ++;
+			wheelCount += 2;
 		}
 		if (wheelCount == 0) {
 			return 0;
@@ -219,7 +213,7 @@ public class Wheel {
 			case "RPM":
 				return Calc.radiansPerSecondToRPM(wheelSpeed / wheelCount);
 			default:
-				return (wheelSpeed / wheelCount);
+				return wheelSpeed / wheelCount;
 			}
 		}
 	}
