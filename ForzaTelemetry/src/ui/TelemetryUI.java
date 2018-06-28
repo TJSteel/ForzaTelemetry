@@ -71,12 +71,10 @@ public class TelemetryUI extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
 		lblGamertag = new JLabel("Gamertag:");
 		lblGamertag.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblGamertag.setBounds(10, 11, 150, 14);
 		contentPane.add(lblGamertag);
-		
 		lblNetworkDetails = new JLabel("Network:");
 		lblNetworkDetails.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNetworkDetails.setBounds(10, 36, 150, 14);

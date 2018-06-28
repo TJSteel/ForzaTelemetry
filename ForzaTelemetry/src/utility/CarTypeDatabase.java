@@ -7,7 +7,7 @@ package utility;
 
 import java.util.*;
 
-import forza.CarType;
+import car.CarType;
 
 /**
  *
