@@ -1,12 +1,14 @@
 package car;
 
+import enums.Drivetrain;
+
 public class Engine {
 	// {{ Variables
     private float engineMaxRpm = 0.0F;
     private float engineIdleRpm = 0.0F;
     private float currentEngineRpm = 0.0F;
     private float maxReachedRpm = 0;
-    private String drivetrainType = "N/A"; //Corresponds to DrivetrainType; 0 = FWD, 1 = RWD, 2 = AWD
+    private Drivetrain drivetrainType = Drivetrain.NONE; //Corresponds to DrivetrainType; 0 = FWD, 1 = RWD, 2 = AWD
     private int numCylinders = 0; //Number of cylinders in the engine
     // }} Variables
 
@@ -71,7 +73,7 @@ public class Engine {
     /**
      * @return the drivetrainType
      */
-    public String getDrivetrainType() {
+    public Drivetrain getDrivetrainType() {
     	return drivetrainType;
     }
 
@@ -81,32 +83,27 @@ public class Engine {
     public void setDrivetrainType(int drivetrainType) {
         switch (drivetrainType) {
             case 0:
-                this.drivetrainType = "FWD";
+                this.drivetrainType = Drivetrain.FWD;
                 break;
             case 1:
-                this.drivetrainType = "RWD";
+                this.drivetrainType = Drivetrain.RWD;
                 break;
             case 2:
-                this.drivetrainType = "AWD";
+                this.drivetrainType = Drivetrain.AWD;
+                break;
+            case 3:
+                this.drivetrainType = Drivetrain.NONE;
                 break;
             default:
-                System.out.println("Drivetype '" + drivetrainType + "' is invalid, must be FWD, RWD, or AWD");
+                System.out.println("Drivetype '" + drivetrainType + "' is invalid, must be FWD (0), RWD (1), AWD (2), or NONE (3)");
         }
     }
 
     /**
      * @param drivetrainType the drivetrainType to set
      */
-    public void setDrivetrainType(String drivetrainType) {
-        switch (drivetrainType) {
-            case "FWD":
-            case "RWD":
-            case "AWD":
-                this.drivetrainType = drivetrainType;
-                break;
-            default:
-                System.out.println("Drivetype '" + drivetrainType + "' is invalid, must be FWD, RWD, or AWD");
-        }
+    public void setDrivetrainType(Drivetrain drivetrainType) {
+    	this.drivetrainType = drivetrainType;
     }
 
     /**

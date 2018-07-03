@@ -3,6 +3,8 @@ package car;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 
+import enums.CarClass;
+
 /**
  *
  * @author Jay
@@ -18,7 +20,7 @@ public class Car {
     private boolean raceOn = false; // = 1 when race is on. = 0 when in menus/race stopped …
     private int timestampMS = 0; //Can overflow to 0 eventually
     private int carOrdinal = 0; //Unique ID of the car make/model
-    private char carClass = 'U'; //Between 0 (D -- worst cars) and 7 (X class -- best cars) inclusive 
+    private CarClass carClass = CarClass.U; //Between 0 (D -- worst cars) and 7 (X class -- best cars) inclusive 
     private int carPerformanceIndex = 0; //Between 100 (slowest car) and 999 (fastest car) inclusive
     
     // process a received packet of data
@@ -297,8 +299,8 @@ public class Car {
     /**
      * @return the carClass
      */
-    public char getCarClass() {
-        return this.isRaceOn() ? carClass : '0';
+    public CarClass getCarClass() {
+        return this.isRaceOn() ? carClass : CarClass.U;
     }
 
     /**
@@ -307,31 +309,31 @@ public class Car {
     public void setCarClass(int carClass) {
         switch (carClass) {
             case 0:
-                this.carClass = 'E';
+                this.carClass = CarClass.E;
                 break;
             case 1:
-                this.carClass = 'D';
+                this.carClass = CarClass.D;
                 break;
             case 2:
-                this.carClass = 'C';
+                this.carClass = CarClass.C;
                 break;
             case 3:
-                this.carClass = 'B';
+                this.carClass = CarClass.B;
                 break;
             case 4:
-                this.carClass = 'A';
+                this.carClass = CarClass.A;
                 break;
             case 5:
-                this.carClass = 'S';
+                this.carClass = CarClass.S;
                 break;
             case 6:
-                this.carClass = 'R';
+                this.carClass = CarClass.R;
                 break;
             case 7:
-                this.carClass = 'P';
+                this.carClass = CarClass.P;
                 break;
             case 8:
-                this.carClass = 'X';
+                this.carClass = CarClass.X;
                 break;
             default:
                 System.out.println("Car class '" + carClass + "' is invalid!, valid range is 0-8");
@@ -341,22 +343,8 @@ public class Car {
     /**
      * @param carClass the carClass to set
      */
-    public void setCarClass(char carClass) {
-        switch (carClass) {
-            case 'E':
-            case 'D':
-            case 'C':
-            case 'B':
-            case 'A':
-            case 'S':
-            case 'R':
-            case 'P':
-            case 'X':
-                this.carClass = carClass;
-                break;
-            default:
-                System.out.println("Car class '" + carClass + "' is invalid!, must be E, D, C, B, A, S, R, P, or X");
-        }
+    public void setCarClass(CarClass carClass) {
+    	this.carClass = carClass;
     }
 
     /**

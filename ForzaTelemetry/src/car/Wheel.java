@@ -1,5 +1,6 @@
 package car;
 
+import enums.Drivetrain;
 import utility.Calc;
 
 public class Wheel {
@@ -191,17 +192,17 @@ public class Wheel {
     }
     // }} Setters and Getters
     
-	public double getDrivenWheelSpeed(String units, String driveTrain) {
+	public double getDrivenWheelSpeed(String units, Drivetrain driveTrain) {
 		//for this I'm going to calculate only on driven wheels, slipping doesn't matter as wheel spin would increase RPM
 		int wheelCount = 0;
 		float wheelSpeed = 0;
 		
-		if (driveTrain.equals("FWD") || driveTrain.equals("AWD")) {
+		if (driveTrain == Drivetrain.FWD || driveTrain == Drivetrain.AWD) {
 			wheelSpeed += this.getWheelRotationSpeedFrontLeft();
 			wheelSpeed += this.getWheelRotationSpeedFrontRight();
 			wheelCount += 2;
 		}
-		if (driveTrain.equals("RWD") || driveTrain.equals("AWD")) {
+		if (driveTrain == Drivetrain.RWD || driveTrain == Drivetrain.AWD) {
 			wheelSpeed += this.getWheelRotationSpeedRearLeft();
 			wheelSpeed += this.getWheelRotationSpeedRearRight();
 			wheelCount += 2;

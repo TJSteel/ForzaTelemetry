@@ -171,7 +171,7 @@ public class TelemetryUI extends JFrame {
 		contentPane.add(txtMaxSpeed);
 		
 		gaugeRpm = new GaugeRpm();
-		gaugeRpm.setBounds(312, 11, 128, 128);
+		gaugeRpm.setBounds(488, 92, 128, 128);
 		contentPane.add(gaugeRpm);
 		
 		txtGearRatio = new JTextField();
@@ -194,9 +194,9 @@ public class TelemetryUI extends JFrame {
     	this.txtGamertag.setText(currPlayer.getGamertag());
         this.txtNetworkDetails.setText(currPlayer.getIpAddress());
         this.txtCarName.setText(Integer.toString(currPlayer.getCar().getCarOrdinal()));
-        this.txtClass.setText(String.valueOf(currPlayer.getCar().getCarClass()));
+        this.txtClass.setText(String.valueOf(currPlayer.getCar().getCarClass().toString()));
         this.txtPerformanceIndex.setText(Integer.toString(currPlayer.getCar().getCarPerformanceIndex()));
-        this.txtDrivetrainType.setText(currPlayer.getCar().getEngine().getDrivetrainType());
+        this.txtDrivetrainType.setText(currPlayer.getCar().getEngine().getDrivetrainType().toString());
         this.txtNumCylinders.setText(Integer.toString(currPlayer.getCar().getEngine().getNumCylinders()));
 
         this.txtRpm.setText(Double.toString(Math.round(currPlayer.getCar().getEngine().getCurrentEngineRpm()*100)/100d));
