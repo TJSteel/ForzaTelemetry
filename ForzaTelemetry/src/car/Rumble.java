@@ -65,4 +65,9 @@ public class Rumble {
         this.surfaceRumbleRearRight = surfaceRumbleRearRight;
     }
     // }} Getters and Setters
+
+    public void reset() {
+    	
+    }
+
 }

@@ -21,6 +21,7 @@ import utility.PlayerDatabase;
 public class ForzaTelemetry {
 	// {{ Variables
 	private PlayerDatabase playerDB;
+	@SuppressWarnings("unused")
 	private CarTypeDatabase carTypeDB;
 	private ArrayList<Player> players;
 	private FilePrinter filePrinter;
@@ -41,7 +42,7 @@ public class ForzaTelemetry {
         traffic = new TrafficReceiver();
         traffic.initialize(50000);
         
-        ui = new TelemetryUI();
+        ui = new TelemetryUI(this.players);
         ui.setVisible(true);
     }
     
@@ -59,7 +60,7 @@ public class ForzaTelemetry {
                     if (currPlayer.getCar().isRaceOn()) {
                         //if (currPlayer.getGamertag().equals("HCR TJSteel")) {
                         	//System.out.println(currPlayer.getCar().getEngineMaxRpm());
-	                        ui.updateFields(currPlayer);
+	                        ui.updateFields();
 	                        printValues(currPlayer);
                         //}
                     }

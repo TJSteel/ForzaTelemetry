@@ -186,4 +186,8 @@ public class Tyre {
         this.tireCombinedSlipRearRight = tireCombinedSlipRearRight;
     }
     // }} Getters and Setters
+
+    public void reset() {
+    	
+    }
 }

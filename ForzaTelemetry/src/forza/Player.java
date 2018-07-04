@@ -21,6 +21,9 @@ public class Player {
         this.setGamertag(gamertag);
         this.car = new Car();
     }
+    public Player() {
+        this.car = new Car();
+    }
     
     // {{ Getters and Setters
     /**
@@ -58,4 +61,8 @@ public class Player {
         return car;
     }
     // }} Getters and Setters
+
+    public void reset() {
+    	this.getCar().reset();
+    }
 }

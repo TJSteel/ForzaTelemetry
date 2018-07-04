@@ -134,4 +134,8 @@ public class Suspension {
         this.suspensionTravelMetersRearRight = suspensionTravelMetersRearRight;
     }
     // }} Getters and Setters
+
+    public void reset() {
+    	
+    }
 }

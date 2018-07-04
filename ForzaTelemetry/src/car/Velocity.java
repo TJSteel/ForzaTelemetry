@@ -17,7 +17,7 @@ public class Velocity {
     private float pitch = 0.0F; //wheelie / endo
     private float roll = 0.0F; //body roll
 
-	private double maxSpeed = 0;
+	private double maxSpeed = 200;
 	// }} variables
 
 	// {{ Getters and Setters
@@ -188,6 +188,7 @@ public class Velocity {
     public void setRoll(float roll) {
         this.roll = roll;
     }
+
 	// }} Getters and Setters
 
     // {{ Calculated fields
@@ -206,13 +207,20 @@ public class Velocity {
     public double getSpeed() {
     	return this.getSpeed("MPS");
     }
+
+    /**
+     * @param roll the maxSpeed to set
+     */
+    private void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
     
     /**
      * @param maxSpeed the maxSpeed to set
      */
     public void updateMaxSpeed() {
     	double speed = this.getSpeed();
-        this.maxSpeed = speed > this.maxSpeed ? speed : this.maxSpeed;
+        this.setMaxSpeed(speed > this.getMaxSpeed() ? speed : this.getMaxSpeed());
     }
 
     /**
@@ -232,4 +240,8 @@ public class Velocity {
     	return this.getMaxSpeed("MPS");
     }
     // }} Calculated fields
+
+    public void reset() {
+    	this.setMaxSpeed(0);
+    }
 }

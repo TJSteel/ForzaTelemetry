@@ -465,4 +465,13 @@ public class Car {
 	}
 
     // }}
+
+	public void reset() {
+		this.getEngine().reset();
+		this.getVelocity().reset();
+		this.getSuspension().reset();
+		this.getTyre().reset();
+		this.getWheel().reset();
+		this.getRumble().reset();
+	}
 }

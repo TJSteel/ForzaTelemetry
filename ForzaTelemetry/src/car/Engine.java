@@ -120,4 +120,9 @@ public class Engine {
         this.numCylinders = numCylinders;
     }
     // }} Getters and Setters
+
+    public void reset() {
+    	this.setMaxReachedRpm(0);
+    }
+    
 }

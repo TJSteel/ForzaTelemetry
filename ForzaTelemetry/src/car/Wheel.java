@@ -192,6 +192,7 @@ public class Wheel {
     }
     // }} Setters and Getters
     
+    // {{ Calculated Fields
 	public double getDrivenWheelSpeed(String units, Drivetrain driveTrain) {
 		//for this I'm going to calculate only on driven wheels, slipping doesn't matter as wheel spin would increase RPM
 		int wheelCount = 0;
@@ -217,5 +218,10 @@ public class Wheel {
 				return wheelSpeed / wheelCount;
 			}
 		}
+	}
+    // }} Calculated Fields
+
+	public void reset() {
+		
 	}
 }
