@@ -1,13 +1,12 @@
 package ui;
 
-import java.awt.EventQueue;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import enums.Speed;
 import forza.Player;
 
 import javax.swing.JLabel;
@@ -208,7 +207,7 @@ public class TelemetryUI extends JFrame {
 	}
 	
 	/**
-	 * Function to update the fields when a player is passed to it
+	 * Function to update the displayed fields
 	 */
     public void updateFields() {
 
@@ -226,8 +225,8 @@ public class TelemetryUI extends JFrame {
 		        this.txtNumCylinders.setText(Integer.toString(currPlayer.getCar().getEngine().getNumCylinders()));
 		
 		        this.txtRpm.setText(Double.toString(Math.round(currPlayer.getCar().getEngine().getCurrentEngineRpm()*100)/100d));
-		        this.txtSpeed.setText(Double.toString(Math.round(currPlayer.getCar().getVelocity().getSpeed("MPH")*100)/100d));
-		        this.txtMaxSpeed.setText(Double.toString(Math.round(currPlayer.getCar().getVelocity().getMaxSpeed("MPH")*100)/100d));
+		        this.txtSpeed.setText(Double.toString(Math.round(currPlayer.getCar().getVelocity().getSpeed(Speed.MPH)*100)/100d));
+		        this.txtMaxSpeed.setText(Double.toString(Math.round(currPlayer.getCar().getVelocity().getMaxSpeed(Speed.MPH)*100)/100d));
 		
 		        this.gaugeRpm.setRpm((double)currPlayer.getCar().getEngine().getCurrentEngineRpm());
 		        this.gaugeRpm.repaint();

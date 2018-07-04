@@ -1,5 +1,6 @@
 package car;
 
+import enums.Speed;
 import utility.Calc;
 
 public class Velocity {
@@ -193,19 +194,19 @@ public class Velocity {
 
     // {{ Calculated fields
     //calculate and return the current speed in meters per second
-    public double getSpeed(String units) {
+    public double getSpeed(Speed units) {
     	double speed = Calc.hypotenuse(this.velocityX, this.velocityY, this.velocityZ);
         switch (units){
-        case "MPH":
+        case MPH:
         	return Calc.MPStoMPH(speed);
-        case "KPH":
+        case KPH:
         	return Calc.MPStoKPH(speed);
         default:
             return speed;
         }
     }
     public double getSpeed() {
-    	return this.getSpeed("MPS");
+    	return this.getSpeed(Speed.MPS);
     }
 
     /**
@@ -226,18 +227,18 @@ public class Velocity {
     /**
      * @return the maxSpeed
      */
-    public double getMaxSpeed(String units) {
+    public double getMaxSpeed(Speed units) {
         switch (units){
-        case "MPH":
+        case MPH:
         	return Calc.MPStoMPH(this.maxSpeed);
-        case "KPH":
+        case KPH:
         	return Calc.MPStoKPH(this.maxSpeed);
         default:
             return this.maxSpeed;
         }
     }
     public double getMaxSpeed() {
-    	return this.getMaxSpeed("MPS");
+    	return this.getMaxSpeed(Speed.MPS);
     }
     // }} Calculated fields
 

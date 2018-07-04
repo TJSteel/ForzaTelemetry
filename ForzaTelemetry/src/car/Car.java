@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 
 import enums.CarClass;
+import enums.Speed;
 
 /**
  *
@@ -239,9 +240,9 @@ public class Car {
             returnString.append(", Rpm = ");
             returnString.append(Math.round(this.getEngine().getCurrentEngineRpm()));
             returnString.append(", Speed = ");
-            returnString.append((this.velocity.getSpeed("MPH")));
+            returnString.append((this.velocity.getSpeed(Speed.MPH)));
             returnString.append(", Max Speed = ");
-            returnString.append((this.velocity.getMaxSpeed("MPH")));
+            returnString.append((this.velocity.getMaxSpeed(Speed.MPH)));
         /*} else {
             returnString.append("Car inactive");
         }*/

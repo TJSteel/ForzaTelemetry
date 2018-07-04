@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import enums.Speed;
 import network.TrafficReceiver;
 import ui.TelemetryUI;
 import utility.CarTypeDatabase;
@@ -213,12 +214,12 @@ public class ForzaTelemetry {
 			sb.append(player.getCar().getCarPerformanceIndex() + ",");
 			sb.append(player.getCar().getEngine().getDrivetrainType() + ",");
 			sb.append(player.getCar().getEngine().getNumCylinders() + ",");
-			sb.append(player.getCar().getVelocity().getSpeed("MPS") + ",");
-			sb.append(player.getCar().getVelocity().getSpeed("MPH") + ",");
-			sb.append(player.getCar().getVelocity().getSpeed("KPH") + ",");
-			sb.append(player.getCar().getVelocity().getMaxSpeed("MPS") + ",");
-			sb.append(player.getCar().getVelocity().getMaxSpeed("MPH") + ",");
-			sb.append(player.getCar().getVelocity().getMaxSpeed("KPH") + ",");
+			sb.append(player.getCar().getVelocity().getSpeed(Speed.MPS) + ",");
+			sb.append(player.getCar().getVelocity().getSpeed(Speed.MPH) + ",");
+			sb.append(player.getCar().getVelocity().getSpeed(Speed.KPH) + ",");
+			sb.append(player.getCar().getVelocity().getMaxSpeed(Speed.MPS) + ",");
+			sb.append(player.getCar().getVelocity().getMaxSpeed(Speed.MPH) + ",");
+			sb.append(player.getCar().getVelocity().getMaxSpeed(Speed.KPH) + ",");
 			filePrinter.writeToFile(sb.toString());
 		}
 	}
