@@ -73,7 +73,7 @@ public class ForzaTelemetry {
             //create a new player
             if (!playerExists) {
                 Player currPlayer;
-				currPlayer = new Player(traffic.getDataPack().getAddress().toString(), "Driver not in DB!");
+				currPlayer = new Player(traffic.getDataPack().getAddress().toString(), "Driver " + traffic.getDataPack().getAddress().toString());
                 currPlayer.getCar().processDataPacket(traffic.getDataPack());
                 //System.out.println(currPlayer.getGamertag() + ", " + currPlayer.getCar());
                 players.add(currPlayer);

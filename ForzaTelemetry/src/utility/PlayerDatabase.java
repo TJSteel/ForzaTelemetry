@@ -19,7 +19,6 @@ public class PlayerDatabase {
     public PlayerDatabase() {
         players = new ArrayList<Player>();
         players.add(new Player("192.168.1.18", "HCR TJSteel"));
-        players.add(new Player("192.168.1.19", "HCR TJSteel2"));
     }
     
     public ArrayList<Player> getPlayers(){

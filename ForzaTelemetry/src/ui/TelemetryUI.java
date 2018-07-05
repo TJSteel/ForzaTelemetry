@@ -53,6 +53,8 @@ public class TelemetryUI extends JFrame {
 	private JLabel lblMaxSpeed;
 	private JLabel lblGearRatio;
 	private JButton btnReset;
+	
+	private DrivetrainIcon drivetrainIcon;
 
 	/**
 	 * Create the frame.
@@ -169,7 +171,7 @@ public class TelemetryUI extends JFrame {
 		contentPane.add(txtMaxSpeed);
 		
 		gaugeRpm = new GaugeRpm();
-		gaugeRpm.setBounds(488, 92, 128, 128);
+		gaugeRpm.setBounds(327, 11, 128, 128);
 		contentPane.add(gaugeRpm);
 		
 		txtGearRatio = new JTextField();
@@ -202,6 +204,10 @@ public class TelemetryUI extends JFrame {
 		});
 		btnReset.setBounds(170, 309, 120, 20);
 		contentPane.add(btnReset);
+		
+		drivetrainIcon = new DrivetrainIcon();
+		drivetrainIcon.setBounds(327, 148, 47, 128);
+		contentPane.add(drivetrainIcon);
 
 		updateFields();
 	}
@@ -227,11 +233,13 @@ public class TelemetryUI extends JFrame {
 		        this.txtRpm.setText(Double.toString(Math.round(currPlayer.getCar().getEngine().getCurrentEngineRpm()*100)/100d));
 		        this.txtSpeed.setText(Double.toString(Math.round(currPlayer.getCar().getVelocity().getSpeed(Speed.MPH)*100)/100d));
 		        this.txtMaxSpeed.setText(Double.toString(Math.round(currPlayer.getCar().getVelocity().getMaxSpeed(Speed.MPH)*100)/100d));
+
+		        this.txtGearRatio.setText(Double.toString(Math.round(currPlayer.getCar().getGearRatio(finalDrive)*1000)/1000d));
 		
 		        this.gaugeRpm.setRpm((double)currPlayer.getCar().getEngine().getCurrentEngineRpm());
 		        this.gaugeRpm.repaint();
 		        
-		        this.txtGearRatio.setText(Double.toString(Math.round(currPlayer.getCar().getGearRatio(finalDrive)*1000)/1000d));
+		        this.drivetrainIcon.setDrivetrain(currPlayer.getCar().getEngine().getDrivetrainType());
     		}
     	}
     }	

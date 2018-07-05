@@ -57,9 +57,11 @@ public class GaugeRpm extends JPanel {
         g2d.drawImage(this.getBiGauge(), 0, 0, null);
         //g2d.draw(new Arc2D.Double(x, y, width, height, start, extent, type));
         //g2d.clipRect(50, 50, 100, 100);
-        g2d.setClip(new Arc2D.Double(0,0,this.getGaugeWidth(),this.getGaugeHeight(),
+        
+        /*g2d.setClip(new Arc2D.Double(0,0,this.getGaugeWidth(),this.getGaugeHeight(),
         		this.getEndAngle(),this.getRedlineAngle(), Arc2D.PIE));
-        g2d.drawImage(this.getBiRedline(), 0, 0, null);
+        g2d.drawImage(this.getBiRedline(), 0, 0, null);*/
+        
         g2d.setClip(null);
         g2d.rotate(this.getRPMAngleRadians(), this.getGaugeWidth() / 2, this.getGaugeHeight() / 2);
         g2d.drawImage(this.getBiNeedle(), 0, 0, null);
