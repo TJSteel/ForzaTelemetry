@@ -17,7 +17,7 @@ public class Velocity {
     private float yaw = 0.0F; //turning left / right
     private float pitch = 0.0F; //wheelie / endo
     private float roll = 0.0F; //body roll
-
+    private float speed = 0.0F; //meters per second
 	private double maxSpeed = 200;
 	// }} variables
 
@@ -190,39 +190,26 @@ public class Velocity {
         this.roll = roll;
     }
 
-	// }} Getters and Setters
-
-    // {{ Calculated fields
-    //calculate and return the current speed in meters per second
     public double getSpeed(Speed units) {
-    	double speed = Calc.hypotenuse(this.velocityX, this.velocityY, this.velocityZ);
+    	//double speed = Calc.hypotenuse(this.velocityX, this.velocityY, this.velocityZ);
         switch (units){
         case MPH:
-        	return Calc.MPStoMPH(speed);
+        	return Calc.MPStoMPH(this.speed);
         case KPH:
-        	return Calc.MPStoKPH(speed);
+        	return Calc.MPStoKPH(this.speed);
         default:
-            return speed;
+            return this.speed;
         }
     }
     public double getSpeed() {
     	return this.getSpeed(Speed.MPS);
     }
-
-    /**
-     * @param roll the maxSpeed to set
-     */
-    private void setMaxSpeed(double maxSpeed) {
-        this.maxSpeed = maxSpeed;
-    }
-    
-    /**
-     * @param maxSpeed the maxSpeed to set
-     */
-    public void updateMaxSpeed() {
-    	double speed = this.getSpeed();
-        this.setMaxSpeed(speed > this.getMaxSpeed() ? speed : this.getMaxSpeed());
-    }
+	/**
+	 * @param speed the speed to set
+	 */
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
 
     /**
      * @return the maxSpeed
@@ -240,9 +227,31 @@ public class Velocity {
     public double getMaxSpeed() {
     	return this.getMaxSpeed(Speed.MPS);
     }
+
+	// }} Getters and Setters
+
+    // {{ Calculated fields
+
+
+    /**
+     * @param roll the maxSpeed to set
+     */
+    private void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+    
+    /**
+     * @param maxSpeed the maxSpeed to set
+     */
+    public void updateMaxSpeed() {
+    	double speed = this.getSpeed();
+        this.setMaxSpeed(speed > this.getMaxSpeed() ? speed : this.getMaxSpeed());
+    }
+
     // }} Calculated fields
 
     public void reset() {
     	this.setMaxSpeed(0);
     }
+
 }

@@ -14,6 +14,10 @@ public class Tyre {
     private float tireCombinedSlipFrontRight = 0.0F;
     private float tireCombinedSlipRearLeft = 0.0F;
     private float tireCombinedSlipRearRight = 0.0F;
+    private float tireTempFrontLeft = 0.0F; // Tire normalized combined slip, = 0 means 100% grip and |slip| > 1.0 means loss of grip.
+    private float tireTempFrontRight = 0.0F;
+    private float tireTempRearLeft = 0.0F;
+    private float tireTempRearRight = 0.0F;
     // }} Variables
 
     // {{ Getters and Setters
@@ -185,9 +189,67 @@ public class Tyre {
     public void setTireCombinedSlipRearRight(float tireCombinedSlipRearRight) {
         this.tireCombinedSlipRearRight = tireCombinedSlipRearRight;
     }
+    
+	/**
+	 * @return the tireTempFrontLeft
+	 */
+	public float getTireTempFrontLeft() {
+		return tireTempFrontLeft;
+	}
+
+	/**
+	 * @param tireTempFrontLeft the tireTempFrontLeft to set
+	 */
+	public void setTireTempFrontLeft(float tireTempFrontLeft) {
+		this.tireTempFrontLeft = tireTempFrontLeft;
+	}
+
+	/**
+	 * @return the tireTempFrontRight
+	 */
+	public float getTireTempFrontRight() {
+		return tireTempFrontRight;
+	}
+
+	/**
+	 * @param tireTempFrontRight the tireTempFrontRight to set
+	 */
+	public void setTireTempFrontRight(float tireTempFrontRight) {
+		this.tireTempFrontRight = tireTempFrontRight;
+	}
+
+	/**
+	 * @return the tireTempRearLeft
+	 */
+	public float getTireTempRearLeft() {
+		return tireTempRearLeft;
+	}
+
+	/**
+	 * @param tireTempRearLeft the tireTempRearLeft to set
+	 */
+	public void setTireTempRearLeft(float tireTempRearLeft) {
+		this.tireTempRearLeft = tireTempRearLeft;
+	}
+
+	/**
+	 * @return the tireTempRearRight
+	 */
+	public float getTireTempRearRight() {
+		return tireTempRearRight;
+	}
+
+	/**
+	 * @param tireTempRearRight the tireTempRearRight to set
+	 */
+	public void setTireTempRearRight(float tireTempRearRight) {
+		this.tireTempRearRight = tireTempRearRight;
+	}
     // }} Getters and Setters
 
     public void reset() {
     	
     }
+
+
 }

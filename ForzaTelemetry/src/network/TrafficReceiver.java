@@ -29,7 +29,7 @@ public class TrafficReceiver {
 
         this.setPort(port);
 		this.setDataSock(this.getPort());
-        this.setReceivedBytes(232);
+        this.setReceivedBytes(344);
         this.setDataPack(this.getReceivedBytes());
 
     }

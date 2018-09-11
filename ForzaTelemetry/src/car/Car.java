@@ -13,11 +13,13 @@ import enums.Speed;
 public class Car {
 	// {{ variables from Forza 7
     private Engine engine = new Engine();
-    private Velocity velocity = new Velocity();
-    private Suspension suspension = new Suspension();
-    private Tyre tyre = new Tyre();
-    private Wheel wheel = new Wheel();
+    private PlayerInput playerInput = new PlayerInput();
     private Rumble rumble = new Rumble();
+    private Suspension suspension = new Suspension();
+    private Track track = new Track();
+    private Tyre tyre = new Tyre();
+    private Velocity velocity = new Velocity();
+    private Wheel wheel = new Wheel();
     private boolean raceOn = false; // = 1 when race is on. = 0 when in menus/race stopped …
     private int timestampMS = 0; //Can overflow to 0 eventually
     private int carOrdinal = 0; //Unique ID of the car make/model
@@ -29,13 +31,23 @@ public class Car {
 
         byte[] receivedDataPacket = dataPack.getData();
 
-        for (int i = 0; i < 58; i++) {
+        for (int i = 0; i < 85; i++) {
             //read input stream and convert byte sequence into a 32bit int
             //start by sticking the current int we want into an array
-            byte[] receivedBytes = {receivedDataPacket[(i * 4) + 3], 
-                                    receivedDataPacket[(i * 4) + 2], 
-                                    receivedDataPacket[(i * 4) + 1], 
-                                    receivedDataPacket[i * 4]};
+        	byte[] receivedBytes = new byte[4];
+        	if (i < 75) {
+	            receivedBytes[0] = receivedDataPacket[(i * 4) + 3]; 
+	            receivedBytes[1] = receivedDataPacket[(i * 4) + 2]; 
+        		receivedBytes[2] = receivedDataPacket[(i * 4) + 1]; 
+				receivedBytes[3] = receivedDataPacket[i * 4];
+        	}
+        	else if (i == 75) {
+	            receivedBytes[0] = receivedDataPacket[(i * 4) + 1]; 
+	            receivedBytes[1] = receivedDataPacket[i * 4];
+        	}
+        	else if (i > 75) {
+	            receivedBytes[0] = receivedDataPacket[(75*4)+(i-74)];
+        	}
 
             //wrap this array into a ByteBuffer which we can then get in / float from
             ByteBuffer bb = ByteBuffer.wrap(receivedBytes);
@@ -216,6 +228,84 @@ public class Car {
                 case 57:
                     this.engine.setNumCylinders(bb.getInt());
                     break;
+                case 58:
+                    this.getTrack().setPositionX(bb.getFloat());
+                    break;
+                case 59:
+                    this.getTrack().setPositionY(bb.getFloat());
+                    break;
+                case 60:
+                    this.getTrack().setPositionZ(bb.getFloat());
+                    break;
+                case 61:
+                    this.velocity.setSpeed(bb.getFloat());
+                    break;
+                case 62:
+                    this.engine.setPower(bb.getFloat());
+                    break;
+                case 63:
+                    this.engine.setTorque(bb.getFloat());
+                    break;
+                case 64:
+                    this.tyre.setTireTempFrontLeft(bb.getFloat());
+                    break;
+                case 65:
+                    this.tyre.setTireTempFrontRight(bb.getFloat());
+                    break;
+                case 66:
+                    this.tyre.setTireTempRearLeft(bb.getFloat());
+                    break;
+                case 67:
+                    this.tyre.setTireTempRearRight(bb.getFloat());
+                    break;
+                case 68:
+                    this.engine.setBoost(bb.getFloat());
+                    break;
+                case 69:
+                    this.engine.setFuel(bb.getFloat());
+                    break;
+                case 70:
+                    this.getTrack().setDistanceTraveled(bb.getFloat());
+                    break;
+                case 71:
+                    this.getTrack().setBestLap(bb.getFloat());
+                    break;
+                case 72:
+                    this.getTrack().setLastLap(bb.getFloat());
+                    break;
+                case 73:
+                    this.getTrack().setCurrentLap(bb.getFloat());
+                    break;
+                case 75:
+                    this.getTrack().setLapNumber((short)(bb.getShort() & 0xffff));
+                    break;
+                case 76:
+                    this.getTrack().setRacePosition((short)(bb.get() & 0xff));
+                    break;
+                case 77:
+                    this.getPlayerInput().setAccel((short)(bb.get() & 0xff));
+                    break;
+                case 78:
+                    this.getPlayerInput().setBrake((short)(bb.get() & 0xff));
+                    break;
+                case 79:
+                    this.getPlayerInput().setClutch((short)(bb.get() & 0xff));
+                    break;
+                case 80:
+                    this.getPlayerInput().setHandbrake((short)(bb.get() & 0xff));
+                    break;
+                case 81:
+                    this.getEngine().setGear((short)(bb.get() & 0xff));
+                    break;
+                case 82:
+                    this.getPlayerInput().setSteer(bb.get());
+                    break;
+                case 83:
+                    this.getPlayerInput().setNormalizedDrivingLine(bb.get());
+                    break;
+                case 84:
+                    this.getPlayerInput().setNormalizedAIBrakeDifference(bb.get());
+                    break;
             }
         }
         //set calculated fields here once processed new data
@@ -362,7 +452,33 @@ public class Car {
         this.carPerformanceIndex = carPerformanceIndex;
     }
 
+	/**
+	 * @return the playerInput
+	 */
+	public PlayerInput getPlayerInput() {
+		return playerInput;
+	}
 
+	/**
+	 * @param playerInput the playerInput to set
+	 */
+	public void setPlayerInput(PlayerInput playerInput) {
+		this.playerInput = playerInput;
+	}
+
+	/**
+	 * @return the track
+	 */
+	public Track getTrack() {
+		return track;
+	}
+
+	/**
+	 * @param track the track to set
+	 */
+	public void setTrack(Track track) {
+		this.track = track;
+	}
 
     // }} Setters and Getters for speed
 
@@ -469,10 +585,14 @@ public class Car {
 
 	public void reset() {
 		this.getEngine().reset();
-		this.getVelocity().reset();
-		this.getSuspension().reset();
-		this.getTyre().reset();
-		this.getWheel().reset();
+		this.getPlayerInput().reset();
 		this.getRumble().reset();
+		this.getSuspension().reset();
+		this.getTrack().reset();
+		this.getTyre().reset();
+		this.getVelocity().reset();
+		this.getWheel().reset();
 	}
+
+
 }

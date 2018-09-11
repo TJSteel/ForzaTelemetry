@@ -60,9 +60,18 @@ public class ForzaTelemetry {
                     playerExists = true;
                     if (currPlayer.getCar().isRaceOn()) {
                         //if (currPlayer.getGamertag().equals("HCR TJSteel")) {
-                        	//System.out.println(currPlayer.getCar().getEngineMaxRpm());
-	                        ui.updateFields();
-	                        printValues(currPlayer);
+                    	StringBuilder returnString = new StringBuilder();
+                    	returnString.append("X = ");
+                    	returnString.append(currPlayer.getCar().getTrack().getPositionX());
+                    	returnString.append(" Y = ");
+                    	returnString.append(currPlayer.getCar().getTrack().getPositionY());
+                    	returnString.append(" Z = ");
+                    	returnString.append(currPlayer.getCar().getTrack().getPositionZ());
+                    	System.out.println(returnString.toString());
+
+                    	
+                    	ui.updateFields();
+                        printValues(currPlayer);
                         //}
                     }
                     break;
