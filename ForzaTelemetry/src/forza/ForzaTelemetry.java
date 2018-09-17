@@ -5,6 +5,11 @@
  */
 package forza;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +41,10 @@ public class ForzaTelemetry {
         playerDB = new PlayerDatabase();
         carTypeDB = new CarTypeDatabase();
         players = playerDB.getPlayers();
+        
+        //load custom fonts
+        loadFonts();
+        
         filePrinter = new FilePrinter("DataOutCapture-" 
 	        + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()).toString() 
 	        + ".csv");
@@ -232,6 +241,16 @@ public class ForzaTelemetry {
 			sb.append(player.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.MPH) + ",");
 			sb.append(player.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.KPH) + ",");
 			filePrinter.writeToFile(sb.toString());
+		}
+	}
+	
+	private void loadFonts() {
+		try {
+		     GraphicsEnvironment ge = 
+		         GraphicsEnvironment.getLocalGraphicsEnvironment();
+		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fonts/DSEG7Classic-Bold.ttf")));
+		} catch (IOException|FontFormatException e) {
+		     //Handle exception
 		}
 	}
 }

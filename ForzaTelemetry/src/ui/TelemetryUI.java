@@ -87,6 +87,7 @@ public class TelemetryUI extends JFrame {
 	private LineChart lineBrake;
 	private LineChart lineClutch;
 	private LineChart lineHandbrake;
+	private JTextField txtGear;
 	
 	/**
 	 * Create the frame.
@@ -487,6 +488,18 @@ public class TelemetryUI extends JFrame {
 		lineHandbrake.setOpaque(false);
 		lineHandbrake.setBounds(554, 766, 700, 100);
 		contentPane.add(lineHandbrake);
+		
+		txtGear = new JTextField();
+		txtGear.setText("6");
+		txtGear.setOpaque(false);
+		txtGear.setHorizontalAlignment(SwingConstants.LEFT);
+		txtGear.setForeground(Color.WHITE);
+		txtGear.setFont(new Font("DSEG7Classic-Bold", Font.BOLD, 30));
+		txtGear.setColumns(10);
+		txtGear.setBorder(null);
+		txtGear.setBackground(Color.WHITE);
+		txtGear.setBounds(643, 74, 35, 40);
+		contentPane.add(txtGear);
 		
 		
 		
