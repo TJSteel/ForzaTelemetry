@@ -5,24 +5,26 @@
  */
 package forza;
 
-import car.Car;
+import java.util.ArrayList;
+
+import telemetry.TelemetryPacket;
 
 public class Player {
 
 	// {{ Variables
     private String ipAddress = "";
     private String gamertag = "";
-    private Car car;
+    private ArrayList<TelemetryPacket> telemetryPackets;
     // }} Variables
 
     // Constructor
     public Player(String ipAddress, String gamertag) {
         this.setIpAddress(ipAddress);
         this.setGamertag(gamertag);
-        this.car = new Car();
+        this.telemetryPackets = new  ArrayList<TelemetryPacket>();
     }
     public Player() {
-        this.car = new Car();
+        this.telemetryPackets = new ArrayList<TelemetryPacket>();
     }
     
     // {{ Getters and Setters
@@ -55,14 +57,24 @@ public class Player {
     }
 
     /**
-     * @return the car
+     * @return the telemetryPackets
      */
-    public Car getCar() {
-        return car;
+    public ArrayList<TelemetryPacket> getTelemetryPackets() {
+        return telemetryPackets;
+    }
+    /**
+     * @return the telemetryPackets
+     */
+    public TelemetryPacket getTelemetryPacket() {
+        return telemetryPackets.size() > 0 ? telemetryPackets.get(telemetryPackets.size()-1) : new TelemetryPacket();
+    }
+
+    public void addTelemetryPacket() {
+    	telemetryPackets.add(new TelemetryPacket());
     }
     // }} Getters and Setters
 
     public void reset() {
-    	this.getCar().reset();
+    	this.getTelemetryPacket().reset();
     }
 }

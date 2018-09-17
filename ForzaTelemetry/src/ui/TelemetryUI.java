@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-
 import enums.Speed;
 import forza.Player;
+import gauges.GaugeRpm;
+import icons.DrivetrainIcon;
+import utility.Calc;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -19,7 +19,16 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
+import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
 import java.awt.event.ItemEvent;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+
+import charts.BarChartSingle;
+import charts.LineChart;
 
 public class TelemetryUI extends JFrame {
 
@@ -42,6 +51,11 @@ public class TelemetryUI extends JFrame {
 	private JTextField txtMaxSpeed;
 	private JTextField txtGearRatio;
 
+	private JTextField txtCurrentLap;
+	private JTextField txtLastLap;
+	private JTextField txtBestLap;
+	private JTextField txtAverageLap;
+
 	private JLabel lblGamertag;
 	private JLabel lblNetworkDetails;
 	private JLabel lblCarName;
@@ -56,16 +70,36 @@ public class TelemetryUI extends JFrame {
 	private JButton btnReset;
 	
 	private DrivetrainIcon drivetrainIcon;
+	private BarChartSingle barAccel;
+	private BarChartSingle barBrake;
+	private BarChartSingle barClutch;
+	private BarChartSingle barHandbrake;
+	private BarChartSingle barSteer;
+	private JTextField txtLastLapDelta;
+	private JTextField txtAccel;
+	private JTextField txtBrake;
+	private JTextField txtClutch;
+	private JTextField txtHandbrake;
+	private JTextField txtTest;
 
+	private LineChart lineSteer;
+	private LineChart lineAccel;
+	private LineChart lineBrake;
+	private LineChart lineClutch;
+	private LineChart lineHandbrake;
+	
 	/**
 	 * Create the frame.
 	 */
 	public TelemetryUI(ArrayList<Player> players) {
+		setTitle("Forza Telemetry");
+		setBackground(Color.DARK_GRAY);
 		this.players = players;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 400);
+		setBounds(100, 100, 1280, 1024);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.GRAY, null, null, null));
+		contentPane.setBackground(Color.DARK_GRAY);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		lblGamertag = new JLabel("Gamertag:");
@@ -172,6 +206,8 @@ public class TelemetryUI extends JFrame {
 		contentPane.add(txtMaxSpeed);
 		
 		gaugeRpm = new GaugeRpm();
+		gaugeRpm.setOpaque(false);
+		gaugeRpm.setBackground(Color.DARK_GRAY);
 		gaugeRpm.setBounds(327, 11, 128, 128);
 		contentPane.add(gaugeRpm);
 		
@@ -207,8 +243,254 @@ public class TelemetryUI extends JFrame {
 		contentPane.add(btnReset);
 		
 		drivetrainIcon = new DrivetrainIcon();
-		drivetrainIcon.setBounds(327, 148, 47, 128);
+		drivetrainIcon.setVisible(false);
+		drivetrainIcon.setOpaque(false);
+		drivetrainIcon.setBackground(Color.DARK_GRAY);
+		drivetrainIcon.setBounds(10, 440, 47, 128);
 		contentPane.add(drivetrainIcon);
+		
+		JPanel pnlRaceTiming = new JPanel();
+		pnlRaceTiming.setBackground(Color.DARK_GRAY);
+		pnlRaceTiming.setBorder(new LineBorder(Color.GRAY, 2));
+		pnlRaceTiming.setBounds(1044, 11, 210, 300);
+		contentPane.add(pnlRaceTiming);
+		pnlRaceTiming.setLayout(null);
+		
+		txtAverageLap = new JTextField();
+		txtAverageLap.setBounds(10, 236, 150, 40);
+		pnlRaceTiming.add(txtAverageLap);
+		txtAverageLap.setText("00:00.000");
+		txtAverageLap.setOpaque(false);
+		txtAverageLap.setHorizontalAlignment(SwingConstants.LEFT);
+		txtAverageLap.setForeground(Color.WHITE);
+		txtAverageLap.setFont(new Font("Arial", Font.PLAIN, 30));
+		txtAverageLap.setColumns(10);
+		txtAverageLap.setBorder(null);
+		txtAverageLap.setBackground(Color.WHITE);
+		
+		JLabel lblAverageLap = new JLabel("Average Lap");
+		lblAverageLap.setBounds(10, 221, 100, 20);
+		pnlRaceTiming.add(lblAverageLap);
+		lblAverageLap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblAverageLap.setForeground(Color.WHITE);
+		lblAverageLap.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblAverageLap.setBackground(Color.WHITE);
+		
+		txtBestLap = new JTextField();
+		txtBestLap.setBounds(10, 176, 150, 40);
+		pnlRaceTiming.add(txtBestLap);
+		txtBestLap.setText("00:00.000");
+		txtBestLap.setOpaque(false);
+		txtBestLap.setHorizontalAlignment(SwingConstants.LEFT);
+		txtBestLap.setForeground(Color.WHITE);
+		txtBestLap.setFont(new Font("Arial", Font.PLAIN, 30));
+		txtBestLap.setColumns(10);
+		txtBestLap.setBorder(null);
+		txtBestLap.setBackground(Color.WHITE);
+		
+		JLabel lblBestLap = new JLabel("Best Lap");
+		lblBestLap.setBounds(10, 161, 100, 20);
+		pnlRaceTiming.add(lblBestLap);
+		lblBestLap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblBestLap.setForeground(Color.WHITE);
+		lblBestLap.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblBestLap.setBackground(Color.WHITE);
+		
+		txtLastLap = new JTextField();
+		txtLastLap.setBounds(10, 116, 150, 40);
+		pnlRaceTiming.add(txtLastLap);
+		txtLastLap.setText("00:00.000");
+		txtLastLap.setOpaque(false);
+		txtLastLap.setHorizontalAlignment(SwingConstants.LEFT);
+		txtLastLap.setForeground(Color.WHITE);
+		txtLastLap.setFont(new Font("Arial", Font.PLAIN, 30));
+		txtLastLap.setColumns(10);
+		txtLastLap.setBorder(null);
+		txtLastLap.setBackground(Color.WHITE);
+		
+		JLabel lblLastLap = new JLabel("Last Lap");
+		lblLastLap.setBounds(10, 101, 100, 20);
+		pnlRaceTiming.add(lblLastLap);
+		lblLastLap.setHorizontalAlignment(SwingConstants.LEFT);
+		lblLastLap.setForeground(Color.WHITE);
+		lblLastLap.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblLastLap.setBackground(Color.WHITE);
+		
+		txtCurrentLap = new JTextField();
+		txtCurrentLap.setBounds(10, 56, 150, 40);
+		pnlRaceTiming.add(txtCurrentLap);
+		txtCurrentLap.setOpaque(false);
+		txtCurrentLap.setBorder(null);
+		txtCurrentLap.setFont(new Font("Arial", Font.PLAIN, 30));
+		txtCurrentLap.setText("00:00.000");
+		txtCurrentLap.setForeground(Color.WHITE);
+		txtCurrentLap.setHorizontalAlignment(SwingConstants.LEFT);
+		txtCurrentLap.setBackground(Color.WHITE);
+		txtCurrentLap.setColumns(10);
+		
+		JLabel lblCurrentLap = new JLabel("Current Lap");
+		lblCurrentLap.setBounds(10, 41, 100, 20);
+		pnlRaceTiming.add(lblCurrentLap);
+		lblCurrentLap.setBackground(Color.WHITE);
+		lblCurrentLap.setForeground(Color.WHITE);
+		lblCurrentLap.setFont(new Font("Arial", Font.PLAIN, 15));
+		lblCurrentLap.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		JLabel lblLapTiming = new JLabel("  Lap Timing");
+		lblLapTiming.setOpaque(true);
+		lblLapTiming.setHorizontalAlignment(SwingConstants.LEFT);
+		lblLapTiming.setForeground(Color.WHITE);
+		lblLapTiming.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblLapTiming.setBackground(Color.GRAY);
+		lblLapTiming.setBounds(0, 0, 210, 30);
+		pnlRaceTiming.add(lblLapTiming);
+		
+		txtLastLapDelta = new JTextField();
+		txtLastLapDelta.setText("00:00.000");
+		txtLastLapDelta.setOpaque(false);
+		txtLastLapDelta.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtLastLapDelta.setForeground(Color.WHITE);
+		txtLastLapDelta.setFont(new Font("Arial", Font.PLAIN, 15));
+		txtLastLapDelta.setColumns(10);
+		txtLastLapDelta.setBorder(null);
+		txtLastLapDelta.setBackground(Color.WHITE);
+		txtLastLapDelta.setBounds(44, 101, 100, 20);
+		pnlRaceTiming.add(txtLastLapDelta);
+		
+		JPanel pnlDriverInput = new JPanel();
+		pnlDriverInput.setLayout(null);
+		pnlDriverInput.setBorder(new LineBorder(Color.GRAY, 2));
+		pnlDriverInput.setBackground(Color.DARK_GRAY);
+		pnlDriverInput.setBounds(824, 11, 210, 300);
+		contentPane.add(pnlDriverInput);
+		
+		
+		JLabel lblPlayerInput = new JLabel("  Driver Input");
+		lblPlayerInput.setOpaque(true);
+		lblPlayerInput.setBounds(0, 0, 210, 30);
+		pnlDriverInput.add(lblPlayerInput);
+		lblPlayerInput.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPlayerInput.setForeground(Color.WHITE);
+		lblPlayerInput.setFont(new Font("Arial", Font.PLAIN, 20));
+		lblPlayerInput.setBackground(Color.GRAY);
+		
+		txtAccel = new JTextField();
+		txtAccel.setOpaque(false);
+		txtAccel.setBounds(10, 259, 40, 30);
+		pnlDriverInput.add(txtAccel);
+		txtAccel.setText("255");
+		txtAccel.setHorizontalAlignment(SwingConstants.CENTER);
+		txtAccel.setForeground(Color.WHITE);
+		txtAccel.setFont(new Font("Arial", Font.PLAIN, 20));
+		txtAccel.setColumns(10);
+		txtAccel.setBorder(null);
+		txtAccel.setBackground(Color.GRAY);
+
+		barSteer = new BarChartSingle(-127, 127, 0, new Color(0,200,200), new Color(0,200,200, 127));
+		barSteer.setOpaque(false);
+		barSteer.setBounds(10, 37, 190, 40);
+		barSteer.setHorizontal(true);
+		pnlDriverInput.add(barSteer);
+
+		barAccel = new BarChartSingle(0, 255, 0, new Color(0,200,0), new Color(0,200,0, 127));
+		barAccel.setOpaque(false);
+		barAccel.setBounds(10, 88, 40, 170);
+		pnlDriverInput.add(barAccel);
+
+		barBrake = new BarChartSingle(0, 255, 0, new Color(200,0,0), new Color(200,0,0, 127));
+		barBrake.setOpaque(false);
+		barAccel.setOpaque(false);
+		barBrake.setBounds(60, 88, 40, 170);
+		pnlDriverInput.add(barBrake);
+		
+		barClutch = new BarChartSingle(0, 255, 0, new Color(200,200,0), new Color(200,200,0, 127));
+		barClutch.setOpaque(false);
+		barAccel.setOpaque(false);
+		barClutch.setBounds(110, 88, 40, 170);
+		pnlDriverInput.add(barClutch);
+		
+		barHandbrake = new BarChartSingle(0, 255, 0, new Color(0,0,200), new Color(0,0,200, 127));
+		barHandbrake.setOpaque(false);
+		barAccel.setOpaque(false);
+		barHandbrake.setBounds(160, 88, 40, 170);
+		pnlDriverInput.add(barHandbrake);
+
+		txtBrake = new JTextField();
+		txtBrake.setText("255");
+		txtBrake.setOpaque(false);
+		txtBrake.setHorizontalAlignment(SwingConstants.CENTER);
+		txtBrake.setForeground(Color.WHITE);
+		txtBrake.setFont(new Font("Arial", Font.PLAIN, 20));
+		txtBrake.setColumns(10);
+		txtBrake.setBorder(null);
+		txtBrake.setBackground(Color.GRAY);
+		txtBrake.setBounds(60, 259, 40, 30);
+		pnlDriverInput.add(txtBrake);
+		
+		txtClutch = new JTextField();
+		txtClutch.setText("255");
+		txtClutch.setOpaque(false);
+		txtClutch.setHorizontalAlignment(SwingConstants.CENTER);
+		txtClutch.setForeground(Color.WHITE);
+		txtClutch.setFont(new Font("Arial", Font.PLAIN, 20));
+		txtClutch.setColumns(10);
+		txtClutch.setBorder(null);
+		txtClutch.setBackground(Color.GRAY);
+		txtClutch.setBounds(110, 259, 40, 30);
+		pnlDriverInput.add(txtClutch);
+		
+		txtHandbrake = new JTextField();
+		txtHandbrake.setText("255");
+		txtHandbrake.setOpaque(false);
+		txtHandbrake.setHorizontalAlignment(SwingConstants.CENTER);
+		txtHandbrake.setForeground(Color.WHITE);
+		txtHandbrake.setFont(new Font("Arial", Font.PLAIN, 20));
+		txtHandbrake.setColumns(10);
+		txtHandbrake.setBorder(null);
+		txtHandbrake.setBackground(Color.GRAY);
+		txtHandbrake.setBounds(160, 259, 40, 30);
+		pnlDriverInput.add(txtHandbrake);
+		
+		txtTest = new JTextField();
+		txtTest.setText("This is a test data field");
+		txtTest.setOpaque(false);
+		txtTest.setHorizontalAlignment(SwingConstants.LEFT);
+		txtTest.setForeground(Color.WHITE);
+		txtTest.setFont(new Font("Arial", Font.PLAIN, 30));
+		txtTest.setColumns(10);
+		txtTest.setBorder(null);
+		txtTest.setBackground(Color.WHITE);
+		txtTest.setBounds(79, 371, 346, 40);
+		contentPane.add(txtTest);
+		
+		lineSteer = new LineChart(new Point2D.Double(0, -127),new Point2D.Double(4000, 127), new Color(0, 200, 200), new Color(0, 200, 200, 127));
+		lineSteer.setOpaque(false);
+		lineSteer.setBounds(554, 322, 700, 100);
+		contentPane.add(lineSteer);
+
+		lineAccel = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255),new Color(0,200,0), new Color(0,200,0, 127));
+		lineAccel.setOpaque(false);
+		lineAccel.setBounds(554, 433, 700, 100);
+		contentPane.add(lineAccel);
+
+		lineBrake = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255), new Color(200, 0, 0), new Color(200, 0, 0, 127));
+		lineBrake.setOpaque(false);
+		lineBrake.setBounds(554, 544, 700, 100);
+		contentPane.add(lineBrake);
+		
+		lineClutch = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255), new Color(200, 200, 0), new Color(200, 200, 0, 127));
+		lineClutch.setOpaque(false);
+		lineClutch.setBounds(554, 655, 700, 100);
+		contentPane.add(lineClutch);
+		
+		lineHandbrake = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255), new Color(0, 0, 200), new Color(0, 0, 200, 127));
+		lineHandbrake.setOpaque(false);
+		lineHandbrake.setBounds(554, 766, 700, 100);
+		contentPane.add(lineHandbrake);
+		
+		
+		
+
 
 		updateFields();
 	}
@@ -217,7 +499,8 @@ public class TelemetryUI extends JFrame {
 	 * Function to update the displayed fields
 	 */
     public void updateFields() {
-
+    	DecimalFormat df2 = new DecimalFormat("#.00");
+    	DecimalFormat df3 = new DecimalFormat("#.000");
     	for (Player currPlayer : this.players) {
     		if(((DefaultComboBoxModel<String>)cboGamertag.getModel()).getIndexOf(currPlayer.getGamertag()) == -1) {
 				cboGamertag.addItem(currPlayer.getGamertag());
@@ -225,25 +508,72 @@ public class TelemetryUI extends JFrame {
     		if (currPlayer == this.getSelectedPlayer()) {
 	    		double finalDrive = 2.5;
 		    	this.txtNetworkDetails.setText(currPlayer.getIpAddress());
-		        this.txtCarName.setText(Integer.toString(currPlayer.getCar().getCarOrdinal()));
-		        this.txtClass.setText(String.valueOf(currPlayer.getCar().getCarClass().toString()));
-		        this.txtPerformanceIndex.setText(Integer.toString(currPlayer.getCar().getCarPerformanceIndex()));
-		        this.txtDrivetrainType.setText(currPlayer.getCar().getEngine().getDrivetrainType().toString());
-		        this.txtNumCylinders.setText(Integer.toString(currPlayer.getCar().getEngine().getNumCylinders()));
+		        this.txtCarName.setText(Integer.toString(currPlayer.getTelemetryPacket().getCarOrdinal()));
+		        this.txtClass.setText(String.valueOf(currPlayer.getTelemetryPacket().getCarClass().toString()));
+		        this.txtPerformanceIndex.setText(Integer.toString(currPlayer.getTelemetryPacket().getCarPerformanceIndex()));
+		        this.txtDrivetrainType.setText(currPlayer.getTelemetryPacket().getEngine().getDrivetrainType().toString());
+		        this.txtNumCylinders.setText(Integer.toString(currPlayer.getTelemetryPacket().getEngine().getNumCylinders()));
 		
-		        this.txtRpm.setText(Double.toString(Math.round(currPlayer.getCar().getEngine().getCurrentEngineRpm()*100)/100d));
-		        this.txtSpeed.setText(Double.toString(Math.round(currPlayer.getCar().getVelocity().getSpeed(Speed.MPH)*100)/100d));
-		        this.txtMaxSpeed.setText(Double.toString(Math.round(currPlayer.getCar().getVelocity().getMaxSpeed(Speed.MPH)*100)/100d));
+		        this.txtRpm.setText(df2.format(currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm()));
+		        this.txtSpeed.setText(df2.format(currPlayer.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
+		        this.txtMaxSpeed.setText(df2.format(currPlayer.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.MPH)));
 
-		        this.txtGearRatio.setText(Double.toString(Math.round(currPlayer.getCar().getGearRatio(finalDrive)*1000)/1000d));
+		        this.txtGearRatio.setText(df3.format(currPlayer.getTelemetryPacket().getGearRatio(finalDrive)));
 		
-		        this.gaugeRpm.setRpm((double)currPlayer.getCar().getEngine().getCurrentEngineRpm());
+		        this.gaugeRpm.setRpm((double)currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm());
 		        this.gaugeRpm.repaint();
 		        
-		        this.drivetrainIcon.setDrivetrain(currPlayer.getCar().getEngine().getDrivetrainType());
+		        this.drivetrainIcon.setDrivetrain(currPlayer.getTelemetryPacket().getEngine().getDrivetrainType());
+		        this.txtCurrentLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getCurrentLap())));
+		        this.txtLastLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getLastLap())));
+		        this.txtBestLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getBestLap())));
+		        this.txtAverageLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getAverageLap())));
+		        float lapDelta = currPlayer.getTelemetryPacket().getTrack().getLastLapDelta();
+		        Color lapDeltaColor;
+		        if (lapDelta > 0) {
+		        	lapDeltaColor = Color.RED;
+		        } else if (lapDelta < 0) {
+		        	lapDeltaColor = Color.GREEN;
+		        } else {
+		        	lapDeltaColor = Color.WHITE;
+		        }
+		        this.txtLastLapDelta.setText(Calc.secondsToTime(lapDelta));
+		        this.txtLastLap.setForeground(lapDeltaColor);
+		        this.txtLastLapDelta.setForeground(lapDeltaColor);
+		        
+		        this.txtAccel.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getAccel()));
+		        this.barAccel.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getAccel());
+		        this.barAccel.repaint();
+		        this.txtBrake.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getBrake()));
+		        this.barBrake.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getBrake());
+		        this.barBrake.repaint();
+		        this.txtClutch.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getClutch()));
+		        this.barClutch.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getClutch());
+		        this.barClutch.repaint();
+		        this.txtHandbrake.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake()));
+		        this.barHandbrake.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake());
+		        this.barHandbrake.repaint();
+		        this.barSteer.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getSteer());
+		        this.barSteer.repaint();
+		        
+		        this.lineSteer.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getSteer()));
+		        this.lineSteer.repaint();
+		        this.lineAccel.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getAccel()));
+		        this.lineAccel.repaint();
+		        this.lineBrake.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getBrake()));
+		        this.lineBrake.repaint();
+		        this.lineClutch.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getClutch()));
+		        this.lineClutch.repaint();
+		        this.lineHandbrake.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake()));
+		        this.lineHandbrake.repaint();
+		        
+		        if (currPlayer.getTelemetryPacket().getTrack().getLapNumber() == 3) this.txtTest.setText("Distance Travelled: " + currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled());
     		}
     	}
-    }	
+    }
+    public void setReceivingTraffic(boolean receiving) {
+    	
+    }
     private Player getSelectedPlayer() {
     	Player returnPlayer = new Player();
     	for (Player currPlayer : this.players) {

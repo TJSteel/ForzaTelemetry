@@ -18,7 +18,7 @@ public class Velocity {
     private float pitch = 0.0F; //wheelie / endo
     private float roll = 0.0F; //body roll
     private float speed = 0.0F; //meters per second
-	private double maxSpeed = 200;
+	private double maxSpeed = 0;
 	// }} variables
 
 	// {{ Getters and Setters

@@ -1,6 +1,6 @@
 package car;
 
-public class PlayerInput {
+public class DriverInput {
 	// {{ Variables
     private short accel = 0;
     private short brake = 0;

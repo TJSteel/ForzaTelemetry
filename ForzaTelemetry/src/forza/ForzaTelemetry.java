@@ -9,12 +9,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import database.CarTypeDatabase;
+import database.PlayerDatabase;
 import enums.Speed;
 import network.TrafficReceiver;
 import ui.TelemetryUI;
-import utility.CarTypeDatabase;
+import utility.Calc;
 import utility.FilePrinter;
-import utility.PlayerDatabase;
 
 /**
  * @author Jay
@@ -49,6 +50,8 @@ public class ForzaTelemetry {
     
     public void run() {
         printHeaders(filePrinter);
+        ui.setReceivingTraffic(false);
+        System.out.println(Float.toString(Calc.coordValue(0, 200, 100, 50)));
         while (true) {
             traffic.receiveTraffic();
             
@@ -56,19 +59,17 @@ public class ForzaTelemetry {
 
             for (Player currPlayer : players) {
                 if (traffic.getAddress().toString().contains(currPlayer.getIpAddress())) {
-                    currPlayer.getCar().processDataPacket(traffic.getDataPack());
+                	currPlayer.addTelemetryPacket();
+                    currPlayer.getTelemetryPacket().processDataPacket(traffic.getDataPack());
                     playerExists = true;
-                    if (currPlayer.getCar().isRaceOn()) {
+                    if (currPlayer.getTelemetryPacket().isRaceOn()) {
                         //if (currPlayer.getGamertag().equals("HCR TJSteel")) {
+                    	/*
                     	StringBuilder returnString = new StringBuilder();
                     	returnString.append("X = ");
                     	returnString.append(currPlayer.getCar().getTrack().getPositionX());
-                    	returnString.append(" Y = ");
-                    	returnString.append(currPlayer.getCar().getTrack().getPositionY());
-                    	returnString.append(" Z = ");
-                    	returnString.append(currPlayer.getCar().getTrack().getPositionZ());
                     	System.out.println(returnString.toString());
-
+						*/
                     	
                     	ui.updateFields();
                         printValues(currPlayer);
@@ -83,10 +84,11 @@ public class ForzaTelemetry {
             if (!playerExists) {
                 Player currPlayer;
 				currPlayer = new Player(traffic.getDataPack().getAddress().toString(), "Driver " + traffic.getDataPack().getAddress().toString());
-                currPlayer.getCar().processDataPacket(traffic.getDataPack());
+                currPlayer.getTelemetryPacket().processDataPacket(traffic.getDataPack());
                 //System.out.println(currPlayer.getGamertag() + ", " + currPlayer.getCar());
                 players.add(currPlayer);
             }
+            ui.setReceivingTraffic(true);
         }
 
     }
@@ -165,70 +167,70 @@ public class ForzaTelemetry {
 	private void printValues(Player player)  {
 		if (this.filePrinter.isFileOpen()) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(player.getCar().isRaceOn() + ",");
-			sb.append(player.getCar().getTimestampMS() + ",");
-			sb.append(player.getCar().getEngine().getEngineMaxRpm() + ",");
-			sb.append(player.getCar().getEngine().getEngineIdleRpm() + ",");
-			sb.append(player.getCar().getEngine().getCurrentEngineRpm() + ",");
-			sb.append(player.getCar().getVelocity().getAccelerationX() + ",");
-			sb.append(player.getCar().getVelocity().getAccelerationY() + ",");
-			sb.append(player.getCar().getVelocity().getAccelerationZ() + ",");
-			sb.append(player.getCar().getVelocity().getVelocityX() + ",");
-			sb.append(player.getCar().getVelocity().getVelocityY() + ",");
-			sb.append(player.getCar().getVelocity().getVelocityZ() + ",");
-			sb.append(player.getCar().getVelocity().getAngularVelocityX() + ",");
-			sb.append(player.getCar().getVelocity().getAngularVelocityY() + ",");
-			sb.append(player.getCar().getVelocity().getAngularVelocityZ() + ",");
-			sb.append(player.getCar().getVelocity().getYaw() + ",");
-			sb.append(player.getCar().getVelocity().getPitch() + ",");
-			sb.append(player.getCar().getVelocity().getRoll() + ",");
-			sb.append(player.getCar().getSuspension().getNormalizedSuspensionTravelFrontLeft() + ",");
-			sb.append(player.getCar().getSuspension().getNormalizedSuspensionTravelFrontRight() + ",");
-			sb.append(player.getCar().getSuspension().getNormalizedSuspensionTravelRearLeft() + ",");
-			sb.append(player.getCar().getSuspension().getNormalizedSuspensionTravelRearRight() + ",");
-			sb.append(player.getCar().getTyre().getTireSlipRatioFrontLeft() + ",");
-			sb.append(player.getCar().getTyre().getTireSlipRatioFrontRight() + ",");
-			sb.append(player.getCar().getTyre().getTireSlipRatioRearLeft() + ",");
-			sb.append(player.getCar().getTyre().getTireSlipRatioRearRight() + ",");
-			sb.append(player.getCar().getWheel().getWheelRotationSpeedFrontLeft() + ",");
-			sb.append(player.getCar().getWheel().getWheelRotationSpeedFrontRight() + ",");
-			sb.append(player.getCar().getWheel().getWheelRotationSpeedRearLeft() + ",");
-			sb.append(player.getCar().getWheel().getWheelRotationSpeedRearRight() + ",");
-			sb.append(player.getCar().getWheel().getWheelOnRumbleStripFrontLeft() + ",");
-			sb.append(player.getCar().getWheel().getWheelOnRumbleStripFrontRight() + ",");
-			sb.append(player.getCar().getWheel().getWheelOnRumbleStripRearLeft() + ",");
-			sb.append(player.getCar().getWheel().getWheelOnRumbleStripRearRight() + ",");
-			sb.append(player.getCar().getWheel().getWheelInPuddleDepthFrontLeft() + ",");
-			sb.append(player.getCar().getWheel().getWheelInPuddleDepthFrontRight() + ",");
-			sb.append(player.getCar().getWheel().getWheelInPuddleDepthRearLeft() + ",");
-			sb.append(player.getCar().getWheel().getWheelInPuddleDepthRearRight() + ",");
-			sb.append(player.getCar().getRumble().getSurfaceRumbleFrontLeft() + ",");
-			sb.append(player.getCar().getRumble().getSurfaceRumbleFrontRight() + ",");
-			sb.append(player.getCar().getRumble().getSurfaceRumbleRearLeft() + ",");
-			sb.append(player.getCar().getRumble().getSurfaceRumbleRearRight() + ",");
-			sb.append(player.getCar().getTyre().getTireSlipAngleFrontLeft() + ",");
-			sb.append(player.getCar().getTyre().getTireSlipAngleFrontRight() + ",");
-			sb.append(player.getCar().getTyre().getTireSlipAngleRearLeft() + ",");
-			sb.append(player.getCar().getTyre().getTireSlipAngleRearRight() + ",");
-			sb.append(player.getCar().getTyre().getTireCombinedSlipFrontLeft() + ",");
-			sb.append(player.getCar().getTyre().getTireCombinedSlipFrontRight() + ",");
-			sb.append(player.getCar().getTyre().getTireCombinedSlipRearLeft() + ",");
-			sb.append(player.getCar().getTyre().getTireCombinedSlipRearRight() + ",");
-			sb.append(player.getCar().getSuspension().getSuspensionTravelMetersFrontLeft() + ",");
-			sb.append(player.getCar().getSuspension().getSuspensionTravelMetersFrontRight() + ",");
-			sb.append(player.getCar().getSuspension().getSuspensionTravelMetersRearLeft() + ",");
-			sb.append(player.getCar().getSuspension().getSuspensionTravelMetersRearRight() + ",");
-			sb.append(player.getCar().getCarOrdinal() + ",");
-			sb.append(player.getCar().getCarClass() + ",");
-			sb.append(player.getCar().getCarPerformanceIndex() + ",");
-			sb.append(player.getCar().getEngine().getDrivetrainType() + ",");
-			sb.append(player.getCar().getEngine().getNumCylinders() + ",");
-			sb.append(player.getCar().getVelocity().getSpeed(Speed.MPS) + ",");
-			sb.append(player.getCar().getVelocity().getSpeed(Speed.MPH) + ",");
-			sb.append(player.getCar().getVelocity().getSpeed(Speed.KPH) + ",");
-			sb.append(player.getCar().getVelocity().getMaxSpeed(Speed.MPS) + ",");
-			sb.append(player.getCar().getVelocity().getMaxSpeed(Speed.MPH) + ",");
-			sb.append(player.getCar().getVelocity().getMaxSpeed(Speed.KPH) + ",");
+			sb.append(player.getTelemetryPacket().isRaceOn() + ",");
+			sb.append(player.getTelemetryPacket().getTimestampMS() + ",");
+			sb.append(player.getTelemetryPacket().getEngine().getEngineMaxRpm() + ",");
+			sb.append(player.getTelemetryPacket().getEngine().getEngineIdleRpm() + ",");
+			sb.append(player.getTelemetryPacket().getEngine().getCurrentEngineRpm() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getAccelerationX() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getAccelerationY() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getAccelerationZ() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getVelocityX() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getVelocityY() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getVelocityZ() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getAngularVelocityX() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getAngularVelocityY() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getAngularVelocityZ() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getYaw() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getPitch() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getRoll() + ",");
+			sb.append(player.getTelemetryPacket().getSuspension().getNormalizedSuspensionTravelFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getSuspension().getNormalizedSuspensionTravelFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getSuspension().getNormalizedSuspensionTravelRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getSuspension().getNormalizedSuspensionTravelRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireSlipRatioFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireSlipRatioFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireSlipRatioRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireSlipRatioRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelRotationSpeedFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelRotationSpeedFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelRotationSpeedRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelRotationSpeedRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelOnRumbleStripFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelOnRumbleStripFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelOnRumbleStripRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelOnRumbleStripRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelInPuddleDepthFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelInPuddleDepthFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelInPuddleDepthRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getWheel().getWheelInPuddleDepthRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getRumble().getSurfaceRumbleFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getRumble().getSurfaceRumbleFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getRumble().getSurfaceRumbleRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getRumble().getSurfaceRumbleRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireSlipAngleFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireSlipAngleFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireSlipAngleRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireSlipAngleRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireCombinedSlipFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireCombinedSlipFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireCombinedSlipRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getTyre().getTireCombinedSlipRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getSuspension().getSuspensionTravelMetersFrontLeft() + ",");
+			sb.append(player.getTelemetryPacket().getSuspension().getSuspensionTravelMetersFrontRight() + ",");
+			sb.append(player.getTelemetryPacket().getSuspension().getSuspensionTravelMetersRearLeft() + ",");
+			sb.append(player.getTelemetryPacket().getSuspension().getSuspensionTravelMetersRearRight() + ",");
+			sb.append(player.getTelemetryPacket().getCarOrdinal() + ",");
+			sb.append(player.getTelemetryPacket().getCarClass() + ",");
+			sb.append(player.getTelemetryPacket().getCarPerformanceIndex() + ",");
+			sb.append(player.getTelemetryPacket().getEngine().getDrivetrainType() + ",");
+			sb.append(player.getTelemetryPacket().getEngine().getNumCylinders() + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getSpeed(Speed.MPS) + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH) + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getSpeed(Speed.KPH) + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.MPS) + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.MPH) + ",");
+			sb.append(player.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.KPH) + ",");
 			filePrinter.writeToFile(sb.toString());
 		}
 	}

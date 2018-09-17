@@ -1,17 +1,20 @@
 package car;
 
+import java.util.ArrayList;
+
 public class Track {
 	// {{ variables
     private float positionX = 0.0F; //I think this is the car in the tracks local space
     private float positionY = 0.0F; //Height/Altitude
     private float positionZ = 0.0F;
-    private float distanceTraveled = 0.0F; //need to calcualte which units it's using
-    private float bestLap = 0.0F; //guessing in milliseconds
-    private float lastLap = 0.0F; //guessing in milliseconds
-    private float currentLap = 0.0F; //guessing in milliseconds
-    private float currentRaceTime = 0.0F; //guessing in milliseconds
-    private short lapNumber = 0; //guessing in milliseconds
-    private short racePosition = 0; //guessing in milliseconds
+    private float distanceTraveled = 0.0F; //need to calculate which units it's using
+    private float bestLap = 0.0F; //seconds
+    private float lastLap = 0.0F; //seconds
+    private float currentLap = 0.0F; //seconds
+    private float currentRaceTime = 0.0F; //seconds
+    private short lapNumber = 0; 
+    private short racePosition = 0;
+    private ArrayList<Float> lapTimes = new ArrayList<Float>();
 
 	// }} variables
 
@@ -140,6 +143,10 @@ public class Track {
 	 * @param lapNumber the lapNumber to set
 	 */
 	public void setLapNumber(short lapNumber) {
+		if (this.lapNumber < lapNumber) {
+			//calculate new lap stuff
+			lapTimes.add(this.getLastLap());
+		}
 		this.lapNumber = lapNumber;
 	}
 
@@ -160,7 +167,45 @@ public class Track {
 
 	// }} Getters and Setters
 
+	// {{ Calculated fields
+	public float getAverageLap() {
+		float totalTime = 0.0f;
+		for (float lap: this.lapTimes) {
+			totalTime += lap;
+		}
+		return this.lapTimes.size() == 0 ? totalTime : totalTime / this.lapTimes.size();
+	}
+	
+	public float getLastLapDelta() {
+		//make sure there is data in the array list
+		if (this.lapTimes.size()>0) {
+			float currentLap = this.lapTimes.get(this.lapTimes.size()-1);
+			float bestLap = this.getBestLap();
+			
+			// if a new best lap has just been set and it's not the only lap, we want to find the split from the previous best lap
+			if (currentLap == bestLap && this.lapTimes.size() > 1) {
+				// set previous best to the lap previous to the last lap
+				float previousBestLap = this.lapTimes.get(this.lapTimes.size()-2);
+				
+				// loop through the arraylist skipping the previous lap and updating with the best time
+				for (int i = this.lapTimes.size()-2; i >= 0; i--) {
+					if (this.lapTimes.get(i) < previousBestLap) previousBestLap = this.lapTimes.get(i);
+				}
+				
+				return currentLap - previousBestLap;
+			} else {
+				return currentLap - bestLap;
+			}
+		} else {
+			return 0.0f;
+		}
+	}
+	
+	// }} Calculated fields
+
     public void reset() {
-    	
-    }	
+    	this.lapTimes.clear();
+    }
+
+
 }

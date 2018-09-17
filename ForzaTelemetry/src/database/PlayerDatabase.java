@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package utility;
+package database;
 
 import java.util.*;
 import forza.Player;
@@ -18,7 +18,7 @@ public class PlayerDatabase {
 
     public PlayerDatabase() {
         players = new ArrayList<Player>();
-        players.add(new Player("192.168.1.18", "HCR TJSteel"));
+        players.add(new Player("192.168.1.13", "HCR TJSteel"));
     }
     
     public ArrayList<Player> getPlayers(){
