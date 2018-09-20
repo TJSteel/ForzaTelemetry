@@ -20,10 +20,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Point2D;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.awt.event.ItemEvent;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
@@ -87,12 +91,25 @@ public class TelemetryUI extends JFrame {
 	private LineChart lineBrake;
 	private LineChart lineClutch;
 	private LineChart lineHandbrake;
+	private LineChart lineTrackMap;
 	private JTextField txtGear;
+	private Font dseg;
 	
 	/**
 	 * Create the frame.
 	 */
 	public TelemetryUI(ArrayList<Player> players) {
+		//load fonts
+		try {
+			dseg = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResource("fonts/DSEG7Classic-Bold.ttf").openStream()).deriveFont(Font.BOLD, 30f);
+		} catch (FontFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		setTitle("Forza Telemetry");
 		setBackground(Color.DARK_GRAY);
 		this.players = players;
@@ -247,7 +264,7 @@ public class TelemetryUI extends JFrame {
 		drivetrainIcon.setVisible(false);
 		drivetrainIcon.setOpaque(false);
 		drivetrainIcon.setBackground(Color.DARK_GRAY);
-		drivetrainIcon.setBounds(10, 440, 47, 128);
+		drivetrainIcon.setBounds(10, 304, 47, 128);
 		contentPane.add(drivetrainIcon);
 		
 		JPanel pnlRaceTiming = new JPanel();
@@ -461,7 +478,7 @@ public class TelemetryUI extends JFrame {
 		txtTest.setColumns(10);
 		txtTest.setBorder(null);
 		txtTest.setBackground(Color.WHITE);
-		txtTest.setBounds(79, 371, 346, 40);
+		txtTest.setBounds(79, 371, 431, 40);
 		contentPane.add(txtTest);
 		
 		lineSteer = new LineChart(new Point2D.Double(0, -127),new Point2D.Double(4000, 127), new Color(0, 200, 200), new Color(0, 200, 200, 127));
@@ -494,12 +511,17 @@ public class TelemetryUI extends JFrame {
 		txtGear.setOpaque(false);
 		txtGear.setHorizontalAlignment(SwingConstants.LEFT);
 		txtGear.setForeground(Color.WHITE);
-		txtGear.setFont(new Font("DSEG7Classic-Bold", Font.BOLD, 30));
+		txtGear.setFont(dseg);
 		txtGear.setColumns(10);
 		txtGear.setBorder(null);
 		txtGear.setBackground(Color.WHITE);
 		txtGear.setBounds(643, 74, 35, 40);
 		contentPane.add(txtGear);
+		
+		lineTrackMap = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(500, 500), new Color(0, 200, 200), new Color(0, 200, 200, 127));
+		lineTrackMap.setOpaque(false);
+		lineTrackMap.setBounds(10, 443, 500, 500);
+		contentPane.add(lineTrackMap);
 		
 		
 		
@@ -579,8 +601,12 @@ public class TelemetryUI extends JFrame {
 		        this.lineClutch.repaint();
 		        this.lineHandbrake.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake()));
 		        this.lineHandbrake.repaint();
+		        this.lineTrackMap.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getPositionX(), currPlayer.getTelemetryPacket().getTrack().getPositionZ()));
+		        this.lineTrackMap.repaint();
 		        
-		        if (currPlayer.getTelemetryPacket().getTrack().getLapNumber() == 3) this.txtTest.setText("Distance Travelled: " + currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled());
+		        this.txtGear.setText(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
+		        
+		        this.txtTest.setText("Distance Travelled: " + currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled());
     		}
     	}
     }

@@ -42,9 +42,6 @@ public class ForzaTelemetry {
         carTypeDB = new CarTypeDatabase();
         players = playerDB.getPlayers();
         
-        //load custom fonts
-        loadFonts();
-        
         filePrinter = new FilePrinter("DataOutCapture-" 
 	        + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()).toString() 
 	        + ".csv");
@@ -79,7 +76,7 @@ public class ForzaTelemetry {
                     	returnString.append(currPlayer.getCar().getTrack().getPositionX());
                     	System.out.println(returnString.toString());
 						*/
-                    	
+                    	System.out.print(currPlayer.getTelemetryPacket().getEngine().getGear());
                     	ui.updateFields();
                         printValues(currPlayer);
                         //}
@@ -241,16 +238,6 @@ public class ForzaTelemetry {
 			sb.append(player.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.MPH) + ",");
 			sb.append(player.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.KPH) + ",");
 			filePrinter.writeToFile(sb.toString());
-		}
-	}
-	
-	private void loadFonts() {
-		try {
-		     GraphicsEnvironment ge = 
-		         GraphicsEnvironment.getLocalGraphicsEnvironment();
-		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("fonts/DSEG7Classic-Bold.ttf")));
-		} catch (IOException|FontFormatException e) {
-		     //Handle exception
 		}
 	}
 }

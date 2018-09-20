@@ -135,7 +135,19 @@ public class LineChart extends JPanel {
 	}
 	
 	public void addValue(Point2D value) {
+		double x, y;
 		this.getValues().add(value);
+		x = value.getX() < this.getMin().getX() ? value.getX() : this.getMin().getX();
+		y = value.getY() < this.getMin().getY() ? value.getY() : this.getMin().getY();
+		this.getMin().setLocation(x, y);
+		x = value.getX() > this.getMax().getX() ? value.getX() : this.getMax().getX();
+		y = value.getY() > this.getMax().getY() ? value.getY() : this.getMax().getY();
+		this.getMax().setLocation(x, y);
+		
+		if (this.getValues().get(0).getX() == 0 && this.getValues().get(0).getY() == 0) {
+			this.getValues().remove(0);
+		}
+
 	}
 	
 	/**
