@@ -13,6 +13,7 @@ import utility.Calc;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
@@ -20,7 +21,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Point2D;
-import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.awt.event.ItemEvent;
@@ -33,6 +33,7 @@ import javax.swing.border.LineBorder;
 
 import charts.BarChartSingle;
 import charts.LineChart;
+import javax.swing.JToggleButton;
 
 public class TelemetryUI extends JFrame {
 
@@ -94,6 +95,7 @@ public class TelemetryUI extends JFrame {
 	private LineChart lineTrackMap;
 	private JTextField txtGear;
 	private Font dseg;
+	private JToggleButton tglbtnRecordData;
 	
 	/**
 	 * Create the frame.
@@ -523,9 +525,15 @@ public class TelemetryUI extends JFrame {
 		lineTrackMap.setBounds(10, 443, 500, 500);
 		contentPane.add(lineTrackMap);
 		
-		
-		
-
+		tglbtnRecordData = new JToggleButton("Record Data");
+		tglbtnRecordData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+		        AbstractButton abstractButton = (AbstractButton) actionEvent.getSource();
+		        tglbtnRecordData.setText(abstractButton.getModel().isSelected() ? "Recording Data" : "Record Data");
+			}
+		});
+		tglbtnRecordData.setBounds(318, 148, 137, 25);
+		contentPane.add(tglbtnRecordData);
 
 		updateFields();
 	}
@@ -551,7 +559,7 @@ public class TelemetryUI extends JFrame {
 		
 		        this.txtRpm.setText(df2.format(currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm()));
 		        this.txtSpeed.setText(df2.format(currPlayer.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
-		        this.txtMaxSpeed.setText(df2.format(currPlayer.getTelemetryPacket().getVelocity().getMaxSpeed(Speed.MPH)));
+		        this.txtMaxSpeed.setText(df2.format(currPlayer.getMaxSpeed(Speed.MPH)));
 
 		        this.txtGearRatio.setText(df3.format(currPlayer.getTelemetryPacket().getGearRatio(finalDrive)));
 		
@@ -562,8 +570,8 @@ public class TelemetryUI extends JFrame {
 		        this.txtCurrentLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getCurrentLap())));
 		        this.txtLastLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getLastLap())));
 		        this.txtBestLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getBestLap())));
-		        this.txtAverageLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getAverageLap())));
-		        float lapDelta = currPlayer.getTelemetryPacket().getTrack().getLastLapDelta();
+		        this.txtAverageLap.setText(Calc.secondsToTime((currPlayer.getAverageLap())));
+		        float lapDelta = currPlayer.getLastLapDelta();
 		        Color lapDeltaColor;
 		        if (lapDelta > 0) {
 		        	lapDeltaColor = Color.RED;
@@ -607,6 +615,7 @@ public class TelemetryUI extends JFrame {
 		        this.txtGear.setText(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
 		        
 		        this.txtTest.setText("Distance Travelled: " + currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled());
+		        getSelectedPlayer().setRecording(this.tglbtnRecordData.isSelected());
     		}
     	}
     }

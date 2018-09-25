@@ -246,10 +246,4 @@ public class Tyre {
 		this.tireTempRearRight = tireTempRearRight;
 	}
     // }} Getters and Setters
-
-    public void reset() {
-    	
-    }
-
-
 }

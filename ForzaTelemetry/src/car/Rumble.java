@@ -66,8 +66,4 @@ public class Rumble {
     }
     // }} Getters and Setters
 
-    public void reset() {
-    	
-    }
-
 }

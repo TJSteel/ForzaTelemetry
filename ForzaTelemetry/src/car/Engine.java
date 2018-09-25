@@ -7,14 +7,13 @@ public class Engine {
     private float engineMaxRpm = 0.0F;
     private float engineIdleRpm = 0.0F;
     private float currentEngineRpm = 0.0F;
-    private float maxReachedRpm = 0;
     private Drivetrain drivetrainType = Drivetrain.NONE; //Corresponds to DrivetrainType; 0 = FWD, 1 = RWD, 2 = AWD
     private int numCylinders = 0; //Number of cylinders in the engine
     private float power = 0.0F; //watts
     private float torque = 0.0F; //newton meters
     private float boost = 0.0F; 
-    private float fuel = 0.0F;
-    private short gear = 0;
+    private float fuel = 0.0F; //percentage full from 0.0F to 100.0F
+    private short gear = 0; //0 = reverse, anything positive = gear
     // }} Variables
 
     // {{ Getters and Setters
@@ -58,22 +57,7 @@ public class Engine {
      */
     public void setCurrentEngineRpm(float currentEngineRpm) {
         this.currentEngineRpm = currentEngineRpm;
-    	setMaxReachedRpm(currentEngineRpm > getMaxReachedRpm() ? currentEngineRpm : getMaxReachedRpm());
     }
-
-	/**
-	 * @return the maxReachedRpm
-	 */
-	public float getMaxReachedRpm() {
-		return maxReachedRpm;
-	}
-
-	/**
-	 * @param maxReachedRpm the maxReachedRpm to set
-	 */
-	private void setMaxReachedRpm(float maxReachedRpm) {
-		this.maxReachedRpm = maxReachedRpm;
-	}
 
     /**
      * @return the drivetrainType
@@ -194,10 +178,5 @@ public class Engine {
 	public void setGear(short gear) {
 		this.gear = gear;
 	}
-    // }} Getters and Setters
-
-    public void reset() {
-    	this.setMaxReachedRpm(0);
-    }
-    
+    // }} Getters and Setters    
 }

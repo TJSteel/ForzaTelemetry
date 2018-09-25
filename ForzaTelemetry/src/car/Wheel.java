@@ -221,7 +221,4 @@ public class Wheel {
 	}
     // }} Calculated Fields
 
-	public void reset() {
-		
-	}
 }

@@ -2,7 +2,7 @@ package car;
 
 public class Suspension {
 	// {{ Variables
-    private float normalizedSuspensionTravelFrontLeft = 0.0F; // Suspension travel normalized: 0.0f = max stretch; 1.0 = max compression
+    private float normalizedSuspensionTravelFrontLeft = 0.0F; // Suspension travel normalized: 0.0F = max stretch; 1.0F = max compression
     private float normalizedSuspensionTravelFrontRight = 0.0F;
     private float normalizedSuspensionTravelRearLeft = 0.0F;
     private float normalizedSuspensionTravelRearRight = 0.0F;
@@ -135,7 +135,4 @@ public class Suspension {
     }
     // }} Getters and Setters
 
-    public void reset() {
-    	
-    }
 }

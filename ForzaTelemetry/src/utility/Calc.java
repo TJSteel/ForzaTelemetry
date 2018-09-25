@@ -64,28 +64,30 @@ public final class Calc {
 	    return negativeTime == true ? "-" + returnString : returnString.toString();
     }
     
-    public static float coordZero(float min, float max, float size, boolean invert) {
-        float zeroPercent = (max / (max - min)); //the percentage of how far through the range the center should be
-    	float answer = size * zeroPercent;
-    	return invert ? size - answer : answer;
+    public static double coordZero(double min, double max, double size, boolean invert) {
+        size -= 1; // using full width or height pushes 1 out of bounds 
+    	double zeroPercent = (max / (max - min)); //the percentage of how far through the range the centre should be
+    	double answer = (size) * zeroPercent;
+    	return invert ? (size) - answer : answer;
     }
-    public static float coordZero(float min, float max, float size) {
+    public static double coordZero(double min, double max, double size) {
         return coordZero(min, max, size, false);
     }
     
-    public static float coordLength(float min, float max, float size, float value, boolean invert) {
-    	float answer = (size) * (value / (max - min));
+    public static double coordLength(double min, double max, double size, double value, boolean invert) {
+        size -= 1; // using full width or height pushes 1 out of bounds 
+    	double answer = (size) * (value / (max - min));
     	return invert ? answer*-1 : answer;
     }
-    public static float coordLength(float min, float max, float size, float value) {
+    public static double coordLength(double min, double max, double size, double value) {
     	return coordLength(min, max, size, value, false);
     }
     
-    public static float coordValue(float min, float max, float size, float value, boolean invert) {
-        float answer = coordZero(min, max, size) - coordLength(min, max, size, value);
+    public static double coordValue(double min, double max, double size, double value, boolean invert) {
+        double answer = coordZero(min, max, size) - coordLength(min, max, size, value);
     	return invert ? size - answer : answer;
     }
-    public static float coordValue(float min, float max, float size, float value) {
+    public static double coordValue(double min, double max, double size, double value) {
     	return coordValue(min, max, size, value, false);
     }
 }

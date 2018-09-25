@@ -1,3 +1,5 @@
+//requires testing
+
 package charts;
 
 import javax.swing.*;
@@ -10,33 +12,29 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-public class LineChart extends JPanel {
+public class ScatterChart extends JPanel {
 
     private Point2D min;
     private Point2D max;
     private ArrayList<Point2D> values;
-    private Color lineColor;
+    private Color dotColor;
     private Color borderColor;
 
-    public LineChart(Point2D min, Point2D max, Color lineColor, Color borderColor) {
+    public ScatterChart(Point2D min, Point2D max, Color dotColor, Color borderColor) {
     	this.setMin(min);
     	this.setMax(max);
     	this.setValues(new ArrayList<Point2D>());
-    	this.setLineColor(lineColor);
+    	this.setDotColor(dotColor);
     	this.setBorderColor(borderColor);
     }
-    public LineChart(Color lineColor, Color borderColor) {
-    	this.setMin(new Point2D.Double(0,0));
-    	this.setMax(new Point2D.Double(0,0));
+    public ScatterChart(Color dotColor, Color borderColor) {
     	this.setValues(new ArrayList<Point2D>());
-    	this.setLineColor(lineColor);
+    	this.setDotColor(dotColor);
     	this.setBorderColor(borderColor);
     }
-    public LineChart() {
-    	this.setMin(new Point2D.Double(0,0));
-    	this.setMax(new Point2D.Double(0,0));
+    public ScatterChart() {
     	this.setValues(new ArrayList<Point2D>());
-    	this.setLineColor(Color.WHITE);
+    	this.setDotColor(Color.WHITE);
     	this.setBorderColor(new Color(255,255,255,127));
     }
 	
@@ -52,21 +50,20 @@ public class LineChart extends JPanel {
         g.setColor(getBorderColor());
         g.drawRect(0, 0, this.getWidth()-1, this.getHeight()-1);
 
-        //only draw value lines if there are at least 2 points to connect
-        if (this.getValues().size() < 2) {
+        //checking we have values to draw
+        if (this.getValues().size() <= 0) {
         	return;
         }
-    
-        g.setColor(this.getLineColor());
-        int x1, y1, x2, y2;
 
-        //loop through all points and draw a line for each
-        for (int i = 0, size = this.getValues().size(); i < size-1; i++) {
-            x1 = (int) Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth(), this.getValues().get(i).getX(), true);
-            x2 = (int) Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth(), this.getValues().get(i+1).getX(), true);
-            y1 = (int) Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight(), this.getValues().get(i).getY());
-            y2 = (int) Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight(), this.getValues().get(i+1).getY());
-        	g.drawLine(x1, y1, x2, y2);
+        g.setColor(this.getDotColor());
+        int x, y;
+
+        //loop through all points and draw a dot for each
+        for (int i = 0, size = this.getValues().size(); i < size; i++) {
+            x = (int) Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth(), this.getValues().get(i).getX(), true);
+            y = (int) Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight(), this.getValues().get(i).getY());
+        	
+        	g.drawLine(x, y, x, y);
     	}
     }
 
@@ -77,7 +74,7 @@ public class LineChart extends JPanel {
                 System.exit(0);
             }
         });
-        f.setContentPane(new LineChart());
+        f.setContentPane(new ScatterChart());
         f.setSize(100,150);
         f.setVisible(true);
     }
@@ -86,15 +83,15 @@ public class LineChart extends JPanel {
 	/**
 	 * @return the barColor
 	 */
-	public Color getLineColor() {
-		return lineColor;
+	public Color getDotColor() {
+		return dotColor;
 	}
 
 	/**
 	 * @param barColor the barColor to set
 	 */
-	public void setLineColor(Color lineColor) {
-		this.lineColor = lineColor;
+	public void setDotColor(Color dotColor) {
+		this.dotColor = dotColor;
 	}
 
 	/**
@@ -114,17 +111,14 @@ public class LineChart extends JPanel {
 	public void addValue(Point2D value) {
 		double x, y;
 		this.getValues().add(value);
+		if (this.getMin() == null) this.setMin(value); 
+		if (this.getMax() == null) this.setMax(value); 
 		x = value.getX() < this.getMin().getX() ? value.getX() : this.getMin().getX();
 		y = value.getY() < this.getMin().getY() ? value.getY() : this.getMin().getY();
 		this.getMin().setLocation(x, y);
 		x = value.getX() > this.getMax().getX() ? value.getX() : this.getMax().getX();
 		y = value.getY() > this.getMax().getY() ? value.getY() : this.getMax().getY();
 		this.getMax().setLocation(x, y);
-		
-		if (this.getValues().get(0).getX() == 0 && this.getValues().get(0).getY() == 0) {
-			this.getValues().remove(0);
-		}
-
 	}
 	
 	/**

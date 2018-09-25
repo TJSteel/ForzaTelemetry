@@ -2,7 +2,7 @@ package telemetry;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
-
+import java.util.ArrayList;
 import car.DriverInput;
 import car.Engine;
 import car.Rumble;
@@ -35,41 +35,39 @@ public class TelemetryPacket {
     private int carPerformanceIndex = 0; //Between 100 (slowest car) and 999 (fastest car) inclusive
     private int packetLength = 85;
     
-    // process a received packet of data
     public void processDataPacket(DatagramPacket dataPack) {
+    	
+    	//ArrayList instead of standard array so that we can remove data from it as we go through the extract
+        ArrayList<Byte> receivedDataPacket = new ArrayList<Byte>();
+        for (byte b : dataPack.getData()) {
+        	receivedDataPacket.add(b);
+        }
 
-        byte[] receivedDataPacket = dataPack.getData();
-
-        for (int i = 0; i < this.packetLength; i++) {
-            //read input stream and convert byte sequence into a 32bit int
-            //start by sticking the current int we want into an array
+        for (int iPacket = 0; iPacket < this.packetLength; iPacket++) {
+        	//using byte array because you can extract float etc from it
         	byte[] receivedBytes = new byte[4];
-        	if (i < 75) {
-	            receivedBytes[0] = receivedDataPacket[(i * 4) + 3]; 
-	            receivedBytes[1] = receivedDataPacket[(i * 4) + 2]; 
-        		receivedBytes[2] = receivedDataPacket[(i * 4) + 1]; 
-				receivedBytes[3] = receivedDataPacket[i * 4];
-        	}
-        	else if (i == 75) {
-	            receivedBytes[0] = receivedDataPacket[(i * 4) + 1]; 
-	            receivedBytes[1] = receivedDataPacket[i * 4];
-        	}
-        	else if (i > 75) {
-	            receivedBytes[0] = receivedDataPacket[(75*4)+(i-74)];
-        	}
+        	int byteCount = 0;
+        	if (iPacket < 75) byteCount = 4;
+        	else if (iPacket == 75) byteCount = 2;
+        	else if (iPacket > 75) byteCount = 1;
 
+    		for (int i = 0; i < byteCount; i++) {
+    			receivedBytes[i] = receivedDataPacket.get(byteCount-i-1);
+    			receivedDataPacket.remove(byteCount-i-1);
+    		}
+        	
             //wrap this array into a ByteBuffer which we can then get in / float from
             ByteBuffer bb = ByteBuffer.wrap(receivedBytes);
 
             // put data into relevant variables
-            switch (i) {
+            switch (iPacket) {
                 case 0:
                     this.setRaceOn(bb.getInt());
                     //stops the packet being processed further if the game state is off
-                    if (!this.isRaceOn()) i=this.packetLength;
+                    if (!this.isRaceOn()) iPacket=this.packetLength;
                     break;
                 case 1:
-                    this.setTimestampMS(bb.getInt());
+                    this.setTimestampMS(bb.getInt() & 0xffffffff);
                     break;
                 case 2:
                     this.engine.setEngineMaxRpm(bb.getFloat());
@@ -319,15 +317,12 @@ public class TelemetryPacket {
                     break;
             }
         }
-        //set calculated fields here once processed new data
-        this.velocity.updateMaxSpeed();
     }
     
     //print stored data
     @Override
     public String toString() {
         StringBuilder returnString = new StringBuilder();
-        //if (this.isRaceOn()) {
             returnString.append("Car = ");
             returnString.append(this.getCarOrdinal());
             returnString.append(", Class = ");
@@ -342,11 +337,6 @@ public class TelemetryPacket {
             returnString.append(Math.round(this.getEngine().getCurrentEngineRpm()));
             returnString.append(", Speed = ");
             returnString.append((this.velocity.getSpeed(Speed.MPH)));
-            returnString.append(", Max Speed = ");
-            returnString.append((this.velocity.getMaxSpeed(Speed.MPH)));
-        /*} else {
-            returnString.append("Car inactive");
-        }*/
         return returnString.toString();
     }
 
@@ -594,16 +584,6 @@ public class TelemetryPacket {
 
     // }}
 
-	public void reset() {
-		this.getEngine().reset();
-		this.getPlayerInput().reset();
-		this.getRumble().reset();
-		this.getSuspension().reset();
-		this.getTrack().reset();
-		this.getTyre().reset();
-		this.getVelocity().reset();
-		this.getWheel().reset();
-	}
 
 
 }

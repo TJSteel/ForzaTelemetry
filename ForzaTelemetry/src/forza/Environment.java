@@ -11,8 +11,8 @@ import java.awt.geom.*;
 public class Environment {
 
 	// {{ Variables
-    private String trackName = "";
-    private float trackLength = 0.0f;
+    private String trackName;
+    private float trackLength;
     private ArrayList<Point2D> trackLayoutOuter;
     private ArrayList<Point2D> trackLayoutInner;
     // }} Variables

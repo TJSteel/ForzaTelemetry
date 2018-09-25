@@ -39,22 +39,22 @@ public class BarChartSingle extends JPanel {
 		
         Graphics2D g = (Graphics2D) g1;
         //draw the border
-        g.setColor(getBorderColor());
+        g.setColor(this.getBorderColor());
         g.drawRect(0, 0, this.getWidth()-1, this.getHeight()-1);
 
         //set and calculate variables for drawing of the value
         int x, y, width, height;
 
         if (isHorizontal()) {
-            x = (int) Calc.coordZero(this.getMin(), this.getMax(), this.getWidth()-1, true);
+            x = (int) Calc.coordZero(this.getMin(), this.getMax(), this.getWidth(), true);
+            width = (int) Calc.coordLength(this.getMin(), this.getMax(), this.getWidth(), this.getValue());
             y = 0;
-            width = (int) Calc.coordLength(this.getMin(), this.getMax(), this.getWidth()-1, this.getValue());
             height = this.getHeight();
         } else {
             x = 0;
-            y = (int) (int) Calc.coordZero(this.getMin(), this.getMax(), this.getHeight()-1);
             width = this.getWidth();
-            height = (int) Calc.coordLength(this.getMin(), this.getMax(), this.getHeight()-1, this.getValue(), true);
+            y = (int) (int) Calc.coordZero(this.getMin(), this.getMax(), this.getHeight());
+            height = (int) Calc.coordLength(this.getMin(), this.getMax(), this.getHeight(), this.getValue(), true);
         }
         
         //draw the rectangle to represent the value

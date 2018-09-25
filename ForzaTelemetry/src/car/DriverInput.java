@@ -114,10 +114,7 @@ public class DriverInput {
     
     // {{ Calculated Fields
 
-    // }} Calculated Fields
 
-	public void reset() {
-		
-	}
+    // }} Calculated Fields
 
 }
