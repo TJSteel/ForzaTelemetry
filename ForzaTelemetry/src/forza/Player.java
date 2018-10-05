@@ -299,8 +299,10 @@ public class Player {
     }
 
     public double getMaxSpeed(Speed units) {
+    	ArrayList<TelemetryPacket> telemetryPackets = this.getTelemetryPackets();
+    	if (telemetryPackets.size() == 0) return 0;
     	double maxSpeed = 0;
-    	for (TelemetryPacket p : this.getTelemetryPackets()) {
+    	for (TelemetryPacket p : telemetryPackets) {
     		if (p.getVelocity().getSpeed(units) > maxSpeed) maxSpeed = p.getVelocity().getSpeed(units);
     	}
     	return maxSpeed;
