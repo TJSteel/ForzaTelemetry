@@ -33,6 +33,8 @@ import javax.swing.border.LineBorder;
 
 import charts.BarChartSingle;
 import charts.LineChart;
+import charts.ScatterChart;
+
 import javax.swing.JToggleButton;
 
 public class TelemetryUI extends JFrame {
@@ -96,6 +98,8 @@ public class TelemetryUI extends JFrame {
 	private JTextField txtGear;
 	private Font dseg;
 	private JToggleButton tglbtnRecordData;
+	
+	private ScatterChart scatterGForce;
 	
 	/**
 	 * Create the frame.
@@ -255,7 +259,7 @@ public class TelemetryUI extends JFrame {
 		btnReset = new JButton("Reset");
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				getSelectedPlayer().reset();
+				reset();
 				updateFields();
 			}
 		});
@@ -486,6 +490,7 @@ public class TelemetryUI extends JFrame {
 		lineSteer = new LineChart(new Point2D.Double(0, -127),new Point2D.Double(4000, 127), new Color(0, 200, 200), new Color(0, 200, 200, 127));
 		lineSteer.setOpaque(false);
 		lineSteer.setBounds(554, 322, 700, 100);
+		lineSteer.setInverted(true);
 		contentPane.add(lineSteer);
 
 		lineAccel = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255),new Color(0,200,0), new Color(0,200,0, 127));
@@ -520,7 +525,7 @@ public class TelemetryUI extends JFrame {
 		txtGear.setBounds(643, 74, 35, 40);
 		contentPane.add(txtGear);
 		
-		lineTrackMap = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(500, 500), new Color(0, 200, 200), new Color(0, 200, 200, 127));
+		lineTrackMap = new LineChart(new Color(0, 200, 200), new Color(0, 200, 200, 127));
 		lineTrackMap.setOpaque(false);
 		lineTrackMap.setBounds(10, 443, 500, 500);
 		contentPane.add(lineTrackMap);
@@ -535,6 +540,11 @@ public class TelemetryUI extends JFrame {
 		tglbtnRecordData.setBounds(318, 148, 137, 25);
 		contentPane.add(tglbtnRecordData);
 
+		scatterGForce = new ScatterChart(new Color(0, 200, 200), new Color(0, 200, 200, 127));
+		scatterGForce.setOpaque(false);
+		scatterGForce.setBounds(554, 148, 150, 150);
+		contentPane.add(scatterGForce);
+
 		updateFields();
 	}
 	
@@ -548,8 +558,9 @@ public class TelemetryUI extends JFrame {
     		if(((DefaultComboBoxModel<String>)cboGamertag.getModel()).getIndexOf(currPlayer.getGamertag()) == -1) {
 				cboGamertag.addItem(currPlayer.getGamertag());
 			}
-    		if (currPlayer == this.getSelectedPlayer()) {
-	    		double finalDrive = 2.5;
+    		if (currPlayer == this.getSelectedPlayer() && currPlayer.getTelemetryPacket() != null) {
+	    		//try {
+    			double finalDrive = 2.5;
 		    	this.txtNetworkDetails.setText(currPlayer.getIpAddress());
 		        this.txtCarName.setText(Integer.toString(currPlayer.getTelemetryPacket().getCarOrdinal()));
 		        this.txtClass.setText(String.valueOf(currPlayer.getTelemetryPacket().getCarClass().toString()));
@@ -611,11 +622,18 @@ public class TelemetryUI extends JFrame {
 		        this.lineHandbrake.repaint();
 		        this.lineTrackMap.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getPositionX(), currPlayer.getTelemetryPacket().getTrack().getPositionZ()));
 		        this.lineTrackMap.repaint();
+		        this.scatterGForce.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getVelocity().getAccelerationX(), currPlayer.getTelemetryPacket().getVelocity().getAccelerationZ()));
+		        this.scatterGForce.repaint();
 		        
+
 		        this.txtGear.setText(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
-		        
-		        this.txtTest.setText("Distance Travelled: " + currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled());
 		        getSelectedPlayer().setRecording(this.tglbtnRecordData.isSelected());
+
+    		
+		        this.txtTest.setText(Float.toString(currPlayer.getTelemetryPacket().getVelocity().getAccelerationX()));
+	    		//} catch (Exception e) {
+	    		//	System.out.println("Exception whilst updating UI:" + e.toString() + ":::" + e.getMessage());
+	    		//}
     		}
     	}
     }
@@ -630,5 +648,15 @@ public class TelemetryUI extends JFrame {
     		}
     	}
     	return returnPlayer;
+    }
+    public void reset() {
+    	getSelectedPlayer().reset();
+    	this.lineSteer.reset();
+    	this.lineAccel.reset();
+    	this.lineBrake.reset();
+    	this.lineClutch.reset();
+    	this.lineHandbrake.reset();
+    	this.lineTrackMap.reset();
+    	
     }
 }

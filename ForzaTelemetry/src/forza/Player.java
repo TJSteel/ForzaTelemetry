@@ -73,7 +73,7 @@ public class Player {
      * @return the telemetryPackets
      */
     public TelemetryPacket getTelemetryPacket() {
-        return telemetryPackets.size() > 0 ? telemetryPackets.get(telemetryPackets.size()-1) : new TelemetryPacket();
+        return telemetryPackets.size() > 0 ? telemetryPackets.get(telemetryPackets.size()-1) : null;
     }
 
     public void addTelemetryPacket() {

@@ -64,7 +64,7 @@ public class TelemetryPacket {
                 case 0:
                     this.setRaceOn(bb.getInt());
                     //stops the packet being processed further if the game state is off
-                    if (!this.isRaceOn()) iPacket=this.packetLength;
+                    //if (!this.isRaceOn()) iPacket=this.packetLength;
                     break;
                 case 1:
                     this.setTimestampMS(bb.getInt() & 0xffffffff);
@@ -284,6 +284,9 @@ public class TelemetryPacket {
                     break;
                 case 73:
                     this.getTrack().setCurrentLap(bb.getFloat());
+                    break;
+                case 74:
+                    this.getTrack().setCurrentRaceTime(bb.getFloat());
                     break;
                 case 75:
                     this.getTrack().setLapNumber((short)(bb.getShort() & 0xffff));

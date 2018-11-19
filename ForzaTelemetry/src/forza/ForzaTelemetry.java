@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import database.CarTypeDatabase;
 import database.PlayerDatabase;
 import network.TrafficReceiver;
+import ui.DashboardUI;
 import ui.TelemetryUI;
 
 /**
@@ -22,6 +23,7 @@ public class ForzaTelemetry {
 	public ArrayList<Player> players;
 	public TrafficReceiver traffic;
 	public TelemetryUI ui;
+	//public DashboardUI ui;
 	// }} Variables
 
     public void initialize() {
@@ -34,12 +36,14 @@ public class ForzaTelemetry {
         traffic.initialize(50000);
         
         ui = new TelemetryUI(this.players);
+        //ui = new DashboardUI(this.players);
         ui.setVisible(true);
     }
     
     public void run() {
         ui.setReceivingTraffic(false);
         while (true) {
+        	//try {
             traffic.receiveTraffic();
             
             boolean playerExists = false;
@@ -54,7 +58,7 @@ public class ForzaTelemetry {
                     	currPlayer.printValues();
 
                     	//used for debugging
-                    	System.out.print(currPlayer.getTelemetryPacket().getEngine().getGear());
+                    	//System.out.println(currPlayer.getTelemetryPacket().getTrack().getLapNumber());
                     }
                     break;
                 }
@@ -64,12 +68,14 @@ public class ForzaTelemetry {
             if (!playerExists) {
                 Player currPlayer;
 				currPlayer = new Player(traffic.getDataPack().getAddress().toString(), "Driver " + traffic.getDataPack().getAddress().toString());
+            	currPlayer.addTelemetryPacket();
                 currPlayer.getTelemetryPacket().processDataPacket(traffic.getDataPack());
                 players.add(currPlayer);
             }
             ui.setReceivingTraffic(true);
+        	//} catch (Exception e) {
+        	//	System.out.println("Exception whilst updating UI:" + e.toString() + ":::" + e.getMessage());
+        	//}
         }
-
     }
-
 }

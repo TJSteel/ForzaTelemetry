@@ -28,11 +28,15 @@ public class ScatterChart extends JPanel {
     	this.setBorderColor(borderColor);
     }
     public ScatterChart(Color dotColor, Color borderColor) {
+    	this.setMin(new Point2D.Double(0,0));
+    	this.setMax(new Point2D.Double(0,0));
     	this.setValues(new ArrayList<Point2D>());
     	this.setDotColor(dotColor);
     	this.setBorderColor(borderColor);
     }
     public ScatterChart() {
+    	this.setMin(new Point2D.Double(0,0));
+    	this.setMax(new Point2D.Double(0,0));
     	this.setValues(new ArrayList<Point2D>());
     	this.setDotColor(Color.WHITE);
     	this.setBorderColor(new Color(255,255,255,127));
@@ -60,10 +64,13 @@ public class ScatterChart extends JPanel {
 
         //loop through all points and draw a dot for each
         for (int i = 0, size = this.getValues().size(); i < size; i++) {
-            x = (int) Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth(), this.getValues().get(i).getX(), true);
-            y = (int) Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight(), this.getValues().get(i).getY());
-        	
-        	g.drawLine(x, y, x, y);
+            x = (int) Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth(), this.getValues().get(i).getX());
+            y = (int) Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight(), this.getValues().get(i).getY(), true);
+    		int dotSize = 2;
+    		g.fillOval(x-(dotSize/2), y-(dotSize/2), dotSize, dotSize);
+        	if (i == size - 2) {
+        		g.fillOval(x-dotSize, y-dotSize, dotSize*2, dotSize*2);
+        	}        	
     	}
     }
 
@@ -110,6 +117,11 @@ public class ScatterChart extends JPanel {
 	
 	public void addValue(Point2D value) {
 		double x, y;
+		if (this.getValues().size() == 0) {
+			//this.getValues().remove(0);
+			this.getMin().setLocation(value);
+			this.getMax().setLocation(value);
+		}
 		this.getValues().add(value);
 		if (this.getMin() == null) this.setMin(value); 
 		if (this.getMax() == null) this.setMax(value); 
