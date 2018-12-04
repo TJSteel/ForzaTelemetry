@@ -167,4 +167,9 @@ public class ScatterChart extends JPanel {
 		this.max = max;
 	}
 
+	public void reset() {
+    	this.setMin(new Point2D.Double(0,0));
+    	this.setMax(new Point2D.Double(0,0));
+    	this.setValues(new ArrayList<Point2D>());
+	}
 }

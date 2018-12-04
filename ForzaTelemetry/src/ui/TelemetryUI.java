@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.awt.event.ItemEvent;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontFormatException;
 
@@ -37,12 +38,9 @@ import charts.ScatterChart;
 
 import javax.swing.JToggleButton;
 
-public class TelemetryUI extends JFrame {
+public class TelemetryUI extends DefaultUI {
 
-	/**
-	 * 
-	 */
-	private ArrayList<Player> players;
+	// {{ variables
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private GaugeRpm gaugeRpm;
@@ -100,32 +98,20 @@ public class TelemetryUI extends JFrame {
 	private JToggleButton tglbtnRecordData;
 	
 	private ScatterChart scatterGForce;
+	// }} variables
 	
 	/**
 	 * Create the frame.
 	 */
 	public TelemetryUI(ArrayList<Player> players) {
-		//load fonts
-		try {
-			dseg = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResource("fonts/DSEG7Classic-Bold.ttf").openStream()).deriveFont(Font.BOLD, 30f);
-		} catch (FontFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		super(players);
+		this.initialize();
+		this.updateFields();
+	}
 
-		setTitle("Forza Telemetry");
-		setBackground(Color.DARK_GRAY);
-		this.players = players;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1280, 1024);
-		contentPane = new JPanel();
-		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.GRAY, null, null, null));
-		contentPane.setBackground(Color.DARK_GRAY);
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+	public void initialize() {
+		super.initialize();
+		Container contentPane = getContentPane();
 		lblGamertag = new JLabel("Gamertag:");
 		lblGamertag.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblGamertag.setBounds(10, 11, 150, 14);
@@ -544,17 +530,15 @@ public class TelemetryUI extends JFrame {
 		scatterGForce.setOpaque(false);
 		scatterGForce.setBounds(554, 148, 150, 150);
 		contentPane.add(scatterGForce);
-
-		updateFields();
 	}
-	
 	/**
 	 * Function to update the displayed fields
 	 */
     public void updateFields() {
+    	super.updateFields();
     	DecimalFormat df2 = new DecimalFormat("#.00");
     	DecimalFormat df3 = new DecimalFormat("#.000");
-    	for (Player currPlayer : this.players) {
+    	for (Player currPlayer : super.getPlayers()) {
     		if(((DefaultComboBoxModel<String>)cboGamertag.getModel()).getIndexOf(currPlayer.getGamertag()) == -1) {
 				cboGamertag.addItem(currPlayer.getGamertag());
 			}
@@ -637,26 +621,25 @@ public class TelemetryUI extends JFrame {
     		}
     	}
     }
+    
     public void setReceivingTraffic(boolean receiving) {
     	
     }
+    
     private Player getSelectedPlayer() {
-    	Player returnPlayer = new Player();
-    	for (Player currPlayer : this.players) {
-    		if (cboGamertag.getSelectedItem().toString().equals(currPlayer.getGamertag())) {
-    			returnPlayer = currPlayer;
-    		}
-    	}
-    	return returnPlayer;
+    	return super.getSelectedPlayer(cboGamertag.getSelectedItem().toString());
     }
+    
     public void reset() {
-    	getSelectedPlayer().reset();
+    	super.reset();
+    	this.getSelectedPlayer().reset();
     	this.lineSteer.reset();
     	this.lineAccel.reset();
     	this.lineBrake.reset();
     	this.lineClutch.reset();
     	this.lineHandbrake.reset();
     	this.lineTrackMap.reset();
+    	this.scatterGForce.reset();
     	
     }
 }

@@ -84,7 +84,7 @@ public class Engine {
                 this.drivetrainType = Drivetrain.NONE;
                 break;
             default:
-                System.out.println("Drivetype '" + drivetrainType + "' is invalid, must be FWD (0), RWD (1), AWD (2), or NONE (3)");
+                this.drivetrainType = Drivetrain.NONE;
         }
     }
 

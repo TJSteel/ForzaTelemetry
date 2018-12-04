@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import database.CarTypeDatabase;
 import database.PlayerDatabase;
 import network.TrafficReceiver;
-import ui.DashboardUI;
+//import ui.TelemetryUI;
+import ui.MainMenu;
 import ui.TelemetryUI;
 
 /**
@@ -22,8 +23,8 @@ public class ForzaTelemetry {
 	public CarTypeDatabase carTypeDB;
 	public ArrayList<Player> players;
 	public TrafficReceiver traffic;
-	public TelemetryUI ui;
-	//public DashboardUI ui;
+	public MainMenu ui;
+	//public TelemetryUI ui;
 	// }} Variables
 
     public void initialize() {
@@ -35,13 +36,13 @@ public class ForzaTelemetry {
         traffic = new TrafficReceiver();
         traffic.initialize(50000);
         
-        ui = new TelemetryUI(this.players);
-        //ui = new DashboardUI(this.players);
+        ui = new MainMenu(this.players);
+        //ui = new TelemetryUI(this.players);
         ui.setVisible(true);
     }
     
     public void run() {
-        ui.setReceivingTraffic(false);
+        //ui.setReceivingTraffic(false);
         while (true) {
         	//try {
             traffic.receiveTraffic();
@@ -72,7 +73,7 @@ public class ForzaTelemetry {
                 currPlayer.getTelemetryPacket().processDataPacket(traffic.getDataPack());
                 players.add(currPlayer);
             }
-            ui.setReceivingTraffic(true);
+            //ui.setReceivingTraffic(true);
         	//} catch (Exception e) {
         	//	System.out.println("Exception whilst updating UI:" + e.toString() + ":::" + e.getMessage());
         	//}
