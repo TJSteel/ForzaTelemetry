@@ -2,20 +2,20 @@ package ui;
 
 import javax.swing.JFrame;
 
-import forza.ForzaTelemetry;
 import forza.Player;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.awt.event.ActionEvent;
 
 public class MainMenu extends DefaultUI {
 
 	private static final long serialVersionUID = 1L;
 
-	public MainMenu(ArrayList<Player> players) {
-		super(players);
+	public MainMenu(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
+		super(players, playersReadWriteLock);
 		this.setBounds(100, 100, 689, 582);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(null);
@@ -25,7 +25,7 @@ public class MainMenu extends DefaultUI {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("Telemetry Button Pressed");
 				dispose();
-				TelemetryUI ui = new TelemetryUI(getPlayers());
+				TelemetryUI ui = new TelemetryUI(getPlayers(), getPlayersReadWriteLock());
 				ui.setVisible(true);
 			}
 		});

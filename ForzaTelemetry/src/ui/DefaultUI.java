@@ -1,6 +1,7 @@
 package ui;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,19 +18,21 @@ public class DefaultUI extends JFrame {
 	private ArrayList<Player> players;
 	protected static final long serialVersionUID = 1L;
 	protected JPanel contentPane;
-	protected Font dseg;
+	private Font dseg;
+	private ReadWriteLock playersReadWriteLock;
 	
 	/**
 	 * Create the frame.
 	 */
-	public DefaultUI(ArrayList<Player> players) {
+	public DefaultUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
 		this.setPlayers(players);
+		this.setPlayersReadWriteLock(playersReadWriteLock);
 	}
 
 	public void initialize() {
 		//load fonts
 		try {
-			dseg = Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResource("fonts/DSEG7Classic-Bold.ttf").openStream()).deriveFont(Font.BOLD, 30f);
+			setDseg(Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResource("fonts/DSEG7Classic-Bold.ttf").openStream()).deriveFont(Font.BOLD, 30f));
 		} catch (FontFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -73,7 +76,35 @@ public class DefaultUI extends JFrame {
 		return players;
 	}
 
-	public void setPlayers(ArrayList<Player> players) {
+	private void setPlayers(ArrayList<Player> players) {
 		this.players = players;
+	}
+
+	/**
+	 * @return the playersReadWriteLock
+	 */
+	public ReadWriteLock getPlayersReadWriteLock() {
+		return playersReadWriteLock;
+	}
+
+	/**
+	 * @param playersReadWriteLock the playersReadWriteLock to set
+	 */
+	private void setPlayersReadWriteLock(ReadWriteLock playersReadWriteLock) {
+		this.playersReadWriteLock = playersReadWriteLock;
+	}
+
+	/**
+	 * @return the dseg
+	 */
+	public Font getDseg() {
+		return dseg;
+	}
+
+	/**
+	 * @param dseg the dseg to set
+	 */
+	private void setDseg(Font dseg) {
+		this.dseg = dseg;
 	}
 }

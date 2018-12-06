@@ -483,19 +483,19 @@ public class DashboardUI extends JFrame {
 		    	float redlineRPM = this.redlineRPM;
 		    	float redlineRange = this.redlineRange;
 		    	
-		    	barRPM1.setValue(getRPMBarValue1(currentRPM, redlineRPM, redlineRange, 1, 14));
+		    	barRPM1.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 1, 14));
 		    	barRPM1.repaint();
-		    	barRPM2.setValue(getRPMBarValue1(currentRPM, redlineRPM, redlineRange, 2, 14));
+		    	barRPM2.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 2, 14));
 		    	barRPM2.repaint();
-		    	barRPM3.setValue(getRPMBarValue1(currentRPM, redlineRPM, redlineRange, 3, 14));
+		    	barRPM3.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 3, 14));
 		    	barRPM3.repaint();
-		    	barRPM4.setValue(getRPMBarValue1(currentRPM, redlineRPM, redlineRange, 4, 14));
+		    	barRPM4.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 4, 14));
 		    	barRPM4.repaint();
-		    	barRPM5.setValue(getRPMBarValue1(currentRPM, redlineRPM, redlineRange, 5, 14));
+		    	barRPM5.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 5, 14));
 		    	barRPM5.repaint();
-		    	barRPM6.setValue(getRPMBarValue1(currentRPM, redlineRPM, redlineRange, 6, 14));
+		    	barRPM6.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 6, 14));
 		    	barRPM6.repaint();
-		    	barRPM7.setValue(getRPMBarValue1(currentRPM, redlineRPM, redlineRange, 7, 14));
+		    	barRPM7.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 7, 14));
 		    	barRPM7.repaint();
 		    	barRPM8.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 8, 14));
 		    	barRPM8.repaint();
@@ -533,15 +533,6 @@ public class DashboardUI extends JFrame {
     	getSelectedPlayer().reset();
     }
     private float getRPMBarValue(float currentRPM, float redlineRPM, float redlineRange, int barNumber, int barCount) {
-    	float barMin = redlineRPM - redlineRange + ((redlineRange / barCount) * (barNumber-1)); 
-    	float barMax = redlineRPM - redlineRange + ((redlineRange / barCount) * barNumber);
-    	if (currentRPM >= barMax) return 100.0f;
-    	if (currentRPM <= barMin) return 0.0f;
-    	float value = ((currentRPM - barMin)/(barMax - barMin))*100;
-    	return value;
-    }
-    private float getRPMBarValue1(float currentRPM, float redlineRPM, float redlineRange, int barNumber, int barCount) {
-    	float barMin = redlineRPM - redlineRange + ((redlineRange / barCount) * (barNumber-1)); 
     	float barMax = redlineRPM - redlineRange + ((redlineRange / barCount) * barNumber);
     	if (currentRPM >= barMax) return 100.0f;
     	return 0.0f;
