@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -113,6 +114,15 @@ public class TelemetryUI extends DefaultUI {
 
 	public void initialize() {
 		super.initialize();
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	dispose();
+				MainMenu ui = new MainMenu(getPlayers(), getPlayersReadWriteLock());
+				ui.setVisible(true);
+		    }
+		});
 		Container contentPane = getContentPane();
 		lblGamertag = new JLabel("Gamertag:");
 		lblGamertag.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -547,7 +557,6 @@ public class TelemetryUI extends DefaultUI {
 					cboGamertag.addItem(currPlayer.getGamertag());
 				}
 	    		if (currPlayer == this.getSelectedPlayer() && currPlayer.getTelemetryPacket() != null) {
-		    		//try {
 	    			double finalDrive = 2.5;
 			    	this.txtNetworkDetails.setText(currPlayer.getIpAddress());
 			        this.txtCarName.setText(Integer.toString(currPlayer.getTelemetryPacket().getCarOrdinal()));
@@ -619,9 +628,6 @@ public class TelemetryUI extends DefaultUI {
 	
 	    		
 			        this.txtTest.setText(Float.toString(currPlayer.getTelemetryPacket().getVelocity().getAccelerationX()));
-		    		//} catch (Exception e) {
-		    		//	System.out.println("Exception whilst updating UI:" + e.toString() + ":::" + e.getMessage());
-		    		//}
 	    		}
 	    	}
     	} finally {

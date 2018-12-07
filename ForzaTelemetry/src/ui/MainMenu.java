@@ -37,11 +37,12 @@ public class MainMenu extends DefaultUI {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("Race Button Pressed");
 				dispose();
-				DashboardUI ui = new DashboardUI(getPlayers());
+				DashboardUI ui = new DashboardUI(getPlayers(), getPlayersReadWriteLock());
 				ui.setVisible(true);
 			}
 		});
 		btnRaceDashboard.setBounds(12, 51, 196, 25);
 		this.getContentPane().add(btnRaceDashboard);
 	}
+
 }
