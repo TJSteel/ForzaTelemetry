@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import forza.Player;
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class DefaultUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+
 	}
 	
 	/**
@@ -62,7 +64,13 @@ public class DefaultUI extends JFrame {
     }
     public Player getSelectedPlayer(String gamertag) {
     	Player returnPlayer = null;
-    	for (Player currPlayer : this.getPlayers()) {
+    	ArrayList<Player> players = this.getPlayers();
+    	
+    	if (gamertag == null && !players.isEmpty()) {
+    		return players.get(players.size()-1);
+    	}
+    	
+    	for (Player currPlayer : players) {
     		if (gamertag.equals(currPlayer.getGamertag())) {
     			returnPlayer = currPlayer;
     		}

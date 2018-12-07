@@ -4,11 +4,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Container;
+
 import javax.swing.border.MatteBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.SwingConstants;
 import charts.BarChartSingle;
@@ -16,14 +23,11 @@ import enums.Speed;
 import forza.Player;
 import utility.Calc;
 
-public class DashboardUI extends JFrame {
+public class DashboardUI extends DefaultUI {
 
-	/**
-	 * 
-	 */
-	private ArrayList<Player> players;
+
+	// {{ variables
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 
 	private BarChartSingle barRPM1;
 	private BarChartSingle barRPM2;
@@ -65,32 +69,59 @@ public class DashboardUI extends JFrame {
 	private JLabel lblFuelLapsRemaining;
 	private JLabel lblFuelLapsRemainingData;
 	
+	private JPanel pnlMain;
+	private JPanel pnlCurrentLap;
+	private JPanel pnlBestLap;
+	private JPanel pnlLastLapDelta;
+	private JPanel pnlRaceTime;
+	private JPanel pnlCurrentSpeed;
+	private JPanel pnlFuel;
+	private JPanel pnlCurrentGear;
+	private JPanel pnlFrontLeftTemp;
+	private JPanel pnlRearLeftTemp;
+	private JPanel pnlFrontRightTemp;
+	private JPanel pnlRearRightTemp;
+	private JPanel pnlFuelLapsRemaining;
+	
 	private float redlineRPM = 9000.0f;
 	private float redlineRange = 1000.0f;
-	
+	// }} variables
 
 	/**
 	 * Create the frame.
 	 */
-	public DashboardUI(ArrayList<Player> players) {
-		this.players = players;
+	public DashboardUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
+		super(players, playersReadWriteLock);
+		this.initialize();
+    	Timer timer = new Timer();
+    	timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+            	updateFields();
+            }
+        }, 50, 50);
+	}
+	
+	public void initialize() {
+		super.initialize();
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	dispose();
+				MainMenu ui = new MainMenu(getPlayers(), getPlayersReadWriteLock());
+				ui.setVisible(true);
+		    }
+		});
+		Container contentPane = getContentPane();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1280, 720);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.BLACK);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JPanel pnlMain = new JPanel();
+		pnlMain = new JPanel();
 		pnlMain.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
 		pnlMain.setBackground(Color.DARK_GRAY);
 		pnlMain.setBounds(295, 11, 706, 659);
 		contentPane.add(pnlMain);
 		pnlMain.setLayout(null);
 		
-		JPanel pnlCurrentLap = new JPanel();
+		pnlCurrentLap = new JPanel();
 		pnlCurrentLap.setForeground(Color.WHITE);
 		pnlCurrentLap.setBackground(Color.DARK_GRAY);
 		pnlCurrentLap.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 200, 0)));
@@ -114,7 +145,7 @@ public class DashboardUI extends JFrame {
 		lblCurrentLapData.setFont(new Font("Tahoma", Font.PLAIN, 48));
 		pnlCurrentLap.add(lblCurrentLapData);
 		
-		JPanel pnlBestLap = new JPanel();
+		pnlBestLap = new JPanel();
 		pnlBestLap.setBackground(Color.DARK_GRAY);
 		pnlBestLap.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.ORANGE));
 		pnlBestLap.setBounds(10, 255, 344, 124);
@@ -137,7 +168,7 @@ public class DashboardUI extends JFrame {
 		lblBestLapData.setFont(new Font("Tahoma", Font.PLAIN, 48));
 		pnlBestLap.add(lblBestLapData);
 		
-		JPanel pnlLastLapDelta = new JPanel();
+		pnlLastLapDelta = new JPanel();
 		pnlLastLapDelta.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 200, 0)));
 		pnlLastLapDelta.setBackground(Color.DARK_GRAY);
 		pnlLastLapDelta.setBounds(352, 120, 344, 124);
@@ -160,7 +191,7 @@ public class DashboardUI extends JFrame {
 		lblLastLapDeltaData.setFont(new Font("Tahoma", Font.PLAIN, 48));
 		pnlLastLapDelta.add(lblLastLapDeltaData);
 		
-		JPanel pnlRaceTime = new JPanel();
+		pnlRaceTime = new JPanel();
 		pnlRaceTime.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 200, 0)));
 		pnlRaceTime.setBackground(Color.DARK_GRAY);
 		pnlRaceTime.setBounds(352, 255, 344, 124);
@@ -182,7 +213,7 @@ public class DashboardUI extends JFrame {
 		lblRaceTimeData.setFont(new Font("Tahoma", Font.PLAIN, 48));
 		pnlRaceTime.add(lblRaceTimeData);
 		
-		JPanel pnlCurrentSpeed = new JPanel();
+		pnlCurrentSpeed = new JPanel();
 		pnlCurrentSpeed.setForeground(Color.WHITE);
 		pnlCurrentSpeed.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.ORANGE));
 		pnlCurrentSpeed.setBackground(Color.DARK_GRAY);
@@ -207,8 +238,8 @@ public class DashboardUI extends JFrame {
 		lblCurrentSpeedData.setToolTipText("");
 		lblCurrentSpeedData.setBounds(10, 11, 224, 67);
 		pnlCurrentSpeed.add(lblCurrentSpeedData);
-		
-		JPanel pnlFuel = new JPanel();
+
+		pnlFuel = new JPanel();
 		pnlFuel.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.ORANGE));
 		pnlFuel.setBackground(Color.DARK_GRAY);
 		pnlFuel.setBounds(572, 524, 124, 124);
@@ -232,8 +263,8 @@ public class DashboardUI extends JFrame {
 		lblFuelData.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFuelData.setForeground(Color.WHITE);
 		lblFuelData.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		
-		JPanel pnlCurrentGear = new JPanel();
+
+		pnlCurrentGear = new JPanel();
 		pnlCurrentGear.setBackground(new Color(0, 0, 255));
 		pnlCurrentGear.setBounds(264, 390, 176, 258);
 		pnlMain.add(pnlCurrentGear);
@@ -254,8 +285,8 @@ public class DashboardUI extends JFrame {
 		lblCurrentGearData.setFont(lblCurrentGearData.getFont().deriveFont(162f));
 		lblCurrentGearData.setBounds(10, 11, 156, 179);
 		pnlCurrentGear.add(lblCurrentGearData);
-		
-		JPanel pnlFrontLeftTemp = new JPanel();
+
+		pnlFrontLeftTemp = new JPanel();
 		pnlFrontLeftTemp.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.ORANGE));
 		pnlFrontLeftTemp.setBackground(Color.DARK_GRAY);
 		pnlFrontLeftTemp.setBounds(10, 390, 124, 124);
@@ -277,8 +308,8 @@ public class DashboardUI extends JFrame {
 		lblFrontLeftTempData.setForeground(Color.WHITE);
 		lblFrontLeftTempData.setFont(new Font("Tahoma", Font.PLAIN, 38));
 		pnlFrontLeftTemp.add(lblFrontLeftTempData);
-		
-		JPanel pnlRearLeftTemp = new JPanel();
+
+		pnlRearLeftTemp = new JPanel();
 		pnlRearLeftTemp.setBackground(Color.DARK_GRAY);
 		pnlRearLeftTemp.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.ORANGE));
 		pnlRearLeftTemp.setBounds(10, 524, 124, 124);
@@ -300,8 +331,8 @@ public class DashboardUI extends JFrame {
 		lblRearLeftTempData.setFont(new Font("Tahoma", Font.PLAIN, 38));
 		lblRearLeftTempData.setBounds(10, 11, 104, 67);
 		pnlRearLeftTemp.add(lblRearLeftTempData);
-		
-		JPanel pnlFrontRightTemp = new JPanel();
+
+		pnlFrontRightTemp = new JPanel();
 		pnlFrontRightTemp.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.ORANGE));
 		pnlFrontRightTemp.setBackground(Color.DARK_GRAY);
 		pnlFrontRightTemp.setBounds(130, 390, 124, 124);
@@ -324,7 +355,7 @@ public class DashboardUI extends JFrame {
 		lblFrontRightTempData.setFont(new Font("Tahoma", Font.PLAIN, 38));
 		pnlFrontRightTemp.add(lblFrontRightTempData);
 		
-		JPanel pnlRearRightTemp = new JPanel();
+		pnlRearRightTemp = new JPanel();
 		pnlRearRightTemp.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.ORANGE));
 		pnlRearRightTemp.setBackground(Color.DARK_GRAY);
 		pnlRearRightTemp.setBounds(130, 524, 124, 124);
@@ -348,8 +379,8 @@ public class DashboardUI extends JFrame {
 		lblRearRightTempData.setLabelFor(pnlRearRightTemp);
 		lblRearRightTempData.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlRearRightTemp.add(lblRearRightTempData);
-		
-		JPanel pnlFuelLapsRemaining = new JPanel();
+
+		pnlFuelLapsRemaining = new JPanel();
 		pnlFuelLapsRemaining.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.ORANGE));
 		pnlFuelLapsRemaining.setBackground(Color.DARK_GRAY);
 		pnlFuelLapsRemaining.setBounds(452, 524, 124, 124);
@@ -460,12 +491,14 @@ public class DashboardUI extends JFrame {
 
 	}
     public void updateFields() {
-    	DecimalFormat df1 = new DecimalFormat("#.0");
-    	DecimalFormat df2 = new DecimalFormat("#.00");
-    	//DecimalFormat df3 = new DecimalFormat("#.000");
-    	Player currPlayer = this.getSelectedPlayer();
-		if (currPlayer.getTelemetryPacket() != null) {
-    		try {
+    	super.updateFields();
+    	getPlayersReadWriteLock().readLock().lock();
+    	try {
+        	DecimalFormat df1 = new DecimalFormat("#.0");
+        	DecimalFormat df2 = new DecimalFormat("#.00");
+        	
+        	Player currPlayer = getSelectedPlayer();
+    		if (currPlayer.getTelemetryPacket() != null) {
 		    	this.lblCurrentLapData.setText(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentLap()));
 		    	this.lblBestLapData.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getBestLap())));
 		    	this.lblLastLapDeltaData.setText(Calc.secondsToTime(currPlayer.getLastLapDelta()));
@@ -511,23 +544,17 @@ public class DashboardUI extends JFrame {
 		    	barRPM13.repaint();
 		    	barRPM14.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 14, 14));
 		    	barRPM14.repaint();
-		    	
-    		} catch (Exception e) {
-    			System.out.println("Exception whilst updating DashboardUI:" + e.toString() + "::::::" + e.getMessage());
-    		}
+        	}
+    	} finally {
+    		getPlayersReadWriteLock().readLock().unlock();
     	}
+
     }
     public void setReceivingTraffic(boolean receiving) {
     	
     }
     private Player getSelectedPlayer() {
-    	Player returnPlayer = new Player();
-    	for (Player currPlayer : this.players) {
-    		if (currPlayer.getGamertag().equals("HCR TJSteel")) {
-    			returnPlayer = currPlayer;
-    		}
-    	}
-    	return returnPlayer;
+    	return super.getSelectedPlayer(null);
     }
     public void reset() {
     	getSelectedPlayer().reset();
