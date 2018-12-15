@@ -112,7 +112,6 @@ public class DashboardUI extends DefaultUI {
 				ui.setVisible(true);
 		    }
 		});
-		Container contentPane = getContentPane();
 		
 		pnlMain = new JPanel();
 		pnlMain.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
