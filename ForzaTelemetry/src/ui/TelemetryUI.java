@@ -27,7 +27,6 @@ import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.awt.event.ItemEvent;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Font;
 import javax.swing.border.LineBorder;
 
@@ -123,7 +122,6 @@ public class TelemetryUI extends DefaultUI {
 				ui.setVisible(true);
 		    }
 		});
-		Container contentPane = getContentPane();
 		lblGamertag = new JLabel("Gamertag:");
 		lblGamertag.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblGamertag.setBounds(10, 11, 150, 14);

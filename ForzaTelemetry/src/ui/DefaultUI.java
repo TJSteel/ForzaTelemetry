@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import forza.Player;
 import java.io.IOException;
@@ -18,7 +17,7 @@ public class DefaultUI extends JFrame {
 
 	private ArrayList<Player> players;
 	protected static final long serialVersionUID = 1L;
-	protected JPanel contentPane;
+	public JPanel contentPane;
 	private Font dseg;
 	private ReadWriteLock playersReadWriteLock;
 	
@@ -49,10 +48,8 @@ public class DefaultUI extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.GRAY, null, null, null));
 		contentPane.setBackground(Color.DARK_GRAY);
-		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
-
+		setContentPane(contentPane);
 	}
 	
 	/**
