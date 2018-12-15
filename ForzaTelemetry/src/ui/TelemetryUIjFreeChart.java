@@ -8,7 +8,6 @@ import java.util.concurrent.locks.ReadWriteLock;
 import javax.swing.JPanel;
 import enums.Speed;
 import forza.Player;
-import gauges.GaugeRpm;
 import icons.DrivetrainIcon;
 import utility.Calc;
 
@@ -31,16 +30,17 @@ import java.awt.Font;
 import javax.swing.border.LineBorder;
 
 import charts.BarChartSingle;
+import charts.DialChart;
 import charts.LineChart;
 import charts.ScatterChart;
 
 import javax.swing.JToggleButton;
 
-public class TelemetryUI extends DefaultUI {
+public class TelemetryUIjFreeChart extends DefaultUI {
 
 	// {{ variables
 	private static final long serialVersionUID = 1L;
-	private GaugeRpm gaugeRpm;
+	private DialChart chartRpm;
 	private JComboBox<String> cboGamertag;
 	private JTextField txtNetworkDetails;
 	private JTextField txtCarName;
@@ -99,7 +99,7 @@ public class TelemetryUI extends DefaultUI {
 	/**
 	 * Create the frame.
 	 */
-	public TelemetryUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
+	public TelemetryUIjFreeChart(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
 		super(players, playersReadWriteLock);
 		this.initialize();
     	Timer timer = new Timer();
@@ -225,11 +225,10 @@ public class TelemetryUI extends DefaultUI {
 		txtMaxSpeed.setBounds(170, 251, 120, 20);
 		contentPane.add(txtMaxSpeed);
 		
-		gaugeRpm = new GaugeRpm();
-		gaugeRpm.setOpaque(false);
-		gaugeRpm.setBackground(Color.DARK_GRAY);
-		gaugeRpm.setBounds(327, 11, 128, 128);
-		contentPane.add(gaugeRpm);
+		chartRpm = new DialChart(0, 10000, "RPM", 128);
+		chartRpm.setOpaque(false);
+		chartRpm.setBounds(327, 11, 128, 128);
+		contentPane.add(chartRpm);
 		
 		txtGearRatio = new JTextField();
 		txtGearRatio.setEditable(false);
@@ -569,8 +568,8 @@ public class TelemetryUI extends DefaultUI {
 	
 			        this.txtGearRatio.setText(df3.format(currPlayer.getTelemetryPacket().getGearRatio(finalDrive)));
 			
-			        this.gaugeRpm.setRpm((double)currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm());
-			        this.gaugeRpm.repaint();
+			        this.chartRpm.getDataset().setValue((double)currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm());
+			        //this.chartRpm.repaint();
 			        
 			        this.drivetrainIcon.setDrivetrain(currPlayer.getTelemetryPacket().getEngine().getDrivetrainType());
 			        this.txtCurrentLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getCurrentLap())));
