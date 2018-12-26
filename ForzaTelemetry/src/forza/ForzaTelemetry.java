@@ -53,6 +53,8 @@ public class ForzaTelemetry {
                     if (traffic.getAddress().toString().contains(currPlayer.getIpAddress())) {
                     	currPlayer.addTelemetryPacket();
                         currPlayer.getTelemetryPacket().processDataPacket(traffic.getDataPack());
+                        if (!currPlayer.getTelemetryPacket().isRaceOn()) currPlayer.getTelemetryPackets().remove(currPlayer.getTelemetryPackets().size()-1);
+                        if (currPlayer.getTelemetryPacket()==null) break;
                         playerExists = true;
                         if (currPlayer.getTelemetryPacket().isRaceOn()) {
                         	currPlayer.printValues();

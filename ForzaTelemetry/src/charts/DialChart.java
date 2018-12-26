@@ -92,9 +92,10 @@ public class DialChart extends JPanel {
 		this.setMinValue(minValue);
 		this.setMaxValue(maxValue);
 		this.setLabel(label);
+		this.setPanelSize(panelSize);
 		this.setLayout(new GridLayout(1, 1));
 		setDataset(new DefaultValueDataset(1000D));
-		DialPlot dialplot = createDialPlot(1000D, 10);
+		DialPlot dialplot = createDialPlot(1000D, 3);
 		JFreeChart jfreechart = new JFreeChart(dialplot);
 		jfreechart.setBackgroundPaint(null);
 		
