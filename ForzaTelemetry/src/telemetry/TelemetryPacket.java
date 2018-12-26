@@ -63,8 +63,6 @@ public class TelemetryPacket {
             switch (iPacket) {
                 case 0:
                     this.setRaceOn(bb.getInt());
-                    //stops the packet being processed further if the game state is off
-                    //if (!this.isRaceOn()) iPacket=this.packetLength;
                     break;
                 case 1:
                     this.setTimestampMS(bb.getInt() & 0xffffffff);
