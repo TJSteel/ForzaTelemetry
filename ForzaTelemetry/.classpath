@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="jfreechart-1.6.0.jar"/>
+	<classpathentry kind="lib" path="xchart-3.5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
