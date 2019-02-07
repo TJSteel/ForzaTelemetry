@@ -65,7 +65,7 @@ public class DashboardUI extends DefaultUI {
 	private JPanel pnlRearRightTemp;
 	private JPanel pnlFuelLapsRemaining;
 	
-	private float redlineRPM = 9000.0f;
+	private float redlineRPM = 6500.0f;
 	private float redlineRange = 1000.0f;
 	private JPanel pnlCurrentLapHeadingBox;
 	private JPanel pnlFastestLapHeadingBox;
@@ -100,15 +100,6 @@ public class DashboardUI extends DefaultUI {
 	public DashboardUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
 		super(players, playersReadWriteLock);
 		this.initialize();
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		    	dispose();
-				MainMenu ui = new MainMenu(getPlayers(), getPlayersReadWriteLock());
-				ui.setVisible(true);
-		    }
-		});
 
 		contentPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
 		contentPane.setForeground(Color.BLACK);
@@ -654,8 +645,8 @@ public class DashboardUI extends DefaultUI {
     	super.updateFields();
     	getPlayersReadWriteLock().readLock().lock();
     	try {
-        	DecimalFormat df1 = new DecimalFormat("#.0");
-        	DecimalFormat df2 = new DecimalFormat("#.00");
+        	DecimalFormat df1 = new DecimalFormat("0.0");
+        	DecimalFormat df2 = new DecimalFormat("0.00");
         	
         	Player currPlayer = getSelectedPlayer();
     		if (currPlayer.getTelemetryPacket() != null) {
@@ -664,13 +655,13 @@ public class DashboardUI extends DefaultUI {
 		    	this.lblLastLapDeltaData.setText(Calc.secondsToTime(currPlayer.getLastLapDelta()));
 		    	this.lblRaceTimeData.setText(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentRaceTime()));
 		    	this.lblCurrentSpeedData.setText(df2.format(currPlayer.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
-		    	this.lblFuelData.setText(Float.toString(currPlayer.getTelemetryPacket().getEngine().getFuel()));
+		    	this.lblFuelData.setText(df2.format(currPlayer.getTelemetryPacket().getEngine().getFuel() * 100));
 		    	this.lblCurrentGearData.setText(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
 		    	this.lblFrontLeftTempData.setText(df1.format(currPlayer.getTelemetryPacket().getTyre().getTireTempFrontLeft()));
 		    	this.lblRearLeftTempData.setText(df1.format(currPlayer.getTelemetryPacket().getTyre().getTireTempRearLeft()));
 		    	this.lblFrontRightTempData.setText(df1.format(currPlayer.getTelemetryPacket().getTyre().getTireTempFrontRight()));
 		    	this.lblRearRightTempData.setText(df1.format(currPlayer.getTelemetryPacket().getTyre().getTireTempRearRight()));
-		    	this.lblFuelLapsRemainingData.setText("N/A");
+		    	this.lblFuelLapsRemainingData.setText(df1.format(currPlayer.getFuelLapsRemaining()));
 
 		    	float currentRPM = currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm();
 		    	float redlineRPM = this.redlineRPM;

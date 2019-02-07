@@ -316,6 +316,9 @@ public class Player {
 	public void setRecording(boolean recording) {
 		this.recording = recording;
 	}
+	public double getFuelLapsRemaining() {
+		return 0.0;
+	}
     
     // }} Calculated Fields
 }
