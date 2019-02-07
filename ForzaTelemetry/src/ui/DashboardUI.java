@@ -99,10 +99,20 @@ public class DashboardUI extends DefaultUI {
 	 */
 	public DashboardUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
 		super(players, playersReadWriteLock);
+		this.initialize();
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	dispose();
+				MainMenu ui = new MainMenu(getPlayers(), getPlayersReadWriteLock());
+				ui.setVisible(true);
+		    }
+		});
+
 		contentPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
 		contentPane.setForeground(Color.BLACK);
 		contentPane.setBackground(Color.BLACK);
-		this.initialize();
     	Timer timer = new Timer();
     	timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
