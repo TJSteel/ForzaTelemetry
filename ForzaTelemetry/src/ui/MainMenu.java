@@ -23,7 +23,6 @@ public class MainMenu extends DefaultUI {
 		JButton btnTelemetryDashboard = new JButton("Telemetry");
 		btnTelemetryDashboard.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Telemetry Button Pressed");
 				dispose();
 				TelemetryUI ui = new TelemetryUI(getPlayers(), getPlayersReadWriteLock());
 				ui.setVisible(true);
@@ -35,7 +34,6 @@ public class MainMenu extends DefaultUI {
 		JButton btnRaceDashboard = new JButton("Race");
 		btnRaceDashboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Race Button Pressed");
 				dispose();
 				DashboardUI ui = new DashboardUI(getPlayers(), getPlayersReadWriteLock());
 				ui.setVisible(true);
@@ -43,6 +41,28 @@ public class MainMenu extends DefaultUI {
 		});
 		btnRaceDashboard.setBounds(12, 51, 196, 25);
 		this.getContentPane().add(btnRaceDashboard);
-	}
+
+		JButton btnTelemetryDashboardjFreeChart = new JButton("Telemetry jFreeChart");
+		btnTelemetryDashboardjFreeChart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				TelemetryUIjFreeChart ui = new TelemetryUIjFreeChart(getPlayers(), getPlayersReadWriteLock());
+				ui.setVisible(true);
+			}
+		});
+		btnTelemetryDashboardjFreeChart.setBounds(12, 89, 196, 25);
+		this.getContentPane().add(btnTelemetryDashboardjFreeChart);
+
+		JButton btnTelemetryDashboardxChart = new JButton("Telemetry xChart");
+		btnTelemetryDashboardxChart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				TelemetryUIxChart ui = new TelemetryUIxChart(getPlayers(), getPlayersReadWriteLock());
+				ui.setVisible(true);
+			}
+		});
+		btnTelemetryDashboardxChart.setBounds(12, 127, 196, 25);
+		this.getContentPane().add(btnTelemetryDashboardxChart);
+}
 
 }

@@ -84,6 +84,7 @@ public class GaugeRpm extends JPanel {
         this.biNeedle = biNeedle;
     }   
     
+	@SuppressWarnings("unused")
 	private BufferedImage getBiRedline() {
 		return biRedline;
 	}
@@ -144,11 +145,13 @@ public class GaugeRpm extends JPanel {
         return Math.toRadians(rpmAngle);
     }
 
-    private double getEndAngle() {
+    @SuppressWarnings("unused")
+	private double getEndAngle() {
     	return this.getStartAngle()-this.getMaxAngle();
     }
     
-    private double getRedlineAngle() {
+    @SuppressWarnings("unused")
+	private double getRedlineAngle() {
     	return this.getMaxAngle()*((this.getMaxGaugeRpm()-this.getMaxRpm()) / this.getMaxGaugeRpm());
     }
     // }} Getters and Setters

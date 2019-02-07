@@ -8,8 +8,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import javax.swing.JPanel;
 import enums.Speed;
 import forza.Player;
-import gauges.GaugeRpm;
 import icons.DrivetrainIcon;
+import telemetry.TelemetryPacket;
 import utility.Calc;
 
 import javax.swing.JLabel;
@@ -30,17 +30,22 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.border.LineBorder;
 
+import org.knowm.xchart.XChartPanel;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
 import charts.BarChartSingle;
+import charts.DialChart;
 import charts.LineChart;
 import charts.ScatterChart;
 
 import javax.swing.JToggleButton;
 
-public class TelemetryUI extends DefaultUI {
+public class TelemetryUIxChart extends DefaultUI {
 
 	// {{ variables
 	private static final long serialVersionUID = 1L;
-	private GaugeRpm gaugeRpm;
+	private DialChart chartRpm;
 	private JComboBox<String> cboGamertag;
 	private JTextField txtNetworkDetails;
 	private JTextField txtCarName;
@@ -84,11 +89,8 @@ public class TelemetryUI extends DefaultUI {
 	private JTextField txtHandbrake;
 	private JTextField txtTest;
 
-	private LineChart lineSteer;
-	private LineChart lineAccel;
-	private LineChart lineBrake;
-	private LineChart lineClutch;
-	private LineChart lineHandbrake;
+	private XYChart lineChart;
+	private JPanel lineChartPanel;
 	private LineChart lineTrackMap;
 	private JTextField txtGear;
 	private JToggleButton tglbtnRecordData;
@@ -99,7 +101,7 @@ public class TelemetryUI extends DefaultUI {
 	/**
 	 * Create the frame.
 	 */
-	public TelemetryUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
+	public TelemetryUIxChart(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
 		super(players, playersReadWriteLock);
 		this.initialize();
     	Timer timer = new Timer();
@@ -225,11 +227,10 @@ public class TelemetryUI extends DefaultUI {
 		txtMaxSpeed.setBounds(170, 251, 120, 20);
 		contentPane.add(txtMaxSpeed);
 		
-		gaugeRpm = new GaugeRpm();
-		gaugeRpm.setOpaque(false);
-		gaugeRpm.setBackground(Color.DARK_GRAY);
-		gaugeRpm.setBounds(327, 11, 128, 128);
-		contentPane.add(gaugeRpm);
+		chartRpm = new DialChart(0, 10000, "RPM", 128);
+		chartRpm.setOpaque(false);
+		chartRpm.setBounds(327, 11, 128, 128);
+		contentPane.add(chartRpm);
 		
 		txtGearRatio = new JTextField();
 		txtGearRatio.setEditable(false);
@@ -483,31 +484,17 @@ public class TelemetryUI extends DefaultUI {
 		txtTest.setBounds(79, 371, 431, 40);
 		contentPane.add(txtTest);
 		
-		lineSteer = new LineChart(new Point2D.Double(0, -127),new Point2D.Double(4000, 127), new Color(0, 200, 200), new Color(0, 200, 200, 127));
-		lineSteer.setOpaque(false);
-		lineSteer.setBounds(554, 322, 700, 100);
-		lineSteer.setInverted(true);
-		contentPane.add(lineSteer);
-
-		lineAccel = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255),new Color(0,200,0), new Color(0,200,0, 127));
-		lineAccel.setOpaque(false);
-		lineAccel.setBounds(554, 433, 700, 100);
-		contentPane.add(lineAccel);
-
-		lineBrake = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255), new Color(200, 0, 0), new Color(200, 0, 0, 127));
-		lineBrake.setOpaque(false);
-		lineBrake.setBounds(554, 544, 700, 100);
-		contentPane.add(lineBrake);
+		lineChart = new XYChartBuilder().title("Driver Input").xAxisTitle("Distance").yAxisTitle("Value").build();
+		lineChart.getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Line);
+		lineChart.addSeries("Accel", new double[] {0}, new double[] {0});
+		lineChart.addSeries("Brake", new double[] {0}, new double[] {0});
+		lineChart.addSeries("Clutch", new double[] {0}, new double[] {0});
+		lineChart.addSeries("Steer", new double[] {0}, new double[] {0});
 		
-		lineClutch = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255), new Color(200, 200, 0), new Color(200, 200, 0, 127));
-		lineClutch.setOpaque(false);
-		lineClutch.setBounds(554, 655, 700, 100);
-		contentPane.add(lineClutch);
-		
-		lineHandbrake = new LineChart(new Point2D.Double(0, 0),new Point2D.Double(4000, 255), new Color(0, 0, 200), new Color(0, 0, 200, 127));
-		lineHandbrake.setOpaque(false);
-		lineHandbrake.setBounds(554, 766, 700, 100);
-		contentPane.add(lineHandbrake);
+		lineChartPanel = new XChartPanel<XYChart>(lineChart);
+		lineChartPanel.setBounds(554, 322, 700, 300);
+		contentPane.add(lineChartPanel);
+
 		
 		txtGear = new JTextField();
 		txtGear.setText("6");
@@ -541,6 +528,7 @@ public class TelemetryUI extends DefaultUI {
 		scatterGForce.setBounds(554, 148, 150, 150);
 		contentPane.add(scatterGForce);
 	}
+
 	/**
 	 * Function to update the displayed fields
 	 */
@@ -550,6 +538,7 @@ public class TelemetryUI extends DefaultUI {
     	try {
 	    	DecimalFormat df2 = new DecimalFormat("#.00");
 	    	DecimalFormat df3 = new DecimalFormat("#.000");
+	    	
 	    	for (Player currPlayer : super.getPlayers()) {
 	    		if(((DefaultComboBoxModel<String>)cboGamertag.getModel()).getIndexOf(currPlayer.getGamertag()) == -1) {
 					cboGamertag.addItem(currPlayer.getGamertag());
@@ -569,8 +558,8 @@ public class TelemetryUI extends DefaultUI {
 	
 			        this.txtGearRatio.setText(df3.format(currPlayer.getTelemetryPacket().getGearRatio(finalDrive)));
 			
-			        this.gaugeRpm.setRpm((double)currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm());
-			        this.gaugeRpm.repaint();
+			        this.chartRpm.getDataset().setValue((double)currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm());
+			        //this.chartRpm.repaint();
 			        
 			        this.drivetrainIcon.setDrivetrain(currPlayer.getTelemetryPacket().getEngine().getDrivetrainType());
 			        this.txtCurrentLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getCurrentLap())));
@@ -605,17 +594,15 @@ public class TelemetryUI extends DefaultUI {
 			        this.barSteer.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getSteer());
 			        this.barSteer.repaint();
 			        
-			        this.lineSteer.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getSteer()));
-			        this.lineSteer.repaint();
-			        this.lineAccel.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getAccel()));
-			        this.lineAccel.repaint();
-			        this.lineBrake.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getBrake()));
-			        this.lineBrake.repaint();
-			        this.lineClutch.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getClutch()));
-			        this.lineClutch.repaint();
-			        this.lineHandbrake.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled(), currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake()));
-			        this.lineHandbrake.repaint();
-			        this.lineTrackMap.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getPositionX(), currPlayer.getTelemetryPacket().getTrack().getPositionZ()));
+			        this.lineChart.updateXYSeries("Accel", getPlayerDistance(currPlayer), getPlayerAccel(currPlayer), null);
+			        this.lineChart.updateXYSeries("Brake", getPlayerDistance(currPlayer), getPlayerBrake(currPlayer), null);
+			        this.lineChart.updateXYSeries("Clutch", getPlayerDistance(currPlayer), getPlayerClutch(currPlayer), null);
+			        this.lineChart.updateXYSeries("Steer", getPlayerDistance(currPlayer), getPlayerSteer(currPlayer), null);
+
+			        lineChartPanel.repaint();
+
+			        this.lineTrackMap.setValues(buildTrackMapValues(), true);
+			        //.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getPositionX(), currPlayer.getTelemetryPacket().getTrack().getPositionZ()));
 			        this.lineTrackMap.repaint();
 			        this.scatterGForce.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getVelocity().getAccelerationX(), currPlayer.getTelemetryPacket().getVelocity().getAccelerationZ()));
 			        this.scatterGForce.repaint();
@@ -625,7 +612,7 @@ public class TelemetryUI extends DefaultUI {
 			        getSelectedPlayer().setRecording(this.tglbtnRecordData.isSelected());
 	
 	    		
-			        this.txtTest.setText(Float.toString(currPlayer.getTelemetryPacket().getVelocity().getAccelerationX()));
+			        this.txtTest.setText(Float.toString(currPlayer.getTelemetryPacket().getTimestampMS()));
 	    		}
 	    	}
     	} finally {
@@ -633,25 +620,97 @@ public class TelemetryUI extends DefaultUI {
     	}
     }
 
+    private double[] getPlayerDistance(Player player) {
+    	ArrayList<TelemetryPacket> packets = player.getTelemetryPackets();
+    	if (packets.size()==0) return new double[] {0};
+    	double[] returnArray = new double[packets.size()];
+    	for (int i = 0; i < packets.size(); i++) {
+    		returnArray[i] = (double) packets.get(i).getTrack().getDistanceTraveled();
+    	}
+    	return returnArray;
+    }
+    private double[] getPlayerAccel(Player player) {
+    	ArrayList<TelemetryPacket> packets = player.getTelemetryPackets();
+    	if (packets.size()==0) return new double[] {0};
+    	double[] returnArray = new double[packets.size()];
+    	for (int i = 0; i < packets.size(); i++) {
+    		returnArray[i] = (double) packets.get(i).getPlayerInput().getAccel();
+    	}
+    	return returnArray;
+    }
+    private double[] getPlayerBrake(Player player) {
+    	ArrayList<TelemetryPacket> packets = player.getTelemetryPackets();
+    	if (packets.size()==0) return new double[] {0};
+    	double[] returnArray = new double[packets.size()];
+    	for (int i = 0; i < packets.size(); i++) {
+    		returnArray[i] = (double) packets.get(i).getPlayerInput().getBrake();
+    	}
+    	return returnArray;
+    }
+    private double[] getPlayerClutch(Player player) {
+    	ArrayList<TelemetryPacket> packets = player.getTelemetryPackets();
+    	if (packets.size()==0) return new double[] {0};
+    	double[] returnArray = new double[packets.size()];
+    	for (int i = 0; i < packets.size(); i++) {
+    		returnArray[i] = (double) packets.get(i).getPlayerInput().getClutch();
+    	}
+    	return returnArray;
+    }
+    private double[] getPlayerSteer(Player player) {
+    	ArrayList<TelemetryPacket> packets = player.getTelemetryPackets();
+    	if (packets.size()==0) return new double[] {0};
+    	double[] returnArray = new double[packets.size()];
+    	for (int i = 0; i < packets.size(); i++) {
+    		returnArray[i] = (double) packets.get(i).getPlayerInput().getSteer();
+    	}
+    	return returnArray;
+    }
+    
+    private ArrayList<Point2D> buildTrackMapValues() {
+    	ArrayList<Point2D> values = new ArrayList<Point2D>();
+    	Player player = this.getSelectedPlayer();
+    	ArrayList<TelemetryPacket> packets = player.getTelemetryPackets();
+    	for (TelemetryPacket packet : packets) {
+    		values.add(new Point2D.Double(packet.getTrack().getPositionX(),packet.getTrack().getPositionZ()));
+    	}
+		return values;
+	}
+    
+	/*private DefaultCategoryDataset buildLineChartDataset() {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		Player player = getSelectedPlayer();
+		if (player == null) return null;
+		ArrayList<TelemetryPacket> packets = player.getTelemetryPackets();
+		int distance;
+		for (int i = 0, length = packets.size(); i < length; i++) {
+			distance=(int) packets.get(i).getTrack().getDistanceTraveled();
+			dataset.addValue(packets.get(i).getPlayerInput().getAccel(), "Accel", Integer.toString(distance));
+			/*dataset.addValue(packets.get(i).getPlayerInput().getBrake(), "Brake", Integer.toString(distance));
+			dataset.addValue(packets.get(i).getPlayerInput().getClutch(), "Clutch", Integer.toString(distance));
+			dataset.addValue(packets.get(i).getPlayerInput().getHandbrake(), "Handbrake", Integer.toString(distance));
+			dataset.addValue(packets.get(i).getPlayerInput().getSteer(), "Steer", Integer.toString(distance));*//*
+		}
+		
+		
+		return dataset;
+	}
+	*/
     
     public void setReceivingTraffic(boolean receiving) {
     	
     }
     
     private Player getSelectedPlayer() {
+    	if (cboGamertag.getSelectedItem()==null) return null;
     	return super.getSelectedPlayer(cboGamertag.getSelectedItem().toString());
     }
     
     public void reset() {
     	super.reset();
     	this.getSelectedPlayer().reset();
-    	this.lineSteer.reset();
-    	this.lineAccel.reset();
-    	this.lineBrake.reset();
-    	this.lineClutch.reset();
-    	this.lineHandbrake.reset();
     	this.lineTrackMap.reset();
     	this.scatterGForce.reset();
     	
     }
+
 }
