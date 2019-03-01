@@ -1,13 +1,11 @@
 package ui;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.border.MatteBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.Image;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -19,7 +17,6 @@ import charts.BarChartSingle;
 import enums.Speed;
 import forza.Player;
 import utility.Calc;
-import java.awt.Label;
 
 public class DashboardUI extends DefaultUI {
 
@@ -68,8 +65,8 @@ public class DashboardUI extends DefaultUI {
 	private JPanel pnlRearRightTemp;
 	private JPanel pnlFuelLapsRemaining;
 	
-	private float redlineRPM = 6500.0f;
-	private float redlineRange = 1000.0f;
+	private float redlineRPM = 9500.0f;
+	private float redlineRange = 9500.0f;
 	private JPanel pnlCurrentLapHeadingBox;
 	private JPanel pnlFastestLapHeadingBox;
 	private JLabel lblFastestLap;
@@ -1235,7 +1232,6 @@ public class DashboardUI extends DefaultUI {
 		pnlCurrentThrottleBar.setBounds(10, 108, 55, 183);
 		pnlDriverInputsMainPanel.add(pnlCurrentThrottleBar);
 		pnlCurrentThrottleBar.setLayout(null);
-		Image img = new ImageIcon(this.getClass().getResource("/Handbrake (Transparent).png")).getImage();
 		
 		pnlCurrentBrakeBar = new JPanel();
 		pnlCurrentBrakeBar.setBackground(Color.BLACK);
