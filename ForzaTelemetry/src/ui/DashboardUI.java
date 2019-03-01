@@ -222,7 +222,7 @@ public class DashboardUI extends DefaultUI {
 	// }} variables
 
 	/**
-	 * Create the frame.
+	 * Create the frame. 
 	 */
 	public DashboardUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
 		super(players, playersReadWriteLock);
