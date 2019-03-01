@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/images/Settings Icon.png</name>
+			<type>1</type>
+			<location>C:/Users/Fujitsu/Desktop/Xbox &amp; Evan Stuff/App Designs UDP DATA/High Quality (Uncompressed)/Version 1 (Dark Mode)/Settings Icon.png</location>
+		</link>
+	</linkedResources>
 </projectDescription>
