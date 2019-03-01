@@ -219,6 +219,37 @@ public class DashboardUI extends DefaultUI {
 	private JLabel lblHandbrakePer;
 	private JPanel pnlHandbrakePercenatgePerLapReadout;
 	private JLabel label_7;
+	JLabel lblDriverInputs;
+	JPanel panel_65;
+	JLabel lblLap;
+	JPanel pnlLapHeading;
+	JPanel pnlLiveTimingHeading;
+	JLabel lblLiveTiming;
+	JLabel lblNa_2;
+	JLabel lblWeatherConditions;
+	JPanel pnlWeatherCondition;
+	JPanel pnlRaceInformation;
+	JPanel pnlRaceInformationHeading;
+	JPanel pnlTrackName;
+	JPanel pnlCurrentTurnName;
+	JPanel pnlTotalTurns;
+	JPanel pnlCurrentTurnNumber;
+	JPanel pnlCurrentTurnName_1;
+	
+	JLabel lblTrack;
+	JLabel lblCurrentTurn;
+	JLabel lblTotalTurns;
+	JLabel lblCurrentTurnNumber;
+	JLabel lblLapLength;
+	JLabel lblNa_1;
+	JLabel label_2;
+	JLabel lblNa_3;
+	JLabel lblNa_4;
+	JLabel lblNa_5;
+	JLabel lblNa_6;
+	JLabel lblNa_7;
+	JLabel lblKm;
+	JLabel raceinfo_lbl;
 	// }} variables
 
 	/**
@@ -226,98 +257,116 @@ public class DashboardUI extends DefaultUI {
 	 */
 	public DashboardUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
 		super(players, playersReadWriteLock);
-		setOpacity(0.0f);
 		this.initialize();
-
+    	Timer timer = new Timer();
+    	timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+            	updateFields();
+            }
+        }, 50, 50);
+	}
+	
+	public void initialize() {
+		super.initialize();
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	dispose();
+				MainMenu ui = new MainMenu(getPlayers(), getPlayersReadWriteLock());
+				ui.setVisible(true);
+		    }
+		});
+		
 		contentPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
 		contentPane.setForeground(Color.BLACK);
 		contentPane.setBackground(Color.BLACK);
 		
-		JPanel pnlRaceInformation = new JPanel();
+		pnlRaceInformation = new JPanel();
 		pnlRaceInformation.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.WHITE));
 		pnlRaceInformation.setBackground(Color.BLACK);
 		pnlRaceInformation.setBounds(0, 45, 272, 404);
 		contentPane.add(pnlRaceInformation);
 		pnlRaceInformation.setLayout(null);
 		
-		JPanel pnlRaceInformationHeading = new JPanel();
+		pnlRaceInformationHeading = new JPanel();
 		pnlRaceInformationHeading.setLayout(null);
 		pnlRaceInformationHeading.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
 		pnlRaceInformationHeading.setBackground(Color.BLACK);
 		pnlRaceInformationHeading.setBounds(0, 0, 272, 32);
 		pnlRaceInformation.add(pnlRaceInformationHeading);
 		
-		JLabel raceinfo_lbl = new JLabel("RACE INFORMATION");
+		raceinfo_lbl = new JLabel("RACE INFORMATION");
 		raceinfo_lbl.setBounds(0, 1, 272, 32);
 		pnlRaceInformationHeading.add(raceinfo_lbl);
 		raceinfo_lbl.setHorizontalAlignment(SwingConstants.CENTER);
 		raceinfo_lbl.setForeground(Color.WHITE);
 		raceinfo_lbl.setFont(new Font("Calibri", Font.BOLD, 19));
 		
-		JPanel pnlTrackName = new JPanel();
+		pnlTrackName = new JPanel();
 		pnlTrackName.setLayout(null);
 		pnlTrackName.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
 		pnlTrackName.setBackground(Color.BLACK);
 		pnlTrackName.setBounds(0, 31, 129, 32);
 		pnlRaceInformation.add(pnlTrackName);
 		
-		JLabel lblTrack = new JLabel("    TRACK NAME");
+		lblTrack = new JLabel("    TRACK NAME");
 		lblTrack.setBounds(0, 0, 129, 32);
 		pnlTrackName.add(lblTrack);
 		lblTrack.setHorizontalAlignment(SwingConstants.LEFT);
 		lblTrack.setForeground(Color.WHITE);
 		lblTrack.setFont(new Font("Calibri", Font.BOLD, 11));
 		
-		JPanel pnlCurrentTurnName = new JPanel();
+		pnlCurrentTurnName = new JPanel();
 		pnlCurrentTurnName.setLayout(null);
 		pnlCurrentTurnName.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
 		pnlCurrentTurnName.setBackground(Color.BLACK);
 		pnlCurrentTurnName.setBounds(0, 93, 129, 32);
 		pnlRaceInformation.add(pnlCurrentTurnName);
 		
-		JLabel lblCurrentTurn = new JLabel("    LAP DISTANCE");
+		lblCurrentTurn = new JLabel("    LAP DISTANCE");
 		lblCurrentTurn.setHorizontalAlignment(SwingConstants.LEFT);
 		lblCurrentTurn.setForeground(Color.WHITE);
 		lblCurrentTurn.setFont(new Font("Calibri", Font.BOLD, 11));
 		lblCurrentTurn.setBounds(0, 0, 129, 32);
 		pnlCurrentTurnName.add(lblCurrentTurn);
 		
-		JPanel pnlTotalTurns = new JPanel();
+		pnlTotalTurns = new JPanel();
 		pnlTotalTurns.setLayout(null);
 		pnlTotalTurns.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
 		pnlTotalTurns.setBackground(Color.BLACK);
 		pnlTotalTurns.setBounds(0, 124, 129, 32);
 		pnlRaceInformation.add(pnlTotalTurns);
 		
-		JLabel lblTotalTurns = new JLabel("    TOTAL TURNS");
+		lblTotalTurns = new JLabel("    TOTAL TURNS");
 		lblTotalTurns.setHorizontalAlignment(SwingConstants.LEFT);
 		lblTotalTurns.setForeground(Color.WHITE);
 		lblTotalTurns.setFont(new Font("Calibri", Font.BOLD, 11));
 		lblTotalTurns.setBounds(0, 0, 129, 32);
 		pnlTotalTurns.add(lblTotalTurns);
 		
-		JPanel pnlCurrentTurnNumber = new JPanel();
+		pnlCurrentTurnNumber = new JPanel();
 		pnlCurrentTurnNumber.setLayout(null);
 		pnlCurrentTurnNumber.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
 		pnlCurrentTurnNumber.setBackground(Color.BLACK);
 		pnlCurrentTurnNumber.setBounds(0, 155, 129, 32);
 		pnlRaceInformation.add(pnlCurrentTurnNumber);
 		
-		JLabel lblCurrentTurnNumber = new JLabel("    CURRENT TURN NUMBER");
+		lblCurrentTurnNumber = new JLabel("    CURRENT TURN NUMBER");
 		lblCurrentTurnNumber.setHorizontalAlignment(SwingConstants.LEFT);
 		lblCurrentTurnNumber.setForeground(Color.WHITE);
 		lblCurrentTurnNumber.setFont(new Font("Calibri", Font.BOLD, 11));
 		lblCurrentTurnNumber.setBounds(0, 0, 125, 32);
 		pnlCurrentTurnNumber.add(lblCurrentTurnNumber);
 		
-		JPanel pnlCurrentTurnName_1 = new JPanel();
+		pnlCurrentTurnName_1 = new JPanel();
 		pnlCurrentTurnName_1.setLayout(null);
 		pnlCurrentTurnName_1.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
 		pnlCurrentTurnName_1.setBackground(Color.BLACK);
 		pnlCurrentTurnName_1.setBounds(0, 186, 129, 32);
 		pnlRaceInformation.add(pnlCurrentTurnName_1);
 		
-		JLabel lblLapLength = new JLabel("    CURRENT TURN NAME");
+		lblLapLength = new JLabel("    CURRENT TURN NAME");
 		lblLapLength.setHorizontalAlignment(SwingConstants.LEFT);
 		lblLapLength.setForeground(Color.WHITE);
 		lblLapLength.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -428,7 +477,7 @@ public class DashboardUI extends DefaultUI {
 		pnlTotalTurnsReadout.setBounds(128, 124, 144, 32);
 		pnlRaceInformation.add(pnlTotalTurnsReadout);
 		
-		JLabel label_2 = new JLabel("16");
+		label_2 = new JLabel("16");
 		label_2.setHorizontalAlignment(SwingConstants.CENTER);
 		label_2.setForeground(Color.WHITE);
 		label_2.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -442,7 +491,7 @@ public class DashboardUI extends DefaultUI {
 		pnlCurrentTurnNumberReadout.setBounds(128, 155, 144, 32);
 		pnlRaceInformation.add(pnlCurrentTurnNumberReadout);
 		
-		JLabel lblNa_1 = new JLabel("N/A");
+		lblNa_1 = new JLabel("N/A");
 		lblNa_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNa_1.setForeground(Color.WHITE);
 		lblNa_1.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -456,7 +505,7 @@ public class DashboardUI extends DefaultUI {
 		pnlCurrentTurnNameReadout.setBounds(128, 186, 144, 32);
 		pnlRaceInformation.add(pnlCurrentTurnNameReadout);
 		
-		JLabel lblKm = new JLabel("RADION");
+		lblKm = new JLabel("RADION");
 		lblKm.setHorizontalAlignment(SwingConstants.CENTER);
 		lblKm.setForeground(Color.WHITE);
 		lblKm.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -470,7 +519,7 @@ public class DashboardUI extends DefaultUI {
 		pnlGearChangesPerLapReadout.setBounds(128, 217, 144, 32);
 		pnlRaceInformation.add(pnlGearChangesPerLapReadout);
 		
-		JLabel lblNa_3 = new JLabel("N/A");
+		lblNa_3 = new JLabel("N/A");
 		lblNa_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNa_3.setForeground(Color.WHITE);
 		lblNa_3.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -484,7 +533,7 @@ public class DashboardUI extends DefaultUI {
 		pnlThrottlePercentagePerLapReadout.setBounds(128, 248, 144, 32);
 		pnlRaceInformation.add(pnlThrottlePercentagePerLapReadout);
 		
-		JLabel lblNa_4 = new JLabel("N/A");
+		lblNa_4 = new JLabel("N/A");
 		lblNa_4.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNa_4.setForeground(Color.WHITE);
 		lblNa_4.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -498,7 +547,7 @@ public class DashboardUI extends DefaultUI {
 		pnlBrakePercentagePerLapReadout.setBounds(128, 279, 144, 32);
 		pnlRaceInformation.add(pnlBrakePercentagePerLapReadout);
 		
-		JLabel lblNa_5 = new JLabel("N/A");
+		lblNa_5 = new JLabel("N/A");
 		lblNa_5.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNa_5.setForeground(Color.WHITE);
 		lblNa_5.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -512,7 +561,7 @@ public class DashboardUI extends DefaultUI {
 		pnlFuelUsagePerLapReadout.setBounds(128, 310, 144, 32);
 		pnlRaceInformation.add(pnlFuelUsagePerLapReadout);
 		
-		JLabel lblNa_6 = new JLabel("N/A");
+		lblNa_6 = new JLabel("N/A");
 		lblNa_6.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNa_6.setForeground(Color.WHITE);
 		lblNa_6.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -526,21 +575,21 @@ public class DashboardUI extends DefaultUI {
 		pnlClutchPecentagePerLapReadout.setBounds(128, 341, 144, 32);
 		pnlRaceInformation.add(pnlClutchPecentagePerLapReadout);
 		
-		JLabel lblNa_7 = new JLabel("N/A");
+		lblNa_7 = new JLabel("N/A");
 		lblNa_7.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNa_7.setForeground(Color.WHITE);
 		lblNa_7.setFont(new Font("Calibri", Font.BOLD, 11));
 		lblNa_7.setBounds(0, 0, 144, 32);
 		pnlClutchPecentagePerLapReadout.add(lblNa_7);
 		
-		JPanel pnlWeatherCondition = new JPanel();
+		pnlWeatherCondition = new JPanel();
 		pnlWeatherCondition.setBounds(0, 62, 129, 32);
 		pnlRaceInformation.add(pnlWeatherCondition);
 		pnlWeatherCondition.setLayout(null);
 		pnlWeatherCondition.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
 		pnlWeatherCondition.setBackground(Color.BLACK);
-		
-		JLabel lblWeatherConditions = new JLabel("    WEATHER CONDITION");
+
+		lblWeatherConditions = new JLabel("    WEATHER CONDITION");
 		lblWeatherConditions.setBounds(0, 0, 129, 32);
 		pnlWeatherCondition.add(lblWeatherConditions);
 		lblWeatherConditions.setHorizontalAlignment(SwingConstants.LEFT);
@@ -554,7 +603,7 @@ public class DashboardUI extends DefaultUI {
 		panel_12.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
 		panel_12.setBackground(Color.BLACK);
 		
-		JLabel lblNa_2 = new JLabel("N/A");
+		lblNa_2 = new JLabel("N/A");
 		lblNa_2.setBounds(0, 0, 144, 32);
 		panel_12.add(lblNa_2);
 		lblNa_2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -604,28 +653,28 @@ public class DashboardUI extends DefaultUI {
 		contentPane.add(pnlLiveTimingGrid);
 		pnlLiveTimingGrid.setLayout(null);
 		
-		JLabel lblLiveTiming = new JLabel("LIVE TIMING");
+		lblLiveTiming = new JLabel("LIVE TIMING");
 		lblLiveTiming.setBounds(0, 1, 271, 32);
 		pnlLiveTimingGrid.add(lblLiveTiming);
 		lblLiveTiming.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLiveTiming.setForeground(Color.WHITE);
 		lblLiveTiming.setFont(new Font("Calibri", Font.BOLD, 19));
 		
-		JPanel pnlLiveTimingHeading = new JPanel();
+		pnlLiveTimingHeading = new JPanel();
 		pnlLiveTimingHeading.setBounds(0, 0, 271, 32);
 		pnlLiveTimingGrid.add(pnlLiveTimingHeading);
 		pnlLiveTimingHeading.setLayout(null);
 		pnlLiveTimingHeading.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
 		pnlLiveTimingHeading.setBackground(Color.BLACK);
 		
-		JPanel pnlLapHeading = new JPanel();
+		pnlLapHeading = new JPanel();
 		pnlLapHeading.setLayout(null);
 		pnlLapHeading.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
 		pnlLapHeading.setBackground(Color.BLACK);
 		pnlLapHeading.setBounds(0, 31, 36, 32);
 		pnlLiveTimingGrid.add(pnlLapHeading);
 		
-		JLabel lblLap = new JLabel("LAP");
+		lblLap = new JLabel("LAP");
 		lblLap.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLap.setForeground(Color.WHITE);
 		lblLap.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -1211,15 +1260,15 @@ public class DashboardUI extends DefaultUI {
 		pnlCurrentSteeringBar.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
 		pnlCurrentSteeringBar.setBounds(75, 42, 185, 55);
 		pnlDriverInputsMainPanel.add(pnlCurrentSteeringBar);
-		
-		JPanel panel_65 = new JPanel();
+
+		panel_65 = new JPanel();
 		panel_65.setLayout(null);
 		panel_65.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
 		panel_65.setBackground(Color.BLACK);
 		panel_65.setBounds(0, 0, 271, 32);
 		pnlDriverInputsMainPanel.add(panel_65);
 		
-		JLabel lblDriverInputs = new JLabel("DRIVER INPUTS");
+		lblDriverInputs = new JLabel("DRIVER INPUTS");
 		lblDriverInputs.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDriverInputs.setForeground(Color.WHITE);
 		lblDriverInputs.setFont(new Font("Calibri", Font.BOLD, 19));
@@ -1302,25 +1351,6 @@ public class DashboardUI extends DefaultUI {
 		pnlTrackMap.setBounds(0, 457, 272, 247);
 		contentPane.add(pnlTrackMap);
 		pnlTrackMap.setLayout(null);
-    	Timer timer = new Timer();
-    	timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-            	updateFields();
-            }
-        }, 50, 50);
-	}
-	
-	public void initialize() {
-		super.initialize();
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		    	dispose();
-				MainMenu ui = new MainMenu(getPlayers(), getPlayersReadWriteLock());
-				ui.setVisible(true);
-		    }
-		});
 		
 		pnlMain = new JPanel();
 		pnlMain.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
