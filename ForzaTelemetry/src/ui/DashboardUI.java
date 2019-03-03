@@ -1,11 +1,16 @@
 package ui;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
+import java.awt.Dimension;
+
+import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -14,15 +19,81 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.SwingConstants;
 import charts.BarChartSingle;
+import charts.LineChart;
 import enums.Speed;
 import forza.Player;
 import utility.Calc;
+
+class ValueBox extends JPanel{
+
+	private static final long serialVersionUID = 1L;
+
+	public static enum Layout {VALUE_BELOW, VALUE_RIGHT};
+	private JLabel lblTitle;
+	private JLabel lblValue;
+
+	public ValueBox(String title, String value, int x, int y, int width, int height, int titleHeight, Layout layout) {
+		int titleFontHeight = (int)(titleHeight * 0.35);
+		int valueFontHeight = (int)((height - titleHeight) * 0.4);
+		this.setBorder(DashboardUI.defaultBorder); 
+		this.setBackground(DashboardUI.defaultBackgroundColor);
+		this.setBounds(x, y, width, height);
+		this.setLayout(null);
+		lblTitle = new JLabel(title); 
+		lblTitle.setBounds(0, 0, width, titleHeight);
+		lblTitle.setPreferredSize(new Dimension(width, titleHeight));
+		lblTitle.setBorder(DashboardUI.defaultBorder);
+		lblTitle.setForeground(DashboardUI.defaultFontColor);
+		lblTitle.setBackground(DashboardUI.defaultBackgroundColor);
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setVerticalAlignment(SwingConstants.CENTER);
+		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, titleFontHeight));
+		this.add(lblTitle);
+		
+		lblValue = new JLabel(value); 
+		lblValue.setBounds(0, lblTitle.getHeight()-1, width, this.getHeight()-lblTitle.getHeight()-1);
+		lblValue.setPreferredSize(new Dimension(width, this.getHeight()-lblTitle.getHeight()-1));
+		//lblValue.setBorder(DashboardUI.defaultBorder);
+		lblValue.setForeground(DashboardUI.defaultFontColor);
+		lblValue.setBackground(DashboardUI.defaultBackgroundColor);
+		lblValue.setHorizontalAlignment(SwingConstants.CENTER);
+		lblValue.setVerticalAlignment(SwingConstants.CENTER);
+		lblValue.setFont(new Font("Tahoma", Font.PLAIN, valueFontHeight));
+		this.add(lblValue);
+		
+	}
+	
+	public void setValue(String value) {
+		lblValue.setText(value);
+	}
+}
 
 public class DashboardUI extends DefaultUI {
 
 
 	// {{ variables
 	private static final long serialVersionUID = 1L;
+	public static final Border defaultBorder = BorderFactory.createLineBorder(Color.WHITE, 1);
+	public static final Color defaultFontColor = Color.WHITE;
+	public static final Color defaultBackgroundColor = Color.BLACK;
+
+	private float redlineRPM = 9500.0f;
+	private float redlineRange = 9500.0f;
+
+	private ValueBox vbTyreTempFrontLeft;
+	private ValueBox vbTyreTempFrontRight;
+	private ValueBox vbTyreTempRearLeft;
+	private ValueBox vbTyreTempRearRight;
+	private ValueBox vbCurrentGear;
+	private ValueBox vbCurrentSpeed;
+	private ValueBox vbFuelLapsRemaining;
+	private ValueBox vbFuel;
+	private ValueBox vbCurrentLap;
+	private ValueBox vbLastLapDelta;
+	private ValueBox vbBestLap;
+	private ValueBox vbRaceTime;	
+	
+	private LineChart lineTrackMap;
 
 	private BarChartSingle barRPM1;
 	private BarChartSingle barRPM2;
@@ -38,60 +109,21 @@ public class DashboardUI extends DefaultUI {
 	private BarChartSingle barRPM12;
 	private BarChartSingle barRPM13;
 	private BarChartSingle barRPM14;
-	private JLabel lblCurrentLapData;
-	private JLabel lblBestLapData;
-	private JLabel lblLastLapDeltaData;
-	private JLabel lblRaceTimeData;
-	private JLabel lblCurrentSpeedData;
-	private JLabel lblFuelData;
-	private JLabel lblCurrentGearData;
-	private JLabel lblFrontLeftTempData;
-	private JLabel lblRearLeftTempData;
-	private JLabel lblFrontRightTempData;
-	private JLabel lblRearRightTempData;
-	private JLabel lblFuelLapsRemainingData;
 	
 	private JPanel pnlMain;
-	private JPanel pnlCurrentLap;
-	private JPanel pnlBestLap;
-	private JPanel pnlLastLapDelta;
-	private JPanel pnlRaceTime;
-	private JPanel pnlCurrentSpeed;
-	private JPanel pnlFuel;
-	private JPanel pnlCurrentGear;
-	private JPanel pnlFrontLeftTemp;
-	private JPanel pnlRearLeftTemp;
-	private JPanel pnlFrontRightTemp;
-	private JPanel pnlRearRightTemp;
-	private JPanel pnlFuelLapsRemaining;
+
+	private BarChartSingle barSteer;
+	private BarChartSingle barAccel;
+	private BarChartSingle barBrake;
+	private BarChartSingle barClutch;
+	private BarChartSingle barHandbrake;
+	private JLabel lblSteer;
+	private JLabel lblAccel;
+	private JLabel lblBrake;
+	private JLabel lblClutch;
+	private JLabel lblHandbrake;
+
 	
-	private float redlineRPM = 9500.0f;
-	private float redlineRange = 9500.0f;
-	private JPanel pnlCurrentLapHeadingBox;
-	private JPanel pnlFastestLapHeadingBox;
-	private JLabel lblFastestLap;
-	private JPanel pnlDeltaHeadingBox;
-	private JLabel lblDelta;
-	private JPanel pnlRaceTimeHeadingBox;
-	private JLabel lblRaceTime;
-	private JPanel pnlFuelLapsRemainingHeadingBox;
-	private JLabel lblFuelLapsRemanining;
-	private JPanel pnlRearLeftTireTempHeadingBox;
-	private JLabel lblRearLeftTireTemp;
-	private JPanel pnlRearRightTireTempHeadingBox;
-	private JLabel lblRearRightTireTemp;
-	private JPanel pnlFrontLeftTireTempHeadingBox;
-	private JLabel lblFrontLeftTire;
-	private JPanel pnlFrontRightTireTempHeadingBox;
-	private JLabel lblFrontRightTire;
-	private JPanel pnlFuelPercenatgeHeadingBox;
-	private JLabel lblFuelPercantage;
-	private JPanel pnlCurrentSpeedMPHHeadingBox;
-	private JLabel lblCurrentSpeedMph;
-	private JPanel pnlGearSelection;
-	private JLabel lblGearSelection;
-	private JPanel pnlGearSelectionHeadingBox;
-	private JLabel lblGearSelection_1;
 	private JPanel pnlGearChangesPerLap;
 	private JLabel lblAverageGearChanges;
 	private JPanel pnlThrottlePercentagePerLap;
@@ -185,7 +217,7 @@ public class DashboardUI extends DefaultUI {
 	private JLabel label_32;
 	private JPanel pnlLap6FinishTime;
 	private JLabel label_33;
-	private JPanel pnlDriverInputsMainPanel;
+	private JPanel pnlDriverInput;
 	private JPanel pnlCurrentThrottlePercentage;
 	private JPanel pnlCurrentBrakePercentage;
 	private JPanel pnlCurrentClutchPercentage;
@@ -200,18 +232,11 @@ public class DashboardUI extends DefaultUI {
 	private JLabel label_5;
 	private JPanel pnlLap7FinishTime;
 	private JLabel label_6;
-	private JPanel pnlCurrentSteeringPercentage;
 	private JPanel pnlCurrentThrottleBar;
 	private JPanel pnlCurrentBrakeBar;
 	private JPanel pnlCurrentClutchBar;
 	private JPanel pnlCurrentHandbrakeBar;
 	private JPanel pnlCurrentSteeringBar;
-	private JLabel lblNewLabel;
-	private JLabel label_38;
-	private JLabel label_39;
-	private JLabel label_40;
-	private JLabel label_41;
-	private JPanel pnlTrackMap;
 	private JPanel pnlHandbrakePercenatgePerLap;
 	private JLabel lblHandbrakePer;
 	private JPanel pnlHandbrakePercenatgePerLapReadout;
@@ -239,7 +264,7 @@ public class DashboardUI extends DefaultUI {
 	JLabel lblCurrentTurnNumber;
 	JLabel lblLapLength;
 	JLabel lblNa_1;
-	JLabel label_2;
+	JLabel lblNa_15;
 	JLabel lblNa_3;
 	JLabel lblNa_4;
 	JLabel lblNa_5;
@@ -247,6 +272,7 @@ public class DashboardUI extends DefaultUI {
 	JLabel lblNa_7;
 	JLabel lblKm;
 	JLabel raceinfo_lbl;
+	
 	// }} variables
 
 	/**
@@ -276,12 +302,12 @@ public class DashboardUI extends DefaultUI {
 		});
 		
 		contentPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		contentPane.setForeground(Color.BLACK);
-		contentPane.setBackground(Color.BLACK);
+		contentPane.setForeground(defaultBackgroundColor);
+		contentPane.setBackground(defaultBackgroundColor);
 		
 		pnlRaceInformation = new JPanel();
 		pnlRaceInformation.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.WHITE));
-		pnlRaceInformation.setBackground(Color.BLACK);
+		pnlRaceInformation.setBackground(defaultBackgroundColor);
 		pnlRaceInformation.setBounds(0, 45, 272, 404);
 		contentPane.add(pnlRaceInformation);
 		pnlRaceInformation.setLayout(null);
@@ -289,7 +315,7 @@ public class DashboardUI extends DefaultUI {
 		pnlRaceInformationHeading = new JPanel();
 		pnlRaceInformationHeading.setLayout(null);
 		pnlRaceInformationHeading.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
-		pnlRaceInformationHeading.setBackground(Color.BLACK);
+		pnlRaceInformationHeading.setBackground(defaultBackgroundColor);
 		pnlRaceInformationHeading.setBounds(0, 0, 272, 32);
 		pnlRaceInformation.add(pnlRaceInformationHeading);
 		
@@ -303,7 +329,7 @@ public class DashboardUI extends DefaultUI {
 		pnlTrackName = new JPanel();
 		pnlTrackName.setLayout(null);
 		pnlTrackName.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlTrackName.setBackground(Color.BLACK);
+		pnlTrackName.setBackground(defaultBackgroundColor);
 		pnlTrackName.setBounds(0, 31, 129, 32);
 		pnlRaceInformation.add(pnlTrackName);
 		
@@ -317,7 +343,7 @@ public class DashboardUI extends DefaultUI {
 		pnlCurrentTurnName = new JPanel();
 		pnlCurrentTurnName.setLayout(null);
 		pnlCurrentTurnName.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlCurrentTurnName.setBackground(Color.BLACK);
+		pnlCurrentTurnName.setBackground(defaultBackgroundColor);
 		pnlCurrentTurnName.setBounds(0, 93, 129, 32);
 		pnlRaceInformation.add(pnlCurrentTurnName);
 		
@@ -331,7 +357,7 @@ public class DashboardUI extends DefaultUI {
 		pnlTotalTurns = new JPanel();
 		pnlTotalTurns.setLayout(null);
 		pnlTotalTurns.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlTotalTurns.setBackground(Color.BLACK);
+		pnlTotalTurns.setBackground(defaultBackgroundColor);
 		pnlTotalTurns.setBounds(0, 124, 129, 32);
 		pnlRaceInformation.add(pnlTotalTurns);
 		
@@ -345,7 +371,7 @@ public class DashboardUI extends DefaultUI {
 		pnlCurrentTurnNumber = new JPanel();
 		pnlCurrentTurnNumber.setLayout(null);
 		pnlCurrentTurnNumber.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlCurrentTurnNumber.setBackground(Color.BLACK);
+		pnlCurrentTurnNumber.setBackground(defaultBackgroundColor);
 		pnlCurrentTurnNumber.setBounds(0, 155, 129, 32);
 		pnlRaceInformation.add(pnlCurrentTurnNumber);
 		
@@ -359,7 +385,7 @@ public class DashboardUI extends DefaultUI {
 		pnlCurrentTurnName_1 = new JPanel();
 		pnlCurrentTurnName_1.setLayout(null);
 		pnlCurrentTurnName_1.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlCurrentTurnName_1.setBackground(Color.BLACK);
+		pnlCurrentTurnName_1.setBackground(defaultBackgroundColor);
 		pnlCurrentTurnName_1.setBounds(0, 186, 129, 32);
 		pnlRaceInformation.add(pnlCurrentTurnName_1);
 		
@@ -373,7 +399,7 @@ public class DashboardUI extends DefaultUI {
 		pnlThrottlePercentagePerLap = new JPanel();
 		pnlThrottlePercentagePerLap.setLayout(null);
 		pnlThrottlePercentagePerLap.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlThrottlePercentagePerLap.setBackground(Color.BLACK);
+		pnlThrottlePercentagePerLap.setBackground(defaultBackgroundColor);
 		pnlThrottlePercentagePerLap.setBounds(0, 248, 129, 32);
 		pnlRaceInformation.add(pnlThrottlePercentagePerLap);
 		
@@ -382,7 +408,7 @@ public class DashboardUI extends DefaultUI {
 		pnlThrottlePercentagePerLap.add(pnlGearChangesPerLap);
 		pnlGearChangesPerLap.setLayout(null);
 		pnlGearChangesPerLap.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlGearChangesPerLap.setBackground(Color.BLACK);
+		pnlGearChangesPerLap.setBackground(defaultBackgroundColor);
 		
 		lblAverageGearChanges = new JLabel("    GEAR CHANGES PER LAP");
 		lblAverageGearChanges.setHorizontalAlignment(SwingConstants.LEFT);
@@ -394,7 +420,7 @@ public class DashboardUI extends DefaultUI {
 		pnlBrakePercentagePerLap = new JPanel();
 		pnlBrakePercentagePerLap.setLayout(null);
 		pnlBrakePercentagePerLap.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlBrakePercentagePerLap.setBackground(Color.BLACK);
+		pnlBrakePercentagePerLap.setBackground(defaultBackgroundColor);
 		pnlBrakePercentagePerLap.setBounds(0, 279, 129, 32);
 		pnlRaceInformation.add(pnlBrakePercentagePerLap);
 		
@@ -408,7 +434,7 @@ public class DashboardUI extends DefaultUI {
 		pnlFuelUsagePerLap = new JPanel();
 		pnlFuelUsagePerLap.setLayout(null);
 		pnlFuelUsagePerLap.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlFuelUsagePerLap.setBackground(Color.BLACK);
+		pnlFuelUsagePerLap.setBackground(defaultBackgroundColor);
 		pnlFuelUsagePerLap.setBounds(0, 217, 129, 32);
 		pnlRaceInformation.add(pnlFuelUsagePerLap);
 		
@@ -422,7 +448,7 @@ public class DashboardUI extends DefaultUI {
 		pnlClutchPercentagePerLap = new JPanel();
 		pnlClutchPercentagePerLap.setLayout(null);
 		pnlClutchPercentagePerLap.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlClutchPercentagePerLap.setBackground(Color.BLACK);
+		pnlClutchPercentagePerLap.setBackground(defaultBackgroundColor);
 		pnlClutchPercentagePerLap.setBounds(0, 341, 129, 32);
 		pnlRaceInformation.add(pnlClutchPercentagePerLap);
 		
@@ -436,11 +462,11 @@ public class DashboardUI extends DefaultUI {
 		pnlTrackNameReadout = new JPanel();
 		pnlTrackNameReadout.setLayout(null);
 		pnlTrackNameReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		pnlTrackNameReadout.setBackground(Color.BLACK);
+		pnlTrackNameReadout.setBackground(defaultBackgroundColor);
 		pnlTrackNameReadout.setBounds(128, 31, 144, 32);
 		pnlRaceInformation.add(pnlTrackNameReadout);
 		
-		lblCicuitDeCatalunya = new JLabel("Cicuit de Catalunya");
+		lblCicuitDeCatalunya = new JLabel("Road Atlanta Club");
 		lblCicuitDeCatalunya.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCicuitDeCatalunya.setForeground(Color.WHITE);
 		lblCicuitDeCatalunya.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -450,11 +476,11 @@ public class DashboardUI extends DefaultUI {
 		pnlLapDistanceReadout = new JPanel();
 		pnlLapDistanceReadout.setLayout(null);
 		pnlLapDistanceReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		pnlLapDistanceReadout.setBackground(Color.BLACK);
+		pnlLapDistanceReadout.setBackground(defaultBackgroundColor);
 		pnlLapDistanceReadout.setBounds(128, 93, 144, 32);
 		pnlRaceInformation.add(pnlLapDistanceReadout);
 		
-		lblNa_8 = new JLabel("4.655 KM");
+		lblNa_8 = new JLabel("2849 Meters");
 		lblNa_8.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNa_8.setForeground(Color.WHITE);
 		lblNa_8.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -470,21 +496,21 @@ public class DashboardUI extends DefaultUI {
 		pnlTotalTurnsReadout = new JPanel();
 		pnlTotalTurnsReadout.setLayout(null);
 		pnlTotalTurnsReadout.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlTotalTurnsReadout.setBackground(Color.BLACK);
+		pnlTotalTurnsReadout.setBackground(defaultBackgroundColor);
 		pnlTotalTurnsReadout.setBounds(128, 124, 144, 32);
 		pnlRaceInformation.add(pnlTotalTurnsReadout);
 		
-		label_2 = new JLabel("16");
-		label_2.setHorizontalAlignment(SwingConstants.CENTER);
-		label_2.setForeground(Color.WHITE);
-		label_2.setFont(new Font("Calibri", Font.BOLD, 11));
-		label_2.setBounds(0, 0, 144, 32);
-		pnlTotalTurnsReadout.add(label_2);
+		lblNa_15 = new JLabel("N/A");
+		lblNa_15.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNa_15.setForeground(Color.WHITE);
+		lblNa_15.setFont(new Font("Calibri", Font.BOLD, 11));
+		lblNa_15.setBounds(0, 0, 144, 32);
+		pnlTotalTurnsReadout.add(lblNa_15);
 		
 		pnlCurrentTurnNumberReadout = new JPanel();
 		pnlCurrentTurnNumberReadout.setLayout(null);
 		pnlCurrentTurnNumberReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		pnlCurrentTurnNumberReadout.setBackground(Color.BLACK);
+		pnlCurrentTurnNumberReadout.setBackground(defaultBackgroundColor);
 		pnlCurrentTurnNumberReadout.setBounds(128, 155, 144, 32);
 		pnlRaceInformation.add(pnlCurrentTurnNumberReadout);
 		
@@ -498,11 +524,11 @@ public class DashboardUI extends DefaultUI {
 		pnlCurrentTurnNameReadout = new JPanel();
 		pnlCurrentTurnNameReadout.setLayout(null);
 		pnlCurrentTurnNameReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		pnlCurrentTurnNameReadout.setBackground(Color.BLACK);
+		pnlCurrentTurnNameReadout.setBackground(defaultBackgroundColor);
 		pnlCurrentTurnNameReadout.setBounds(128, 186, 144, 32);
 		pnlRaceInformation.add(pnlCurrentTurnNameReadout);
 		
-		lblKm = new JLabel("RADION");
+		lblKm = new JLabel("N/A");
 		lblKm.setHorizontalAlignment(SwingConstants.CENTER);
 		lblKm.setForeground(Color.WHITE);
 		lblKm.setFont(new Font("Calibri", Font.BOLD, 11));
@@ -512,7 +538,7 @@ public class DashboardUI extends DefaultUI {
 		pnlGearChangesPerLapReadout = new JPanel();
 		pnlGearChangesPerLapReadout.setLayout(null);
 		pnlGearChangesPerLapReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		pnlGearChangesPerLapReadout.setBackground(Color.BLACK);
+		pnlGearChangesPerLapReadout.setBackground(defaultBackgroundColor);
 		pnlGearChangesPerLapReadout.setBounds(128, 217, 144, 32);
 		pnlRaceInformation.add(pnlGearChangesPerLapReadout);
 		
@@ -526,7 +552,7 @@ public class DashboardUI extends DefaultUI {
 		pnlThrottlePercentagePerLapReadout = new JPanel();
 		pnlThrottlePercentagePerLapReadout.setLayout(null);
 		pnlThrottlePercentagePerLapReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		pnlThrottlePercentagePerLapReadout.setBackground(Color.BLACK);
+		pnlThrottlePercentagePerLapReadout.setBackground(defaultBackgroundColor);
 		pnlThrottlePercentagePerLapReadout.setBounds(128, 248, 144, 32);
 		pnlRaceInformation.add(pnlThrottlePercentagePerLapReadout);
 		
@@ -540,7 +566,7 @@ public class DashboardUI extends DefaultUI {
 		pnlBrakePercentagePerLapReadout = new JPanel();
 		pnlBrakePercentagePerLapReadout.setLayout(null);
 		pnlBrakePercentagePerLapReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		pnlBrakePercentagePerLapReadout.setBackground(Color.BLACK);
+		pnlBrakePercentagePerLapReadout.setBackground(defaultBackgroundColor);
 		pnlBrakePercentagePerLapReadout.setBounds(128, 279, 144, 32);
 		pnlRaceInformation.add(pnlBrakePercentagePerLapReadout);
 		
@@ -554,7 +580,7 @@ public class DashboardUI extends DefaultUI {
 		pnlFuelUsagePerLapReadout = new JPanel();
 		pnlFuelUsagePerLapReadout.setLayout(null);
 		pnlFuelUsagePerLapReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		pnlFuelUsagePerLapReadout.setBackground(Color.BLACK);
+		pnlFuelUsagePerLapReadout.setBackground(defaultBackgroundColor);
 		pnlFuelUsagePerLapReadout.setBounds(128, 310, 144, 32);
 		pnlRaceInformation.add(pnlFuelUsagePerLapReadout);
 		
@@ -568,7 +594,7 @@ public class DashboardUI extends DefaultUI {
 		pnlClutchPecentagePerLapReadout = new JPanel();
 		pnlClutchPecentagePerLapReadout.setLayout(null);
 		pnlClutchPecentagePerLapReadout.setBorder(new MatteBorder(1, 1, 1, 2, (Color) new Color(255, 255, 255)));
-		pnlClutchPecentagePerLapReadout.setBackground(Color.BLACK);
+		pnlClutchPecentagePerLapReadout.setBackground(defaultBackgroundColor);
 		pnlClutchPecentagePerLapReadout.setBounds(128, 341, 144, 32);
 		pnlRaceInformation.add(pnlClutchPecentagePerLapReadout);
 		
@@ -584,7 +610,7 @@ public class DashboardUI extends DefaultUI {
 		pnlRaceInformation.add(pnlWeatherCondition);
 		pnlWeatherCondition.setLayout(null);
 		pnlWeatherCondition.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlWeatherCondition.setBackground(Color.BLACK);
+		pnlWeatherCondition.setBackground(defaultBackgroundColor);
 
 		lblWeatherConditions = new JLabel("    WEATHER CONDITION");
 		lblWeatherConditions.setBounds(0, 0, 129, 32);
@@ -598,7 +624,7 @@ public class DashboardUI extends DefaultUI {
 		pnlRaceInformation.add(panel_12);
 		panel_12.setLayout(null);
 		panel_12.setBorder(new MatteBorder(1, 1, 1, 2, (Color) Color.WHITE));
-		panel_12.setBackground(Color.BLACK);
+		panel_12.setBackground(defaultBackgroundColor);
 		
 		lblNa_2 = new JLabel("N/A");
 		lblNa_2.setBounds(0, 0, 144, 32);
@@ -617,7 +643,7 @@ public class DashboardUI extends DefaultUI {
 		pnlHandbrakePercenatgePerLap = new JPanel();
 		pnlHandbrakePercenatgePerLap.setLayout(null);
 		pnlHandbrakePercenatgePerLap.setBorder(new MatteBorder(1, 2, 2, 1, (Color) new Color(255, 255, 255)));
-		pnlHandbrakePercenatgePerLap.setBackground(Color.BLACK);
+		pnlHandbrakePercenatgePerLap.setBackground(defaultBackgroundColor);
 		pnlHandbrakePercenatgePerLap.setBounds(0, 372, 129, 32);
 		pnlRaceInformation.add(pnlHandbrakePercenatgePerLap);
 		
@@ -631,7 +657,7 @@ public class DashboardUI extends DefaultUI {
 		pnlHandbrakePercenatgePerLapReadout = new JPanel();
 		pnlHandbrakePercenatgePerLapReadout.setLayout(null);
 		pnlHandbrakePercenatgePerLapReadout.setBorder(new MatteBorder(1, 1, 2, 2, (Color) new Color(255, 255, 255)));
-		pnlHandbrakePercenatgePerLapReadout.setBackground(Color.BLACK);
+		pnlHandbrakePercenatgePerLapReadout.setBackground(defaultBackgroundColor);
 		pnlHandbrakePercenatgePerLapReadout.setBounds(128, 372, 144, 32);
 		pnlRaceInformation.add(pnlHandbrakePercenatgePerLapReadout);
 		
@@ -645,7 +671,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLiveTimingGrid = new JPanel();
 		pnlLiveTimingGrid.setForeground(Color.BLACK);
 		pnlLiveTimingGrid.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlLiveTimingGrid.setBackground(Color.BLACK);
+		pnlLiveTimingGrid.setBackground(defaultBackgroundColor);
 		pnlLiveTimingGrid.setBounds(993, 45, 271, 249);
 		contentPane.add(pnlLiveTimingGrid);
 		pnlLiveTimingGrid.setLayout(null);
@@ -662,12 +688,12 @@ public class DashboardUI extends DefaultUI {
 		pnlLiveTimingGrid.add(pnlLiveTimingHeading);
 		pnlLiveTimingHeading.setLayout(null);
 		pnlLiveTimingHeading.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
-		pnlLiveTimingHeading.setBackground(Color.BLACK);
+		pnlLiveTimingHeading.setBackground(defaultBackgroundColor);
 		
 		pnlLapHeading = new JPanel();
 		pnlLapHeading.setLayout(null);
 		pnlLapHeading.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlLapHeading.setBackground(Color.BLACK);
+		pnlLapHeading.setBackground(defaultBackgroundColor);
 		pnlLapHeading.setBounds(0, 31, 36, 32);
 		pnlLiveTimingGrid.add(pnlLapHeading);
 		
@@ -681,7 +707,7 @@ public class DashboardUI extends DefaultUI {
 		pnlSector2Heading = new JPanel();
 		pnlSector2Heading.setLayout(null);
 		pnlSector2Heading.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlSector2Heading.setBackground(Color.BLACK);
+		pnlSector2Heading.setBackground(defaultBackgroundColor);
 		pnlSector2Heading.setBounds(94, 31, 60, 32);
 		pnlLiveTimingGrid.add(pnlSector2Heading);
 		
@@ -695,7 +721,7 @@ public class DashboardUI extends DefaultUI {
 		pnlSector1Heading = new JPanel();
 		pnlSector1Heading.setLayout(null);
 		pnlSector1Heading.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlSector1Heading.setBackground(Color.BLACK);
+		pnlSector1Heading.setBackground(defaultBackgroundColor);
 		pnlSector1Heading.setBounds(35, 31, 60, 32);
 		pnlLiveTimingGrid.add(pnlSector1Heading);
 		
@@ -709,7 +735,7 @@ public class DashboardUI extends DefaultUI {
 		pnlSector3Heading = new JPanel();
 		pnlSector3Heading.setLayout(null);
 		pnlSector3Heading.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlSector3Heading.setBackground(Color.BLACK);
+		pnlSector3Heading.setBackground(defaultBackgroundColor);
 		pnlSector3Heading.setBounds(153, 31, 60, 32);
 		pnlLiveTimingGrid.add(pnlSector3Heading);
 		
@@ -723,7 +749,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLapTimeHeading = new JPanel();
 		pnlLapTimeHeading.setLayout(null);
 		pnlLapTimeHeading.setBorder(new MatteBorder(1, 1, 1, 2, (Color) new Color(255, 255, 255)));
-		pnlLapTimeHeading.setBackground(Color.BLACK);
+		pnlLapTimeHeading.setBackground(defaultBackgroundColor);
 		pnlLapTimeHeading.setBounds(211, 31, 60, 32);
 		pnlLiveTimingGrid.add(pnlLapTimeHeading);
 		
@@ -737,7 +763,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap1 = new JPanel();
 		pnlLap1.setLayout(null);
 		pnlLap1.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlLap1.setBackground(Color.BLACK);
+		pnlLap1.setBackground(defaultBackgroundColor);
 		pnlLap1.setBounds(0, 62, 36, 32);
 		pnlLiveTimingGrid.add(pnlLap1);
 		
@@ -751,7 +777,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap2 = new JPanel();
 		pnlLap2.setLayout(null);
 		pnlLap2.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlLap2.setBackground(Color.BLACK);
+		pnlLap2.setBackground(defaultBackgroundColor);
 		pnlLap2.setBounds(0, 93, 36, 32);
 		pnlLiveTimingGrid.add(pnlLap2);
 		
@@ -765,7 +791,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap3 = new JPanel();
 		pnlLap3.setLayout(null);
 		pnlLap3.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlLap3.setBackground(Color.BLACK);
+		pnlLap3.setBackground(defaultBackgroundColor);
 		pnlLap3.setBounds(0, 124, 36, 32);
 		pnlLiveTimingGrid.add(pnlLap3);
 		
@@ -779,7 +805,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap4 = new JPanel();
 		pnlLap4.setLayout(null);
 		pnlLap4.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlLap4.setBackground(Color.BLACK);
+		pnlLap4.setBackground(defaultBackgroundColor);
 		pnlLap4.setBounds(0, 155, 36, 32);
 		pnlLiveTimingGrid.add(pnlLap4);
 		
@@ -793,7 +819,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap5 = new JPanel();
 		pnlLap5.setLayout(null);
 		pnlLap5.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlLap5.setBackground(Color.BLACK);
+		pnlLap5.setBackground(defaultBackgroundColor);
 		pnlLap5.setBounds(0, 186, 36, 32);
 		pnlLiveTimingGrid.add(pnlLap5);
 		
@@ -807,7 +833,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap6 = new JPanel();
 		pnlLap6.setLayout(null);
 		pnlLap6.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlLap6.setBackground(Color.BLACK);
+		pnlLap6.setBackground(defaultBackgroundColor);
 		pnlLap6.setBounds(0, 217, 36, 32);
 		pnlLiveTimingGrid.add(pnlLap6);
 		
@@ -821,7 +847,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap1Sector1Time = new JPanel();
 		pnlLap1Sector1Time.setLayout(null);
 		pnlLap1Sector1Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap1Sector1Time.setBackground(Color.BLACK);
+		pnlLap1Sector1Time.setBackground(defaultBackgroundColor);
 		pnlLap1Sector1Time.setBounds(35, 62, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap1Sector1Time);
 		
@@ -835,7 +861,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap2Sector1Time = new JPanel();
 		pnlLap2Sector1Time.setLayout(null);
 		pnlLap2Sector1Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap2Sector1Time.setBackground(Color.BLACK);
+		pnlLap2Sector1Time.setBackground(defaultBackgroundColor);
 		pnlLap2Sector1Time.setBounds(35, 93, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap2Sector1Time);
 		
@@ -849,7 +875,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap3Sector1Time = new JPanel();
 		pnlLap3Sector1Time.setLayout(null);
 		pnlLap3Sector1Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap3Sector1Time.setBackground(Color.BLACK);
+		pnlLap3Sector1Time.setBackground(defaultBackgroundColor);
 		pnlLap3Sector1Time.setBounds(35, 124, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap3Sector1Time);
 		
@@ -863,7 +889,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap4Sector1Time = new JPanel();
 		pnlLap4Sector1Time.setLayout(null);
 		pnlLap4Sector1Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap4Sector1Time.setBackground(Color.BLACK);
+		pnlLap4Sector1Time.setBackground(defaultBackgroundColor);
 		pnlLap4Sector1Time.setBounds(35, 155, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap4Sector1Time);
 		
@@ -877,7 +903,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap5Sector1Time = new JPanel();
 		pnlLap5Sector1Time.setLayout(null);
 		pnlLap5Sector1Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap5Sector1Time.setBackground(Color.BLACK);
+		pnlLap5Sector1Time.setBackground(defaultBackgroundColor);
 		pnlLap5Sector1Time.setBounds(35, 186, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap5Sector1Time);
 		
@@ -891,7 +917,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap6Sector1Time = new JPanel();
 		pnlLap6Sector1Time.setLayout(null);
 		pnlLap6Sector1Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap6Sector1Time.setBackground(Color.BLACK);
+		pnlLap6Sector1Time.setBackground(defaultBackgroundColor);
 		pnlLap6Sector1Time.setBounds(35, 217, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap6Sector1Time);
 		
@@ -905,7 +931,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap1Sector2Time = new JPanel();
 		pnlLap1Sector2Time.setLayout(null);
 		pnlLap1Sector2Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap1Sector2Time.setBackground(Color.BLACK);
+		pnlLap1Sector2Time.setBackground(defaultBackgroundColor);
 		pnlLap1Sector2Time.setBounds(94, 62, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap1Sector2Time);
 		
@@ -919,7 +945,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap2Sector2Time = new JPanel();
 		pnlLap2Sector2Time.setLayout(null);
 		pnlLap2Sector2Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap2Sector2Time.setBackground(Color.BLACK);
+		pnlLap2Sector2Time.setBackground(defaultBackgroundColor);
 		pnlLap2Sector2Time.setBounds(94, 93, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap2Sector2Time);
 		
@@ -933,7 +959,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap3Sector2Time = new JPanel();
 		pnlLap3Sector2Time.setLayout(null);
 		pnlLap3Sector2Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap3Sector2Time.setBackground(Color.BLACK);
+		pnlLap3Sector2Time.setBackground(defaultBackgroundColor);
 		pnlLap3Sector2Time.setBounds(94, 124, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap3Sector2Time);
 		
@@ -947,7 +973,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap4Sector2Time = new JPanel();
 		pnlLap4Sector2Time.setLayout(null);
 		pnlLap4Sector2Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap4Sector2Time.setBackground(Color.BLACK);
+		pnlLap4Sector2Time.setBackground(defaultBackgroundColor);
 		pnlLap4Sector2Time.setBounds(94, 155, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap4Sector2Time);
 		
@@ -961,7 +987,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap5Sector2Time = new JPanel();
 		pnlLap5Sector2Time.setLayout(null);
 		pnlLap5Sector2Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap5Sector2Time.setBackground(Color.BLACK);
+		pnlLap5Sector2Time.setBackground(defaultBackgroundColor);
 		pnlLap5Sector2Time.setBounds(94, 186, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap5Sector2Time);
 		
@@ -975,7 +1001,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap6Sector2Time = new JPanel();
 		pnlLap6Sector2Time.setLayout(null);
 		pnlLap6Sector2Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap6Sector2Time.setBackground(Color.BLACK);
+		pnlLap6Sector2Time.setBackground(defaultBackgroundColor);
 		pnlLap6Sector2Time.setBounds(94, 217, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap6Sector2Time);
 		
@@ -989,7 +1015,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap1Sector3Time = new JPanel();
 		pnlLap1Sector3Time.setLayout(null);
 		pnlLap1Sector3Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap1Sector3Time.setBackground(Color.BLACK);
+		pnlLap1Sector3Time.setBackground(defaultBackgroundColor);
 		pnlLap1Sector3Time.setBounds(153, 62, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap1Sector3Time);
 		
@@ -1003,7 +1029,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap2Sector3Time = new JPanel();
 		pnlLap2Sector3Time.setLayout(null);
 		pnlLap2Sector3Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap2Sector3Time.setBackground(Color.BLACK);
+		pnlLap2Sector3Time.setBackground(defaultBackgroundColor);
 		pnlLap2Sector3Time.setBounds(153, 93, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap2Sector3Time);
 		
@@ -1017,7 +1043,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap3Sector3Time = new JPanel();
 		pnlLap3Sector3Time.setLayout(null);
 		pnlLap3Sector3Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap3Sector3Time.setBackground(Color.BLACK);
+		pnlLap3Sector3Time.setBackground(defaultBackgroundColor);
 		pnlLap3Sector3Time.setBounds(153, 124, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap3Sector3Time);
 		
@@ -1031,7 +1057,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap4Sector3Time = new JPanel();
 		pnlLap4Sector3Time.setLayout(null);
 		pnlLap4Sector3Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap4Sector3Time.setBackground(Color.BLACK);
+		pnlLap4Sector3Time.setBackground(defaultBackgroundColor);
 		pnlLap4Sector3Time.setBounds(153, 155, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap4Sector3Time);
 		
@@ -1045,7 +1071,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap5Sector3Time = new JPanel();
 		pnlLap5Sector3Time.setLayout(null);
 		pnlLap5Sector3Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap5Sector3Time.setBackground(Color.BLACK);
+		pnlLap5Sector3Time.setBackground(defaultBackgroundColor);
 		pnlLap5Sector3Time.setBounds(153, 186, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap5Sector3Time);
 		
@@ -1059,7 +1085,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLa6Sector3Time = new JPanel();
 		pnlLa6Sector3Time.setLayout(null);
 		pnlLa6Sector3Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLa6Sector3Time.setBackground(Color.BLACK);
+		pnlLa6Sector3Time.setBackground(defaultBackgroundColor);
 		pnlLa6Sector3Time.setBounds(153, 217, 60, 32);
 		pnlLiveTimingGrid.add(pnlLa6Sector3Time);
 		
@@ -1073,7 +1099,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap1FinishTime = new JPanel();
 		pnlLap1FinishTime.setLayout(null);
 		pnlLap1FinishTime.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap1FinishTime.setBackground(Color.BLACK);
+		pnlLap1FinishTime.setBackground(defaultBackgroundColor);
 		pnlLap1FinishTime.setBounds(211, 62, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap1FinishTime);
 		
@@ -1087,7 +1113,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap2FinishTime = new JPanel();
 		pnlLap2FinishTime.setLayout(null);
 		pnlLap2FinishTime.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap2FinishTime.setBackground(Color.BLACK);
+		pnlLap2FinishTime.setBackground(defaultBackgroundColor);
 		pnlLap2FinishTime.setBounds(211, 93, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap2FinishTime);
 		
@@ -1101,7 +1127,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap3FinishTime = new JPanel();
 		pnlLap3FinishTime.setLayout(null);
 		pnlLap3FinishTime.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap3FinishTime.setBackground(Color.BLACK);
+		pnlLap3FinishTime.setBackground(defaultBackgroundColor);
 		pnlLap3FinishTime.setBounds(211, 124, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap3FinishTime);
 		
@@ -1115,7 +1141,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap4FinishTime = new JPanel();
 		pnlLap4FinishTime.setLayout(null);
 		pnlLap4FinishTime.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap4FinishTime.setBackground(Color.BLACK);
+		pnlLap4FinishTime.setBackground(defaultBackgroundColor);
 		pnlLap4FinishTime.setBounds(211, 155, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap4FinishTime);
 		
@@ -1129,7 +1155,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap5FinishTime = new JPanel();
 		pnlLap5FinishTime.setLayout(null);
 		pnlLap5FinishTime.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap5FinishTime.setBackground(Color.BLACK);
+		pnlLap5FinishTime.setBackground(defaultBackgroundColor);
 		pnlLap5FinishTime.setBounds(211, 186, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap5FinishTime);
 		
@@ -1143,7 +1169,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap6FinishTime = new JPanel();
 		pnlLap6FinishTime.setLayout(null);
 		pnlLap6FinishTime.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap6FinishTime.setBackground(Color.BLACK);
+		pnlLap6FinishTime.setBackground(defaultBackgroundColor);
 		pnlLap6FinishTime.setBounds(211, 217, 60, 32);
 		pnlLiveTimingGrid.add(pnlLap6FinishTime);
 		
@@ -1154,127 +1180,125 @@ public class DashboardUI extends DefaultUI {
 		label_33.setBounds(0, 0, 60, 32);
 		pnlLap6FinishTime.add(label_33);
 		
-		pnlDriverInputsMainPanel = new JPanel();
-		pnlDriverInputsMainPanel.setBorder(new MatteBorder(1, 2, 2, 2, (Color) Color.WHITE));
-		pnlDriverInputsMainPanel.setBackground(Color.BLACK);
-		pnlDriverInputsMainPanel.setBounds(993, 336, 271, 368);
-		contentPane.add(pnlDriverInputsMainPanel);
-		pnlDriverInputsMainPanel.setLayout(null);
-		
-		pnlCurrentThrottlePercentage = new JPanel();
-		pnlCurrentThrottlePercentage.setBackground(Color.BLACK);
-		pnlCurrentThrottlePercentage.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentThrottlePercentage.setBounds(10, 302, 55, 55);
-		pnlDriverInputsMainPanel.add(pnlCurrentThrottlePercentage);
-		pnlCurrentThrottlePercentage.setLayout(null);
-		
-		lblNewLabel = new JLabel("N/A");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setBounds(-1, 0, 56, 55);
-		pnlCurrentThrottlePercentage.add(lblNewLabel);
-		
-		pnlCurrentBrakePercentage = new JPanel();
-		pnlCurrentBrakePercentage.setBackground(Color.BLACK);
-		pnlCurrentBrakePercentage.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentBrakePercentage.setBounds(75, 302, 55, 55);
-		pnlDriverInputsMainPanel.add(pnlCurrentBrakePercentage);
-		pnlCurrentBrakePercentage.setLayout(null);
-		
-		label_38 = new JLabel("N/A");
-		label_38.setHorizontalAlignment(SwingConstants.CENTER);
-		label_38.setForeground(Color.WHITE);
-		label_38.setBounds(0, 0, 56, 55);
-		pnlCurrentBrakePercentage.add(label_38);
-		
-		pnlCurrentClutchPercentage = new JPanel();
-		pnlCurrentClutchPercentage.setBackground(Color.BLACK);
-		pnlCurrentClutchPercentage.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentClutchPercentage.setBounds(140, 302, 55, 55);
-		pnlDriverInputsMainPanel.add(pnlCurrentClutchPercentage);
-		pnlCurrentClutchPercentage.setLayout(null);
-		
-		label_39 = new JLabel("N/A");
-		label_39.setHorizontalAlignment(SwingConstants.CENTER);
-		label_39.setForeground(Color.WHITE);
-		label_39.setBounds(0, 0, 56, 55);
-		pnlCurrentClutchPercentage.add(label_39);
-		
-		pnlCurrentHandbrakePercentage = new JPanel();
-		pnlCurrentHandbrakePercentage.setBackground(Color.BLACK);
-		pnlCurrentHandbrakePercentage.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentHandbrakePercentage.setBounds(205, 302, 55, 55);
-		pnlDriverInputsMainPanel.add(pnlCurrentHandbrakePercentage);
-		pnlCurrentHandbrakePercentage.setLayout(null);
-		
-		label_40 = new JLabel("N/A");
-		label_40.setHorizontalAlignment(SwingConstants.CENTER);
-		label_40.setForeground(Color.WHITE);
-		label_40.setBounds(0, 0, 56, 55);
-		pnlCurrentHandbrakePercentage.add(label_40);
-		
-		pnlCurrentSteeringPercentage = new JPanel();
-		pnlCurrentSteeringPercentage.setBackground(Color.BLACK);
-		pnlCurrentSteeringPercentage.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentSteeringPercentage.setBounds(10, 42, 55, 55);
-		pnlDriverInputsMainPanel.add(pnlCurrentSteeringPercentage);
-		pnlCurrentSteeringPercentage.setLayout(null);
-		
-		label_41 = new JLabel("N/A");
-		label_41.setHorizontalAlignment(SwingConstants.CENTER);
-		label_41.setForeground(Color.WHITE);
-		label_41.setBounds(0, 0, 56, 55);
-		pnlCurrentSteeringPercentage.add(label_41);
-		
-		pnlCurrentThrottleBar = new JPanel();
-		pnlCurrentThrottleBar.setBackground(Color.BLACK);
-		pnlCurrentThrottleBar.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentThrottleBar.setBounds(10, 108, 55, 183);
-		pnlDriverInputsMainPanel.add(pnlCurrentThrottleBar);
-		pnlCurrentThrottleBar.setLayout(null);
-		
-		pnlCurrentBrakeBar = new JPanel();
-		pnlCurrentBrakeBar.setBackground(Color.BLACK);
-		pnlCurrentBrakeBar.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentBrakeBar.setBounds(75, 108, 55, 183);
-		pnlDriverInputsMainPanel.add(pnlCurrentBrakeBar);
-		
-		pnlCurrentClutchBar = new JPanel();
-		pnlCurrentClutchBar.setBackground(Color.BLACK);
-		pnlCurrentClutchBar.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentClutchBar.setBounds(140, 108, 55, 183);
-		pnlDriverInputsMainPanel.add(pnlCurrentClutchBar);
-		
-		pnlCurrentHandbrakeBar = new JPanel();
-		pnlCurrentHandbrakeBar.setBackground(Color.BLACK);
-		pnlCurrentHandbrakeBar.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentHandbrakeBar.setBounds(205, 108, 55, 183);
-		pnlDriverInputsMainPanel.add(pnlCurrentHandbrakeBar);
-		
-		pnlCurrentSteeringBar = new JPanel();
-		pnlCurrentSteeringBar.setBackground(Color.BLACK);
-		pnlCurrentSteeringBar.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentSteeringBar.setBounds(75, 42, 185, 55);
-		pnlDriverInputsMainPanel.add(pnlCurrentSteeringBar);
 
-		panel_65 = new JPanel();
-		panel_65.setLayout(null);
-		panel_65.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
-		panel_65.setBackground(Color.BLACK);
-		panel_65.setBounds(0, 0, 271, 32);
-		pnlDriverInputsMainPanel.add(panel_65);
 		
+		
+		
+		
+		
+		
+		pnlDriverInput = new JPanel();
+		pnlDriverInput.setBorder(new MatteBorder(1, 2, 2, 2, (Color) Color.WHITE));
+		pnlDriverInput.setBackground(defaultBackgroundColor);
+		pnlDriverInput.setBounds(993, 336, 271, 368);
+		contentPane.add(pnlDriverInput);
+		pnlDriverInput.setLayout(null);
+
 		lblDriverInputs = new JLabel("DRIVER INPUTS");
-		lblDriverInputs.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDriverInputs.setBackground(defaultBackgroundColor);
 		lblDriverInputs.setForeground(Color.WHITE);
-		lblDriverInputs.setFont(new Font("Calibri", Font.BOLD, 19));
-		lblDriverInputs.setBounds(0, 1, 271, 32);
-		panel_65.add(lblDriverInputs);
+		lblDriverInputs.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDriverInputs.setBounds(0, 0, 271, 32);
+		lblDriverInputs.setBorder(defaultBorder);
+		pnlDriverInput.add(lblDriverInputs);
+
+		lblSteer = new JLabel("N/A");
+		lblSteer.setBackground(defaultBackgroundColor);
+		lblSteer.setForeground(Color.WHITE);
+		lblSteer.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSteer.setBounds(10, 42, 55, 55);
+		lblSteer.setBorder(defaultBorder);
+		pnlDriverInput.add(lblSteer);
+
+		lblAccel = new JLabel("0");
+		lblAccel.setBackground(defaultBackgroundColor);
+		lblAccel.setForeground(Color.WHITE);
+		lblAccel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAccel.setBounds(10, 302, 55, 55);
+		lblAccel.setBorder(defaultBorder);
+		pnlDriverInput.add(lblAccel);
+
+		lblBrake = new JLabel("0");
+		lblBrake.setBackground(defaultBackgroundColor);
+		lblBrake.setForeground(Color.WHITE);
+		lblBrake.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBrake.setBounds(75, 302, 55, 55);
+		lblBrake.setBorder(defaultBorder);
+		pnlDriverInput.add(lblBrake);
+
+		lblClutch = new JLabel("0");
+		lblClutch.setBackground(defaultBackgroundColor);
+		lblClutch.setForeground(Color.WHITE);
+		lblClutch.setHorizontalAlignment(SwingConstants.CENTER);
+		lblClutch.setBounds(140, 302, 55, 55);
+		lblClutch.setBorder(defaultBorder);
+		pnlDriverInput.add(lblClutch);
+
+		lblHandbrake = new JLabel("0");
+		lblHandbrake.setBackground(defaultBackgroundColor);
+		lblHandbrake.setForeground(Color.WHITE);
+		lblHandbrake.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHandbrake.setBounds(205, 302, 55, 55);
+		lblHandbrake.setBorder(defaultBorder);
+		pnlDriverInput.add(lblHandbrake);
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		barSteer = new BarChartSingle(-127, 127, 0, new Color(0,200,200), new Color(0,200,200, 127));
+		barSteer.setOpaque(false);
+		barSteer.setBounds(75, 42, 185, 55);
+		barSteer.setHorizontal(true);
+		pnlDriverInput.add(barSteer);
+
+		barAccel = new BarChartSingle(0, 255, 0, new Color(0,200,0), new Color(0,200,0, 127));
+		barAccel.setOpaque(false);
+		barAccel.setBounds(10, 108, 55, 183);
+		pnlDriverInput.add(barAccel);
+
+		barBrake = new BarChartSingle(0, 255, 0, new Color(200,0,0), new Color(200,0,0, 127));
+		barBrake.setOpaque(false);
+		barBrake.setBounds(75, 108, 55, 183);
+		pnlDriverInput.add(barBrake);
+		
+		barClutch = new BarChartSingle(0, 255, 0, new Color(200,200,0), new Color(200,200,0, 127));
+		barClutch.setOpaque(false);
+		barClutch.setBounds(140, 108, 55, 183);
+		pnlDriverInput.add(barClutch);
+		
+		barHandbrake = new BarChartSingle(0, 255, 0, new Color(0,0,200), new Color(0,0,200, 127));
+		barHandbrake.setOpaque(false);
+		barHandbrake.setBounds(205, 108, 55, 183);
+		pnlDriverInput.add(barHandbrake);		
+
+		
+		
+		
+		
+		
+		
+		
+
+		
 		
 		pnlLap7 = new JPanel();
 		pnlLap7.setLayout(null);
 		pnlLap7.setBorder(new MatteBorder(1, 2, 1, 1, (Color) Color.WHITE));
-		pnlLap7.setBackground(Color.BLACK);
+		pnlLap7.setBackground(defaultBackgroundColor);
 		pnlLap7.setBounds(993, 293, 36, 32);
 		contentPane.add(pnlLap7);
 		
@@ -1288,7 +1312,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap7Sector1Time = new JPanel();
 		pnlLap7Sector1Time.setLayout(null);
 		pnlLap7Sector1Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap7Sector1Time.setBackground(Color.BLACK);
+		pnlLap7Sector1Time.setBackground(defaultBackgroundColor);
 		pnlLap7Sector1Time.setBounds(1028, 293, 60, 32);
 		contentPane.add(pnlLap7Sector1Time);
 		
@@ -1302,7 +1326,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap7Sector2Time = new JPanel();
 		pnlLap7Sector2Time.setLayout(null);
 		pnlLap7Sector2Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap7Sector2Time.setBackground(Color.BLACK);
+		pnlLap7Sector2Time.setBackground(defaultBackgroundColor);
 		pnlLap7Sector2Time.setBounds(1087, 293, 60, 32);
 		contentPane.add(pnlLap7Sector2Time);
 		
@@ -1316,7 +1340,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap7Sector3Time = new JPanel();
 		pnlLap7Sector3Time.setLayout(null);
 		pnlLap7Sector3Time.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap7Sector3Time.setBackground(Color.BLACK);
+		pnlLap7Sector3Time.setBackground(defaultBackgroundColor);
 		pnlLap7Sector3Time.setBounds(1146, 293, 60, 32);
 		contentPane.add(pnlLap7Sector3Time);
 		
@@ -1330,7 +1354,7 @@ public class DashboardUI extends DefaultUI {
 		pnlLap7FinishTime = new JPanel();
 		pnlLap7FinishTime.setLayout(null);
 		pnlLap7FinishTime.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlLap7FinishTime.setBackground(Color.BLACK);
+		pnlLap7FinishTime.setBackground(defaultBackgroundColor);
 		pnlLap7FinishTime.setBounds(1204, 293, 60, 32);
 		contentPane.add(pnlLap7FinishTime);
 		
@@ -1341,388 +1365,12 @@ public class DashboardUI extends DefaultUI {
 		label_6.setBounds(0, 0, 60, 32);
 		pnlLap7FinishTime.add(label_6);
 		
-		pnlTrackMap = new JPanel();
-		pnlTrackMap.setBorder(new MatteBorder(2, 2, 2, 2, (Color) Color.WHITE));
-		pnlTrackMap.setBackground(Color.BLACK);
-		pnlTrackMap.setBounds(0, 457, 272, 247);
-		contentPane.add(pnlTrackMap);
-		pnlTrackMap.setLayout(null);
-		
 		pnlMain = new JPanel();
 		pnlMain.setBorder(new MatteBorder(2, 2, 2, 2, (Color) new Color(255, 255, 255)));
-		pnlMain.setBackground(Color.BLACK);
-		pnlMain.setBounds(279, 45, 706, 659);
+		pnlMain.setBackground(defaultBackgroundColor);
+		pnlMain.setBounds(277, 45, 706, 659);
 		contentPane.add(pnlMain);
 		pnlMain.setLayout(null);
-		
-		pnlCurrentLap = new JPanel();
-		pnlCurrentLap.setForeground(Color.WHITE);
-		pnlCurrentLap.setBackground(Color.BLACK);
-		pnlCurrentLap.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlCurrentLap.setBounds(10, 120, 344, 124);
-		pnlMain.add(pnlCurrentLap);
-		pnlCurrentLap.setLayout(null);
-		
-		lblCurrentLapData = new JLabel("-00:00.000");
-		lblCurrentLapData.setForeground(Color.WHITE);
-		lblCurrentLapData.setBounds(0, 31, 344, 93);
-		lblCurrentLapData.setLabelFor(pnlCurrentLap);
-		lblCurrentLapData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCurrentLapData.setFont(new Font("Tahoma", Font.PLAIN, 48));
-		pnlCurrentLap.add(lblCurrentLapData);
-		
-		pnlCurrentLapHeadingBox = new JPanel();
-		pnlCurrentLapHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlCurrentLapHeadingBox.setBackground(Color.BLACK);
-		pnlCurrentLapHeadingBox.setBounds(0, 0, 344, 32);
-		pnlCurrentLap.add(pnlCurrentLapHeadingBox);
-		pnlCurrentLapHeadingBox.setLayout(null);
-		
-		JLabel lbCurrentLap = new JLabel("CURRENT LAP");
-		lbCurrentLap.setLabelFor(pnlCurrentLapHeadingBox);
-		lbCurrentLap.setHorizontalAlignment(SwingConstants.CENTER);
-		lbCurrentLap.setForeground(Color.WHITE);
-		lbCurrentLap.setFont(new Font("Calibri", Font.BOLD, 19));
-		lbCurrentLap.setBounds(0, 3, 344, 28);
-		pnlCurrentLapHeadingBox.add(lbCurrentLap);
-		
-		pnlBestLap = new JPanel();
-		pnlBestLap.setBackground(Color.BLACK);
-		pnlBestLap.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlBestLap.setBounds(10, 255, 344, 124);
-		pnlMain.add(pnlBestLap);
-		pnlBestLap.setLayout(null);
-		
-		lblBestLapData = new JLabel("-00:00.000");
-		lblBestLapData.setBounds(0, 32, 344, 92);
-		lblBestLapData.setLabelFor(pnlBestLap);
-		lblBestLapData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblBestLapData.setForeground(Color.WHITE);
-		lblBestLapData.setFont(new Font("Tahoma", Font.PLAIN, 48));
-		pnlBestLap.add(lblBestLapData);
-		
-		pnlFastestLapHeadingBox = new JPanel();
-		pnlFastestLapHeadingBox.setLayout(null);
-		pnlFastestLapHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlFastestLapHeadingBox.setBackground(Color.BLACK);
-		pnlFastestLapHeadingBox.setBounds(0, 0, 344, 32);
-		pnlBestLap.add(pnlFastestLapHeadingBox);
-		
-		lblFastestLap = new JLabel("FASTEST LAP");
-		lblFastestLap.setLabelFor(pnlFastestLapHeadingBox);
-		lblFastestLap.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFastestLap.setForeground(Color.WHITE);
-		lblFastestLap.setFont(new Font("Calibri", Font.BOLD, 19));
-		lblFastestLap.setBounds(0, 3, 344, 28);
-		pnlFastestLapHeadingBox.add(lblFastestLap);
-		
-		pnlLastLapDelta = new JPanel();
-		pnlLastLapDelta.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlLastLapDelta.setBackground(Color.BLACK);
-		pnlLastLapDelta.setBounds(352, 120, 344, 124);
-		pnlMain.add(pnlLastLapDelta);
-		pnlLastLapDelta.setLayout(null);
-		
-		lblLastLapDeltaData = new JLabel("-00:00.000");
-		lblLastLapDeltaData.setBounds(0, 31, 344, 93);
-		lblLastLapDeltaData.setLabelFor(pnlLastLapDelta);
-		lblLastLapDeltaData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblLastLapDeltaData.setForeground(Color.WHITE);
-		lblLastLapDeltaData.setFont(new Font("Tahoma", Font.PLAIN, 48));
-		pnlLastLapDelta.add(lblLastLapDeltaData);
-		
-		pnlDeltaHeadingBox = new JPanel();
-		pnlDeltaHeadingBox.setLayout(null);
-		pnlDeltaHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlDeltaHeadingBox.setBackground(Color.BLACK);
-		pnlDeltaHeadingBox.setBounds(0, 0, 344, 32);
-		pnlLastLapDelta.add(pnlDeltaHeadingBox);
-		
-		lblDelta = new JLabel("DELTA");
-		lblDelta.setLabelFor(pnlDeltaHeadingBox);
-		lblDelta.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDelta.setForeground(Color.WHITE);
-		lblDelta.setFont(new Font("Calibri", Font.BOLD, 19));
-		lblDelta.setBounds(0, 3, 344, 28);
-		pnlDeltaHeadingBox.add(lblDelta);
-		
-		pnlRaceTime = new JPanel();
-		pnlRaceTime.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlRaceTime.setBackground(Color.BLACK);
-		pnlRaceTime.setBounds(352, 255, 344, 124);
-		pnlMain.add(pnlRaceTime);
-		pnlRaceTime.setLayout(null);
-		
-		lblRaceTimeData = new JLabel("00:00:00.000");
-		lblRaceTimeData.setBounds(0, 31, 344, 93);
-		lblRaceTimeData.setLabelFor(pnlRaceTime);
-		lblRaceTimeData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRaceTimeData.setForeground(Color.WHITE);
-		lblRaceTimeData.setFont(new Font("Tahoma", Font.PLAIN, 48));
-		pnlRaceTime.add(lblRaceTimeData);
-		
-		pnlRaceTimeHeadingBox = new JPanel();
-		pnlRaceTimeHeadingBox.setLayout(null);
-		pnlRaceTimeHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlRaceTimeHeadingBox.setBackground(Color.BLACK);
-		pnlRaceTimeHeadingBox.setBounds(0, 0, 344, 32);
-		pnlRaceTime.add(pnlRaceTimeHeadingBox);
-		
-		lblRaceTime = new JLabel("RACE TIME");
-		lblRaceTime.setLabelFor(pnlRaceTimeHeadingBox);
-		lblRaceTime.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRaceTime.setForeground(Color.WHITE);
-		lblRaceTime.setFont(new Font("Calibri", Font.BOLD, 19));
-		lblRaceTime.setBounds(0, 3, 344, 28);
-		pnlRaceTimeHeadingBox.add(lblRaceTime);
-		
-		pnlCurrentSpeed = new JPanel();
-		pnlCurrentSpeed.setForeground(Color.WHITE);
-		pnlCurrentSpeed.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentSpeed.setBackground(Color.BLACK);
-		pnlCurrentSpeed.setBounds(452, 390, 244, 124);
-		pnlMain.add(pnlCurrentSpeed);
-		pnlCurrentSpeed.setLayout(null);
-		
-		lblCurrentSpeedData = new JLabel("888.88");
-		lblCurrentSpeedData.setFont(new Font("Tahoma", Font.PLAIN, 60));
-		lblCurrentSpeedData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCurrentSpeedData.setForeground(Color.WHITE);
-		lblCurrentSpeedData.setLabelFor(pnlCurrentSpeed);
-		lblCurrentSpeedData.setToolTipText("");
-		lblCurrentSpeedData.setBounds(0, 25, 244, 99);
-		pnlCurrentSpeed.add(lblCurrentSpeedData);
-		
-		pnlCurrentSpeedMPHHeadingBox = new JPanel();
-		pnlCurrentSpeedMPHHeadingBox.setLayout(null);
-		pnlCurrentSpeedMPHHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentSpeedMPHHeadingBox.setBackground(Color.BLACK);
-		pnlCurrentSpeedMPHHeadingBox.setBounds(0, 0, 244, 25);
-		pnlCurrentSpeed.add(pnlCurrentSpeedMPHHeadingBox);
-		
-		lblCurrentSpeedMph = new JLabel("CURRENT SPEED MP/H");
-		lblCurrentSpeedMph.setLabelFor(pnlCurrentSpeedMPHHeadingBox);
-		lblCurrentSpeedMph.setToolTipText("");
-		lblCurrentSpeedMph.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCurrentSpeedMph.setForeground(Color.WHITE);
-		lblCurrentSpeedMph.setFont(new Font("Calibri", Font.BOLD, 11));
-		lblCurrentSpeedMph.setBounds(0, 3, 244, 23);
-		pnlCurrentSpeedMPHHeadingBox.add(lblCurrentSpeedMph);
-
-		pnlFuel = new JPanel();
-		pnlFuel.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlFuel.setBackground(Color.BLACK);
-		pnlFuel.setBounds(572, 524, 124, 124);
-		pnlMain.add(pnlFuel);
-		pnlFuel.setLayout(null);
-		
-		lblFuelData = new JLabel("888.8");
-		lblFuelData.setBounds(0, 26, 124, 98);
-		lblFuelData.setLabelFor(pnlFuel);
-		pnlFuel.add(lblFuelData);
-		lblFuelData.setToolTipText("");
-		lblFuelData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFuelData.setForeground(Color.WHITE);
-		lblFuelData.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		
-		pnlFuelPercenatgeHeadingBox = new JPanel();
-		pnlFuelPercenatgeHeadingBox.setLayout(null);
-		pnlFuelPercenatgeHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlFuelPercenatgeHeadingBox.setBackground(Color.BLACK);
-		pnlFuelPercenatgeHeadingBox.setBounds(0, 0, 124, 27);
-		pnlFuel.add(pnlFuelPercenatgeHeadingBox);
-		
-		lblFuelPercantage = new JLabel("FUEL %");
-		lblFuelPercantage.setToolTipText("");
-		lblFuelPercantage.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFuelPercantage.setForeground(Color.WHITE);
-		lblFuelPercantage.setFont(new Font("Calibri", Font.BOLD, 11));
-		lblFuelPercantage.setBounds(0, 3, 121, 22);
-		pnlFuelPercenatgeHeadingBox.add(lblFuelPercantage);
-
-		pnlCurrentGear = new JPanel();
-		pnlCurrentGear.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlCurrentGear.setBackground(Color.BLACK);
-		pnlCurrentGear.setBounds(265, 390, 176, 258);
-		pnlMain.add(pnlCurrentGear);
-		pnlCurrentGear.setLayout(null);
-		
-		lblCurrentGearData = new JLabel("N");
-		lblCurrentGearData.setForeground(Color.WHITE);
-		lblCurrentGearData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCurrentGearData.setFont(new Font("Tahoma", Font.PLAIN, 162));
-		lblCurrentGearData.setBounds(0, 31, 176, 227);
-		pnlCurrentGear.add(lblCurrentGearData);
-		
-		pnlGearSelectionHeadingBox = new JPanel();
-		pnlGearSelectionHeadingBox.setBounds(0, 0, 176, 32);
-		pnlCurrentGear.add(pnlGearSelectionHeadingBox);
-		pnlGearSelectionHeadingBox.setLayout(null);
-		pnlGearSelectionHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlGearSelectionHeadingBox.setBackground(Color.BLACK);
-		
-		lblGearSelection_1 = new JLabel("GEAR SELECTION");
-		lblGearSelection_1.setLabelFor(pnlGearSelectionHeadingBox);
-		lblGearSelection_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblGearSelection_1.setForeground(Color.WHITE);
-		lblGearSelection_1.setFont(new Font("Calibri", Font.BOLD, 19));
-		lblGearSelection_1.setBounds(0, 3, 176, 28);
-		pnlGearSelectionHeadingBox.add(lblGearSelection_1);
-
-		pnlFrontLeftTemp = new JPanel();
-		pnlFrontLeftTemp.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlFrontLeftTemp.setBackground(Color.BLACK);
-		pnlFrontLeftTemp.setBounds(10, 390, 122, 124);
-		pnlMain.add(pnlFrontLeftTemp);
-		pnlFrontLeftTemp.setLayout(null);
-		
-		lblFrontLeftTempData = new JLabel("888.8");
-		lblFrontLeftTempData.setBounds(0, 26, 122, 98);
-		lblFrontLeftTempData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFrontLeftTempData.setForeground(Color.WHITE);
-		lblFrontLeftTempData.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		pnlFrontLeftTemp.add(lblFrontLeftTempData);
-		
-		pnlFrontLeftTireTempHeadingBox = new JPanel();
-		pnlFrontLeftTireTempHeadingBox.setLayout(null);
-		pnlFrontLeftTireTempHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlFrontLeftTireTempHeadingBox.setBackground(Color.BLACK);
-		pnlFrontLeftTireTempHeadingBox.setBounds(0, 0, 122, 27);
-		pnlFrontLeftTemp.add(pnlFrontLeftTireTempHeadingBox);
-		
-		lblFrontLeftTire = new JLabel("FRONT LEFT TIRE TEMP");
-		lblFrontLeftTire.setLabelFor(pnlFrontLeftTireTempHeadingBox);
-		lblFrontLeftTire.setToolTipText("");
-		lblFrontLeftTire.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFrontLeftTire.setForeground(Color.WHITE);
-		lblFrontLeftTire.setFont(new Font("Calibri", Font.BOLD, 11));
-		lblFrontLeftTire.setBounds(0, 3, 122, 22);
-		pnlFrontLeftTireTempHeadingBox.add(lblFrontLeftTire);
-
-		pnlRearLeftTemp = new JPanel();
-		pnlRearLeftTemp.setBackground(Color.BLACK);
-		pnlRearLeftTemp.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlRearLeftTemp.setBounds(10, 524, 122, 124);
-		pnlMain.add(pnlRearLeftTemp);
-		pnlRearLeftTemp.setLayout(null);
-		
-		lblRearLeftTempData = new JLabel("888.8");
-		lblRearLeftTempData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRearLeftTempData.setForeground(Color.WHITE);
-		lblRearLeftTempData.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		lblRearLeftTempData.setBounds(0, 26, 122, 98);
-		pnlRearLeftTemp.add(lblRearLeftTempData);
-		
-		pnlRearLeftTireTempHeadingBox = new JPanel();
-		pnlRearLeftTireTempHeadingBox.setLayout(null);
-		pnlRearLeftTireTempHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlRearLeftTireTempHeadingBox.setBackground(Color.BLACK);
-		pnlRearLeftTireTempHeadingBox.setBounds(0, 0, 122, 27);
-		pnlRearLeftTemp.add(pnlRearLeftTireTempHeadingBox);
-		
-		lblRearLeftTireTemp = new JLabel("REAR LEFT TIRE TEMP");
-		lblRearLeftTireTemp.setLabelFor(pnlRearLeftTireTempHeadingBox);
-		lblRearLeftTireTemp.setToolTipText("");
-		lblRearLeftTireTemp.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRearLeftTireTemp.setForeground(Color.WHITE);
-		lblRearLeftTireTemp.setFont(new Font("Calibri", Font.BOLD, 11));
-		lblRearLeftTireTemp.setBounds(0, 3, 122, 22);
-		pnlRearLeftTireTempHeadingBox.add(lblRearLeftTireTemp);
-
-		pnlFrontRightTemp = new JPanel();
-		pnlFrontRightTemp.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlFrontRightTemp.setBackground(Color.BLACK);
-		pnlFrontRightTemp.setBounds(130, 390, 124, 124);
-		pnlMain.add(pnlFrontRightTemp);
-		pnlFrontRightTemp.setLayout(null);
-		
-		lblFrontRightTempData = new JLabel("888.8");
-		lblFrontRightTempData.setBounds(0, 26, 124, 98);
-		lblFrontRightTempData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFrontRightTempData.setForeground(Color.WHITE);
-		lblFrontRightTempData.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		pnlFrontRightTemp.add(lblFrontRightTempData);
-		
-		pnlFrontRightTireTempHeadingBox = new JPanel();
-		pnlFrontRightTireTempHeadingBox.setLayout(null);
-		pnlFrontRightTireTempHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlFrontRightTireTempHeadingBox.setBackground(Color.BLACK);
-		pnlFrontRightTireTempHeadingBox.setBounds(0, 0, 124, 27);
-		pnlFrontRightTemp.add(pnlFrontRightTireTempHeadingBox);
-		
-		lblFrontRightTire = new JLabel("FRONT RIGHT TIRE TEMP");
-		lblFrontRightTire.setLabelFor(pnlFrontRightTireTempHeadingBox);
-		lblFrontRightTire.setToolTipText("");
-		lblFrontRightTire.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFrontRightTire.setForeground(Color.WHITE);
-		lblFrontRightTire.setFont(new Font("Calibri", Font.BOLD, 11));
-		lblFrontRightTire.setBounds(0, 3, 124, 22);
-		pnlFrontRightTireTempHeadingBox.add(lblFrontRightTire);
-		
-		pnlRearRightTemp = new JPanel();
-		pnlRearRightTemp.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlRearRightTemp.setBackground(Color.BLACK);
-		pnlRearRightTemp.setBounds(130, 524, 124, 124);
-		pnlMain.add(pnlRearRightTemp);
-		pnlRearRightTemp.setLayout(null);
-		
-		lblRearRightTempData = new JLabel("888.8");
-		lblRearRightTempData.setBounds(0, 26, 124, 98);
-		lblRearRightTempData.setBackground(Color.BLACK);
-		lblRearRightTempData.setForeground(Color.WHITE);
-		lblRearRightTempData.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		lblRearRightTempData.setLabelFor(pnlRearRightTemp);
-		lblRearRightTempData.setHorizontalAlignment(SwingConstants.CENTER);
-		pnlRearRightTemp.add(lblRearRightTempData);
-		
-		pnlRearRightTireTempHeadingBox = new JPanel();
-		pnlRearRightTireTempHeadingBox.setBounds(0, 0, 124, 27);
-		pnlRearRightTemp.add(pnlRearRightTireTempHeadingBox);
-		pnlRearRightTireTempHeadingBox.setLayout(null);
-		pnlRearRightTireTempHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlRearRightTireTempHeadingBox.setBackground(Color.BLACK);
-		
-		lblRearRightTireTemp = new JLabel("REAR RIGHT TIRE TEMP");
-		lblRearRightTireTemp.setLabelFor(pnlRearRightTireTempHeadingBox);
-		lblRearRightTireTemp.setToolTipText("");
-		lblRearRightTireTemp.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRearRightTireTemp.setForeground(Color.WHITE);
-		lblRearRightTireTemp.setFont(new Font("Calibri", Font.BOLD, 11));
-		lblRearRightTireTemp.setBounds(0, 3, 124, 22);
-		pnlRearRightTireTempHeadingBox.add(lblRearRightTireTemp);
-
-		pnlFuelLapsRemaining = new JPanel();
-		lblFuelPercantage.setLabelFor(pnlFuelLapsRemaining);
-		pnlFuelLapsRemaining.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlFuelLapsRemaining.setBackground(Color.BLACK);
-		pnlFuelLapsRemaining.setBounds(452, 524, 124, 124);
-		pnlMain.add(pnlFuelLapsRemaining);
-		pnlFuelLapsRemaining.setLayout(null);
-		
-		lblFuelLapsRemainingData = new JLabel("88.8");
-		lblFuelLapsRemainingData.setBounds(0, 26, 121, 98);
-		lblFuelLapsRemainingData.setLabelFor(pnlFuelLapsRemaining);
-		pnlFuelLapsRemaining.add(lblFuelLapsRemainingData);
-		lblFuelLapsRemainingData.setToolTipText("");
-		lblFuelLapsRemainingData.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFuelLapsRemainingData.setForeground(Color.WHITE);
-		lblFuelLapsRemainingData.setFont(new Font("Tahoma", Font.PLAIN, 36));
-		
-		pnlFuelLapsRemainingHeadingBox = new JPanel();
-		pnlFuelLapsRemainingHeadingBox.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		pnlFuelLapsRemainingHeadingBox.setBackground(Color.BLACK);
-		pnlFuelLapsRemainingHeadingBox.setBounds(0, 0, 121, 27);
-		pnlFuelLapsRemaining.add(pnlFuelLapsRemainingHeadingBox);
-		pnlFuelLapsRemainingHeadingBox.setLayout(null);
-		
-		lblFuelLapsRemanining = new JLabel("FUEL LAPS REMAINING");
-		lblFuelLapsRemanining.setLabelFor(pnlFuelLapsRemainingHeadingBox);
-		lblFuelLapsRemanining.setBounds(0, 3, 121, 22);
-		pnlFuelLapsRemainingHeadingBox.add(lblFuelLapsRemanining);
-		lblFuelLapsRemanining.setToolTipText("");
-		lblFuelLapsRemanining.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFuelLapsRemanining.setForeground(Color.WHITE);
-		lblFuelLapsRemanining.setFont(new Font("Calibri", Font.BOLD, 11));
 
 		barRPM1 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
 		barRPM1.setBorderColor(Color.WHITE);
@@ -1850,19 +1498,48 @@ public class DashboardUI extends DefaultUI {
 		barRPM14.setHorizontal(true);
 		pnlMain.add(barRPM14);
 		
-		pnlGearSelection = new JPanel();
-		pnlGearSelection.setBounds(277, 390, 153, 32);
-		pnlMain.add(pnlGearSelection);
-		pnlGearSelection.setLayout(null);
-		pnlGearSelection.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(255, 255, 255)));
-		pnlGearSelection.setBackground(Color.BLACK);
+		vbTyreTempFrontLeft = new ValueBox("Tyre Temp Front Left", "888.8", 10, 390, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbTyreTempFrontLeft);
 		
-		lblGearSelection = new JLabel("GEAR SELECTION");
-		lblGearSelection.setHorizontalAlignment(SwingConstants.CENTER);
-		lblGearSelection.setForeground(Color.WHITE);
-		lblGearSelection.setFont(new Font("Calibri", Font.BOLD, 19));
-		lblGearSelection.setBounds(0, 3, 153, 28);
-		pnlGearSelection.add(lblGearSelection);
+		vbTyreTempFrontRight = new ValueBox("Tyre Temp Front Right", "888.8", 130, 390, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbTyreTempFrontRight);
+		
+		vbTyreTempRearLeft = new ValueBox("Tyre Temp Rear Left", "888.8", 10, 521, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbTyreTempRearLeft);
+		
+		vbTyreTempRearRight = new ValueBox("Tyre Temp Rear Right", "888.8", 130, 521, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbTyreTempRearRight);
+		
+		vbCurrentGear = new ValueBox("Current Gear", "N", 255, 390, 195, 251, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbCurrentGear);
+		
+		vbCurrentSpeed = new ui.ValueBox("Current Speed", "888.88", 456, 390, 240, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbCurrentSpeed);
+		
+		vbFuel = new ui.ValueBox("Fuel %", "888.88", 576, 521, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbFuel);
+		
+		vbFuelLapsRemaining = new ValueBox("Fuel, Laps Remaining", "888.8", 456, 521, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbFuelLapsRemaining);
+		
+		vbCurrentLap = new ValueBox("Current Lap", "00:00:00.000", 10, 120, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbCurrentLap);
+		
+		vbLastLapDelta = new ui.ValueBox("Last Lap Delta", "00:00:00.000", 353, 120, 343, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbLastLapDelta);
+		
+		vbBestLap = new ui.ValueBox("Best Lap", "00:00:00.000", 10, 255, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbBestLap);
+		
+		vbRaceTime = new ui.ValueBox("Race Time", "00:00:00.000", 353, 255, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		pnlMain.add(vbRaceTime);
+		
+		lineTrackMap = new LineChart(Color.WHITE, Color.WHITE);
+		lineTrackMap.setOpaque(false);
+		lineTrackMap.setBounds(0, 457, 272, 247);
+		lineTrackMap.setMaintainRatio(true);
+		lineTrackMap.setBorderSize(10);
+		contentPane.add(lineTrackMap);
 
 	}
     public void updateFields() {
@@ -1874,18 +1551,18 @@ public class DashboardUI extends DefaultUI {
         	
         	Player currPlayer = getSelectedPlayer();
     		if (currPlayer.getTelemetryPacket() != null) {
-		    	this.lblCurrentLapData.setText(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentLap()));
-		    	this.lblBestLapData.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getBestLap())));
-		    	this.lblLastLapDeltaData.setText(Calc.secondsToTime(currPlayer.getLastLapDelta()));
-		    	this.lblRaceTimeData.setText(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentRaceTime()));
-		    	this.lblCurrentSpeedData.setText(df2.format(currPlayer.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
-		    	this.lblFuelData.setText(df2.format(currPlayer.getTelemetryPacket().getEngine().getFuel() * 100));
-		    	this.lblCurrentGearData.setText(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
-		    	this.lblFrontLeftTempData.setText(df1.format(currPlayer.getTelemetryPacket().getTyre().getTireTempFrontLeft()));
-		    	this.lblRearLeftTempData.setText(df1.format(currPlayer.getTelemetryPacket().getTyre().getTireTempRearLeft()));
-		    	this.lblFrontRightTempData.setText(df1.format(currPlayer.getTelemetryPacket().getTyre().getTireTempFrontRight()));
-		    	this.lblRearRightTempData.setText(df1.format(currPlayer.getTelemetryPacket().getTyre().getTireTempRearRight()));
-		    	this.lblFuelLapsRemainingData.setText(df1.format(currPlayer.getFuelLapsRemaining()));
+		    	this.vbCurrentLap.setValue(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentLap()));
+		    	this.vbBestLap.setValue(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getBestLap())));
+		    	this.vbLastLapDelta.setValue(Calc.secondsToTime(currPlayer.getLastLapDelta()));
+		    	this.vbRaceTime.setValue(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentRaceTime()));
+		    	this.vbCurrentSpeed.setValue(df2.format(currPlayer.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
+		    	this.vbFuel.setValue(df2.format(currPlayer.getTelemetryPacket().getEngine().getFuel() * 100));
+		    	this.vbCurrentGear.setValue(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
+		    	this.vbTyreTempFrontLeft.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempFrontLeft()));
+		    	this.vbTyreTempFrontRight.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempRearLeft()));
+		    	this.vbTyreTempRearLeft.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempFrontRight()));
+		    	this.vbTyreTempRearRight.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempRearRight()));
+		    	this.vbFuelLapsRemaining.setValue(df1.format(currPlayer.getFuelLapsRemaining()));
 
 		    	float currentRPM = currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm();
 		    	float redlineRPM = this.redlineRPM;
@@ -1919,6 +1596,25 @@ public class DashboardUI extends DefaultUI {
 		    	barRPM13.repaint();
 		    	barRPM14.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 14, 14));
 		    	barRPM14.repaint();
+		    	
+		        this.lineTrackMap.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getPositionX(), currPlayer.getTelemetryPacket().getTrack().getPositionZ()));
+		        this.lineTrackMap.repaint();
+		        
+		        this.lblAccel.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getAccel()));
+		        this.barAccel.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getAccel());
+		        this.barAccel.repaint();
+		        this.lblBrake.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getBrake()));
+		        this.barBrake.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getBrake());
+		        this.barBrake.repaint();
+		        this.lblClutch.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getClutch()));
+		        this.barClutch.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getClutch());
+		        this.barClutch.repaint();
+		        this.lblHandbrake.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake()));
+		        this.barHandbrake.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake());
+		        this.barHandbrake.repaint();
+		        this.lblSteer.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getSteer()));
+		        this.barSteer.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getSteer());
+		        this.barSteer.repaint();
         	}
     	} finally {
     		getPlayersReadWriteLock().readLock().unlock();

@@ -125,16 +125,16 @@ public class TelemetryPacket {
                     this.suspension.setNormalizedSuspensionTravelRearRight(bb.getFloat());
                     break;
                 case 21:
-                    this.tyre.setTireSlipRatioFrontLeft(bb.getFloat());
+                    this.tyre.setTyreSlipRatioFrontLeft(bb.getFloat());
                     break;
                 case 22:
-                    this.tyre.setTireSlipRatioFrontRight(bb.getFloat());
+                    this.tyre.setTyreSlipRatioFrontRight(bb.getFloat());
                     break;
                 case 23:
-                    this.tyre.setTireSlipRatioRearLeft(bb.getFloat());
+                    this.tyre.setTyreSlipRatioRearLeft(bb.getFloat());
                     break;
                 case 24:
-                    this.tyre.setTireSlipRatioRearRight(bb.getFloat());
+                    this.tyre.setTyreSlipRatioRearRight(bb.getFloat());
                     break;
                 case 25:
                     this.wheel.setWheelRotationSpeedFrontLeft(bb.getFloat());
@@ -185,28 +185,28 @@ public class TelemetryPacket {
                     this.rumble.setSurfaceRumbleRearRight(bb.getFloat());
                     break;
                 case 41:
-                    this.tyre.setTireSlipAngleFrontLeft(bb.getFloat());
+                    this.tyre.setTyreSlipAngleFrontLeft(bb.getFloat());
                     break;
                 case 42:
-                    this.tyre.setTireSlipAngleFrontRight(bb.getFloat());
+                    this.tyre.setTyreSlipAngleFrontRight(bb.getFloat());
                     break;
                 case 43:
-                    this.tyre.setTireSlipAngleRearLeft(bb.getFloat());
+                    this.tyre.setTyreSlipAngleRearLeft(bb.getFloat());
                     break;
                 case 44:
-                    this.tyre.setTireSlipAngleRearRight(bb.getFloat());
+                    this.tyre.setTyreSlipAngleRearRight(bb.getFloat());
                     break;
                 case 45:
-                    this.tyre.setTireCombinedSlipFrontLeft(bb.getFloat());
+                    this.tyre.setTyreCombinedSlipFrontLeft(bb.getFloat());
                     break;
                 case 46:
-                    this.tyre.setTireCombinedSlipFrontRight(bb.getFloat());
+                    this.tyre.setTyreCombinedSlipFrontRight(bb.getFloat());
                     break;
                 case 47:
-                    this.tyre.setTireCombinedSlipRearLeft(bb.getFloat());
+                    this.tyre.setTyreCombinedSlipRearLeft(bb.getFloat());
                     break;
                 case 48:
-                    this.tyre.setTireCombinedSlipRearRight(bb.getFloat());
+                    this.tyre.setTyreCombinedSlipRearRight(bb.getFloat());
                     break;
                 case 49:
                     this.suspension.setSuspensionTravelMetersFrontLeft(bb.getFloat());
@@ -254,16 +254,16 @@ public class TelemetryPacket {
                     this.engine.setTorque(bb.getFloat());
                     break;
                 case 64:
-                    this.tyre.setTireTempFrontLeft(bb.getFloat());
+                    this.tyre.setTyreTempFrontLeft(bb.getFloat());
                     break;
                 case 65:
-                    this.tyre.setTireTempFrontRight(bb.getFloat());
+                    this.tyre.setTyreTempFrontRight(bb.getFloat());
                     break;
                 case 66:
-                    this.tyre.setTireTempRearLeft(bb.getFloat());
+                    this.tyre.setTyreTempRearLeft(bb.getFloat());
                     break;
                 case 67:
-                    this.tyre.setTireTempRearRight(bb.getFloat());
+                    this.tyre.setTyreTempRearRight(bb.getFloat());
                     break;
                 case 68:
                     this.engine.setBoost(bb.getFloat());
