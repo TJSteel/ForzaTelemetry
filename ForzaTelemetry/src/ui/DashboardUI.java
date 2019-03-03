@@ -19,6 +19,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.SwingConstants;
 import charts.BarChartSingle;
+import charts.LedRound;
 import charts.LineChart;
 import enums.Speed;
 import forza.Player;
@@ -39,7 +40,7 @@ class ValueBox extends JPanel{
 		this.setBackground(DashboardUI.defaultBackgroundColor);
 		this.setBounds(x, y, width, height);
 		this.setLayout(null);
-		lblTitle = new JLabel(title); 
+		lblTitle = new JLabel(title.toUpperCase()); 
 		lblTitle.setBounds(0, 0, width, titleHeight);
 		lblTitle.setPreferredSize(new Dimension(width, titleHeight));
 		lblTitle.setBorder(DashboardUI.defaultBorder);
@@ -47,7 +48,7 @@ class ValueBox extends JPanel{
 		lblTitle.setBackground(DashboardUI.defaultBackgroundColor);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setVerticalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, titleFontHeight));
+		lblTitle.setFont(new Font("Tahoma", Font.BOLD, titleFontHeight));
 		this.add(lblTitle);
 		
 		lblValue = new JLabel(value); 
@@ -77,8 +78,8 @@ public class DashboardUI extends DefaultUI {
 	public static final Color defaultFontColor = Color.WHITE;
 	public static final Color defaultBackgroundColor = Color.BLACK;
 
-	private float redlineRPM = 9500.0f;
-	private float redlineRange = 9500.0f;
+	private float redlineRPM = 7500.0f;
+	private float redlineRange = 1500.0f;
 
 	private ValueBox vbTyreTempFrontLeft;
 	private ValueBox vbTyreTempFrontRight;
@@ -95,20 +96,7 @@ public class DashboardUI extends DefaultUI {
 	
 	private LineChart lineTrackMap;
 
-	private BarChartSingle barRPM1;
-	private BarChartSingle barRPM2;
-	private BarChartSingle barRPM3;
-	private BarChartSingle barRPM4;
-	private BarChartSingle barRPM5;
-	private BarChartSingle barRPM6;
-	private BarChartSingle barRPM7;
-	private BarChartSingle barRPM8;
-	private BarChartSingle barRPM9;
-	private BarChartSingle barRPM10;
-	private BarChartSingle barRPM11;
-	private BarChartSingle barRPM12;
-	private BarChartSingle barRPM13;
-	private BarChartSingle barRPM14;
+	private LedRound ledRPM[];
 	
 	private JPanel pnlMain;
 
@@ -218,10 +206,6 @@ public class DashboardUI extends DefaultUI {
 	private JPanel pnlLap6FinishTime;
 	private JLabel label_33;
 	private JPanel pnlDriverInput;
-	private JPanel pnlCurrentThrottlePercentage;
-	private JPanel pnlCurrentBrakePercentage;
-	private JPanel pnlCurrentClutchPercentage;
-	private JPanel pnlCurrentHandbrakePercentage;
 	private JPanel pnlLap7;
 	private JLabel label_1;
 	private JPanel pnlLap7Sector1Time;
@@ -232,11 +216,6 @@ public class DashboardUI extends DefaultUI {
 	private JLabel label_5;
 	private JPanel pnlLap7FinishTime;
 	private JLabel label_6;
-	private JPanel pnlCurrentThrottleBar;
-	private JPanel pnlCurrentBrakeBar;
-	private JPanel pnlCurrentClutchBar;
-	private JPanel pnlCurrentHandbrakeBar;
-	private JPanel pnlCurrentSteeringBar;
 	private JPanel pnlHandbrakePercenatgePerLap;
 	private JLabel lblHandbrakePer;
 	private JPanel pnlHandbrakePercenatgePerLapReadout;
@@ -1241,23 +1220,6 @@ public class DashboardUI extends DefaultUI {
 		lblHandbrake.setBounds(205, 302, 55, 55);
 		lblHandbrake.setBorder(defaultBorder);
 		pnlDriverInput.add(lblHandbrake);
-
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		barSteer = new BarChartSingle(-127, 127, 0, new Color(0,200,200), new Color(0,200,200, 127));
 		barSteer.setOpaque(false);
@@ -1372,166 +1334,56 @@ public class DashboardUI extends DefaultUI {
 		contentPane.add(pnlMain);
 		pnlMain.setLayout(null);
 
-		barRPM1 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM1.setBorderColor(Color.WHITE);
-		barRPM1.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM1.setBackground(new Color(240, 240, 240));
-		barRPM1.setOpaque(false);
-		barRPM1.setBounds(10, 11, 48, 98);
-		barRPM1.setHorizontal(true);
-		pnlMain.add(barRPM1);
+		ledRPM = new LedRound[14];
+		int ledXpos = 10;
+		for (int i = 0; i < 14; i++) {
+			if (i >= 0 && i <= 4) {
+				ledRPM[i] = new LedRound(true, new Color(0,200,255), new Color(0,200,255, 127));
+			} else if (i >= 5 && i <= 9) {
+				ledRPM[i] = new LedRound(true, new Color(255,255,0), new Color(255,255,0, 127));
+			} else {
+				ledRPM[i] = new LedRound(true, new Color(255,0,0), new Color(255,0,0, 127));
+			}
 
-		barRPM2 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM2.setBorderColor(Color.WHITE);
-		barRPM2.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM2.setBackground(new Color(240, 240, 240));
-		barRPM2.setOpaque(false);
-		barRPM2.setBounds(59, 11, 48, 98);
-		barRPM2.setHorizontal(true);
-		pnlMain.add(barRPM2);
-
-		barRPM3 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM3.setBorderColor(Color.WHITE);
-		barRPM3.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM3.setBackground(new Color(240, 240, 240));
-		barRPM3.setOpaque(false);
-		barRPM3.setBounds(108, 11, 48, 98);
-		barRPM3.setHorizontal(true);
-		pnlMain.add(barRPM3);
-
-		barRPM4 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM4.setBorderColor(Color.WHITE);
-		barRPM4.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM4.setBackground(new Color(240, 240, 240));
-		barRPM4.setOpaque(false);
-		barRPM4.setBounds(157, 11, 48, 98);
-		barRPM4.setHorizontal(true);
-		pnlMain.add(barRPM4);
-
-		barRPM5 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM5.setBorderColor(Color.WHITE);
-		barRPM5.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM5.setBackground(new Color(240, 240, 240));
-		barRPM5.setOpaque(false);
-		barRPM5.setBounds(206, 11, 48, 98);
-		barRPM5.setHorizontal(true);
-		pnlMain.add(barRPM5);
-
-		barRPM6 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM6.setBorderColor(Color.WHITE);
-		barRPM6.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM6.setBackground(new Color(240, 240, 240));
-		barRPM6.setOpaque(false);
-		barRPM6.setBounds(255, 11, 48, 98);
-		barRPM6.setHorizontal(true);
-		pnlMain.add(barRPM6);
-
-		barRPM7 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM7.setBorderColor(Color.WHITE);
-		barRPM7.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM7.setBackground(new Color(240, 240, 240));
-		barRPM7.setOpaque(false);
-		barRPM7.setBounds(304, 11, 48, 98);
-		barRPM7.setHorizontal(true);
-		pnlMain.add(barRPM7);
-
-		barRPM8 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM8.setBorderColor(Color.WHITE);
-		barRPM8.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM8.setBackground(new Color(240, 240, 240));
-		barRPM8.setOpaque(false);
-		barRPM8.setBounds(353, 11, 48, 98);
-		barRPM8.setHorizontal(true);
-		pnlMain.add(barRPM8);
-
-		barRPM9 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM9.setBorderColor(Color.WHITE);
-		barRPM9.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM9.setBackground(new Color(240, 240, 240));
-		barRPM9.setOpaque(false);
-		barRPM9.setBounds(402, 11, 48, 98);
-		barRPM9.setHorizontal(true);
-		pnlMain.add(barRPM9);
-
-		barRPM10 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM10.setBorderColor(Color.WHITE);
-		barRPM10.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM10.setBackground(new Color(240, 240, 240));
-		barRPM10.setOpaque(false);
-		barRPM10.setBounds(451, 11, 48, 98);
-		barRPM10.setHorizontal(true);
-		pnlMain.add(barRPM10);
-
-		barRPM11 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM11.setBorderColor(Color.WHITE);
-		barRPM11.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM11.setBackground(new Color(240, 240, 240));
-		barRPM11.setOpaque(false);
-		barRPM11.setBounds(500, 11, 48, 98);
-		barRPM11.setHorizontal(true);
-		pnlMain.add(barRPM11);
-
-		barRPM12 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM12.setBorderColor(Color.WHITE);
-		barRPM12.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM12.setBackground(new Color(240, 240, 240));
-		barRPM12.setOpaque(false);
-		barRPM12.setBounds(549, 11, 48, 98);
-		barRPM12.setHorizontal(true);
-		pnlMain.add(barRPM12);
-
-		barRPM13 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM13.setBorderColor(Color.WHITE);
-		barRPM13.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM13.setBackground(new Color(240, 240, 240));
-		barRPM13.setOpaque(false);
-		barRPM13.setBounds(598, 11, 48, 98);
-		barRPM13.setHorizontal(true);
-		pnlMain.add(barRPM13);
-
-		barRPM14 = new BarChartSingle(0, 100, 0, new Color(0,200,200), new Color(0,200,200, 127));
-		barRPM14.setBorderColor(Color.WHITE);
-		barRPM14.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		barRPM14.setBackground(new Color(240, 240, 240));
-		barRPM14.setOpaque(false);
-		barRPM14.setBounds(647, 11, 48, 98);
-		barRPM14.setHorizontal(true);
-		pnlMain.add(barRPM14);
+			ledRPM[i].setBounds(ledXpos, 11, 48, 48);
+			pnlMain.add(ledRPM[i]);
+			ledXpos += 49;
+		}
 		
-		vbTyreTempFrontLeft = new ValueBox("Tyre Temp Front Left", "888.8", 10, 390, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempFrontLeft = new ValueBox("Front Left Temp", "888.8", 10, 397, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbTyreTempFrontLeft);
 		
-		vbTyreTempFrontRight = new ValueBox("Tyre Temp Front Right", "888.8", 130, 390, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempFrontRight = new ValueBox("Front Right Temp", "888.8", 130, 397, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbTyreTempFrontRight);
 		
-		vbTyreTempRearLeft = new ValueBox("Tyre Temp Rear Left", "888.8", 10, 521, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempRearLeft = new ValueBox("Rear Left Temp", "888.8", 10, 528, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbTyreTempRearLeft);
 		
-		vbTyreTempRearRight = new ValueBox("Tyre Temp Rear Right", "888.8", 130, 521, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempRearRight = new ValueBox("Rear Right Temp", "888.8", 130, 528, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbTyreTempRearRight);
 		
-		vbCurrentGear = new ValueBox("Current Gear", "N", 255, 390, 195, 251, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentGear = new ValueBox("Current Gear", "N", 260, 397, 186, 251, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbCurrentGear);
 		
-		vbCurrentSpeed = new ui.ValueBox("Current Speed", "888.88", 456, 390, 240, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentSpeed = new ui.ValueBox("Current Speed", "888.88", 456, 397, 240, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbCurrentSpeed);
 		
-		vbFuel = new ui.ValueBox("Fuel %", "888.88", 576, 521, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbFuel = new ui.ValueBox("Fuel %", "888.88", 576, 528, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbFuel);
 		
-		vbFuelLapsRemaining = new ValueBox("Fuel, Laps Remaining", "888.8", 456, 521, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbFuelLapsRemaining = new ValueBox("Fuel, Laps Left", "888.8", 456, 528, 120, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbFuelLapsRemaining);
 		
-		vbCurrentLap = new ValueBox("Current Lap", "00:00:00.000", 10, 120, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentLap = new ValueBox("Current Lap", "00:00:00.000", 10, 135, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbCurrentLap);
 		
-		vbLastLapDelta = new ui.ValueBox("Last Lap Delta", "00:00:00.000", 353, 120, 343, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbLastLapDelta = new ui.ValueBox("Last Lap Delta", "00:00:00.000", 353, 135, 343, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbLastLapDelta);
 		
-		vbBestLap = new ui.ValueBox("Best Lap", "00:00:00.000", 10, 255, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbBestLap = new ui.ValueBox("Best Lap", "00:00:00.000", 10, 266, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbBestLap);
 		
-		vbRaceTime = new ui.ValueBox("Race Time", "00:00:00.000", 353, 255, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
+		vbRaceTime = new ui.ValueBox("Race Time", "00:00:00.000", 353, 266, 342, 120, 30, ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbRaceTime);
 		
 		lineTrackMap = new LineChart(Color.WHITE, Color.WHITE);
@@ -1568,35 +1420,11 @@ public class DashboardUI extends DefaultUI {
 		    	float redlineRPM = this.redlineRPM;
 		    	float redlineRange = this.redlineRange;
 		    	
-		    	barRPM1.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 1, 14));
-		    	barRPM1.repaint();
-		    	barRPM2.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 2, 14));
-		    	barRPM2.repaint();
-		    	barRPM3.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 3, 14));
-		    	barRPM3.repaint();
-		    	barRPM4.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 4, 14));
-		    	barRPM4.repaint();
-		    	barRPM5.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 5, 14));
-		    	barRPM5.repaint();
-		    	barRPM6.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 6, 14));
-		    	barRPM6.repaint();
-		    	barRPM7.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 7, 14));
-		    	barRPM7.repaint();
-		    	barRPM8.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 8, 14));
-		    	barRPM8.repaint();
-		    	barRPM9.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 9, 14));
-		    	barRPM9.repaint();
-		    	barRPM10.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 10, 14));
-		    	barRPM10.repaint();
-		    	barRPM11.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 11, 14));
-		    	barRPM11.repaint();
-		    	barRPM12.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 12, 14));
-		    	barRPM12.repaint();
-		    	barRPM13.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 13, 14));
-		    	barRPM13.repaint();
-		    	barRPM14.setValue(getRPMBarValue(currentRPM, redlineRPM, redlineRange, 14, 14));
-		    	barRPM14.repaint();
-		    	
+		    	for (int i = 0; i < 14; i++) {
+			    	ledRPM[i].setOn(getRPMLedOn(currentRPM, redlineRPM, redlineRange, i-1, 14));
+			    	ledRPM[i].repaint();
+		    	}
+
 		        this.lineTrackMap.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getPositionX(), currPlayer.getTelemetryPacket().getTrack().getPositionZ()));
 		        this.lineTrackMap.repaint();
 		        
@@ -1630,9 +1458,9 @@ public class DashboardUI extends DefaultUI {
     public void reset() {
     	getSelectedPlayer().reset();
     }
-    private float getRPMBarValue(float currentRPM, float redlineRPM, float redlineRange, int barNumber, int barCount) {
-    	float barMax = redlineRPM - redlineRange + ((redlineRange / barCount) * barNumber);
-    	if (currentRPM >= barMax) return 100.0f;
-    	return 0.0f;
+    private boolean getRPMLedOn(float currentRPM, float redlineRPM, float redlineRange, int ledNumber, int ledCount) {
+    	float barMax = redlineRPM - redlineRange + ((redlineRange / ledCount) * ledNumber);
+    	if (currentRPM >= barMax) return true;
+    	return false;
     }
 }
