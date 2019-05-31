@@ -601,7 +601,7 @@ public class TelemetryUIxChart extends DefaultUI {
 
 			        lineChartPanel.repaint();
 
-			        this.lineTrackMap.setValues(buildTrackMapValues(), true);
+			        this.lineTrackMap.setValues(buildTrackMapValues());
 			        //.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getPositionX(), currPlayer.getTelemetryPacket().getTrack().getPositionZ()));
 			        this.lineTrackMap.repaint();
 			        this.scatterGForce.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getVelocity().getAccelerationX(), currPlayer.getTelemetryPacket().getVelocity().getAccelerationZ()));

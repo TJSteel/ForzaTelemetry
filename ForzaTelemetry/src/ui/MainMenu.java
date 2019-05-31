@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import java.awt.Color;
 
 public class MainMenu extends DefaultUI {
 
@@ -19,30 +21,29 @@ public class MainMenu extends DefaultUI {
 		this.setBounds(100, 100, 689, 582);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(null);
-		
+
 		JButton btnTelemetryDashboard = new JButton("Telemetry");
-		btnTelemetryDashboard.addActionListener(new ActionListener() { 
+		btnTelemetryDashboard.setForeground(Color.WHITE);
+		btnTelemetryDashboard.setBackground(Color.BLACK);
+		btnTelemetryDashboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 				TelemetryUI ui = new TelemetryUI(getPlayers(), getPlayersReadWriteLock());
 				ui.setVisible(true);
 			}
 		});
-		btnTelemetryDashboard.setBounds(12, 13, 196, 25);
+		btnTelemetryDashboard.setBounds(12, 13, 150, 196);
 		this.getContentPane().add(btnTelemetryDashboard);
-		
-		JButton btnRaceDashboard = new JButton("Race");
-		btnRaceDashboard.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-				DashboardUI ui = new DashboardUI(getPlayers(), getPlayersReadWriteLock());
-				ui.setVisible(true);
-			}
-		});
-		btnRaceDashboard.setBounds(12, 51, 196, 25);
-		this.getContentPane().add(btnRaceDashboard);
+
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.BLACK);
+		panel.setBounds(0, 0, 673, 543);
+		getContentPane().add(panel);
+		panel.setLayout(null);
 
 		JButton btnTelemetryDashboardjFreeChart = new JButton("Telemetry jFreeChart");
+		btnTelemetryDashboardjFreeChart.setBackground(Color.BLACK);
+		btnTelemetryDashboardjFreeChart.setForeground(Color.WHITE);
 		btnTelemetryDashboardjFreeChart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -50,10 +51,12 @@ public class MainMenu extends DefaultUI {
 				ui.setVisible(true);
 			}
 		});
-		btnTelemetryDashboardjFreeChart.setBounds(12, 89, 196, 25);
-		this.getContentPane().add(btnTelemetryDashboardjFreeChart);
+		btnTelemetryDashboardjFreeChart.setBounds(334, 11, 150, 196);
+		panel.add(btnTelemetryDashboardjFreeChart);
 
 		JButton btnTelemetryDashboardxChart = new JButton("Telemetry xChart");
+		btnTelemetryDashboardxChart.setBackground(Color.BLACK);
+		btnTelemetryDashboardxChart.setForeground(Color.WHITE);
 		btnTelemetryDashboardxChart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -61,8 +64,21 @@ public class MainMenu extends DefaultUI {
 				ui.setVisible(true);
 			}
 		});
-		btnTelemetryDashboardxChart.setBounds(12, 127, 196, 25);
-		this.getContentPane().add(btnTelemetryDashboardxChart);
-}
+		btnTelemetryDashboardxChart.setBounds(497, 11, 150, 196);
+		panel.add(btnTelemetryDashboardxChart);
 
+		JButton btnRaceDashboard = new JButton("Race");
+		btnRaceDashboard.setForeground(Color.WHITE);
+		btnRaceDashboard.setBackground(Color.BLACK);
+		btnRaceDashboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				DashboardUI ui = new DashboardUI(getPlayers(), getPlayersReadWriteLock());
+				ui.setVisible(true);
+			}
+		});
+		btnRaceDashboard.setBounds(174, 11, 150, 196);
+		panel.add(btnRaceDashboard);
+
+	}
 }

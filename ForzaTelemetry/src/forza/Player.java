@@ -127,10 +127,10 @@ public class Player {
 			sb.append("normalizedSuspensionTravelFrontRight,");
 			sb.append("normalizedSuspensionTravelRearLeft,");
 			sb.append("normalizedSuspensionTravelRearRight,");
-			sb.append("tireSlipRatioFrontLeft,");
-			sb.append("tireSlipRatioFrontRight,");
-			sb.append("tireSlipRatioRearLeft,");
-			sb.append("tireSlipRatioRearRight,");
+			sb.append("tyreSlipRatioFrontLeft,");
+			sb.append("tyreSlipRatioFrontRight,");
+			sb.append("tyreSlipRatioRearLeft,");
+			sb.append("tyreSlipRatioRearRight,");
 			sb.append("wheelRotationSpeedFrontLeft,");
 			sb.append("wheelRotationSpeedFrontRight,");
 			sb.append("wheelRotationSpeedRearLeft,");
@@ -147,14 +147,14 @@ public class Player {
 			sb.append("surfaceRumbleFrontRight,");
 			sb.append("surfaceRumbleRearLeft,");
 			sb.append("surfaceRumbleRearRight,");
-			sb.append("tireSlipAngleFrontLeft,");
-			sb.append("tireSlipAngleFrontRight,");
-			sb.append("tireSlipAngleRearLeft,");
-			sb.append("tireSlipAngleRearRight,");
-			sb.append("tireCombinedSlipFrontLeft,");
-			sb.append("tireCombinedSlipFrontRight,");
-			sb.append("tireCombinedSlipRearLeft,");
-			sb.append("tireCombinedSlipRearRight,");
+			sb.append("tyreSlipAngleFrontLeft,");
+			sb.append("tyreSlipAngleFrontRight,");
+			sb.append("tyreSlipAngleRearLeft,");
+			sb.append("tyreSlipAngleRearRight,");
+			sb.append("tyreCombinedSlipFrontLeft,");
+			sb.append("tyreCombinedSlipFrontRight,");
+			sb.append("tyreCombinedSlipRearLeft,");
+			sb.append("tyreCombinedSlipRearRight,");
 			sb.append("suspensionTravelMetersFrontLeft,");
 			sb.append("suspensionTravelMetersFrontRight,");
 			sb.append("suspensionTravelMetersRearLeft,");
@@ -205,10 +205,10 @@ public class Player {
 		sb.append(this.getTelemetryPacket().getSuspension().getNormalizedSuspensionTravelFrontRight() + ",");
 		sb.append(this.getTelemetryPacket().getSuspension().getNormalizedSuspensionTravelRearLeft() + ",");
 		sb.append(this.getTelemetryPacket().getSuspension().getNormalizedSuspensionTravelRearRight() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireSlipRatioFrontLeft() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireSlipRatioFrontRight() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireSlipRatioRearLeft() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireSlipRatioRearRight() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreSlipRatioFrontLeft() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreSlipRatioFrontRight() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreSlipRatioRearLeft() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreSlipRatioRearRight() + ",");
 		sb.append(this.getTelemetryPacket().getWheel().getWheelRotationSpeedFrontLeft() + ",");
 		sb.append(this.getTelemetryPacket().getWheel().getWheelRotationSpeedFrontRight() + ",");
 		sb.append(this.getTelemetryPacket().getWheel().getWheelRotationSpeedRearLeft() + ",");
@@ -225,14 +225,14 @@ public class Player {
 		sb.append(this.getTelemetryPacket().getRumble().getSurfaceRumbleFrontRight() + ",");
 		sb.append(this.getTelemetryPacket().getRumble().getSurfaceRumbleRearLeft() + ",");
 		sb.append(this.getTelemetryPacket().getRumble().getSurfaceRumbleRearRight() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireSlipAngleFrontLeft() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireSlipAngleFrontRight() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireSlipAngleRearLeft() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireSlipAngleRearRight() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireCombinedSlipFrontLeft() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireCombinedSlipFrontRight() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireCombinedSlipRearLeft() + ",");
-		sb.append(this.getTelemetryPacket().getTyre().getTireCombinedSlipRearRight() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreSlipAngleFrontLeft() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreSlipAngleFrontRight() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreSlipAngleRearLeft() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreSlipAngleRearRight() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreCombinedSlipFrontLeft() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreCombinedSlipFrontRight() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreCombinedSlipRearLeft() + ",");
+		sb.append(this.getTelemetryPacket().getTyre().getTyreCombinedSlipRearRight() + ",");
 		sb.append(this.getTelemetryPacket().getSuspension().getSuspensionTravelMetersFrontLeft() + ",");
 		sb.append(this.getTelemetryPacket().getSuspension().getSuspensionTravelMetersFrontRight() + ",");
 		sb.append(this.getTelemetryPacket().getSuspension().getSuspensionTravelMetersRearLeft() + ",");
@@ -315,6 +315,9 @@ public class Player {
 	}
 	public void setRecording(boolean recording) {
 		this.recording = recording;
+	}
+	public double getFuelLapsRemaining() {
+		return 0.0;
 	}
     
     // }} Calculated Fields

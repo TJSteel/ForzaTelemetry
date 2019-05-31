@@ -2,248 +2,248 @@ package car;
 
 public class Tyre {
 	// {{ Variables
-    private float tireSlipRatioFrontLeft = 0.0F; // Tire normalized slip ratio, = 0 means 100% grip and |ratio| > 1.0 means loss of grip.
-    private float tireSlipRatioFrontRight = 0.0F;
-    private float tireSlipRatioRearLeft = 0.0F;
-    private float tireSlipRatioRearRight = 0.0F;
-    private float tireSlipAngleFrontLeft = 0.0F; // Tire normalized slip angle, = 0 means 100% grip and |angle| > 1.0 means loss of grip.
-    private float tireSlipAngleFrontRight = 0.0F;
-    private float tireSlipAngleRearLeft = 0.0F;
-    private float tireSlipAngleRearRight = 0.0F;
-    private float tireCombinedSlipFrontLeft = 0.0F; // Tire normalized combined slip, = 0 means 100% grip and |slip| > 1.0 means loss of grip.
-    private float tireCombinedSlipFrontRight = 0.0F;
-    private float tireCombinedSlipRearLeft = 0.0F;
-    private float tireCombinedSlipRearRight = 0.0F;
-    private float tireTempFrontLeft = 0.0F; // Tire normalized combined slip, = 0 means 100% grip and |slip| > 1.0 means loss of grip.
-    private float tireTempFrontRight = 0.0F;
-    private float tireTempRearLeft = 0.0F;
-    private float tireTempRearRight = 0.0F;
+    private float tyreSlipRatioFrontLeft = 0.0F; // Tyre normalized slip ratio, = 0 means 100% grip and |ratio| > 1.0 means loss of grip.
+    private float tyreSlipRatioFrontRight = 0.0F;
+    private float tyreSlipRatioRearLeft = 0.0F;
+    private float tyreSlipRatioRearRight = 0.0F;
+    private float tyreSlipAngleFrontLeft = 0.0F; // Tyre normalized slip angle, = 0 means 100% grip and |angle| > 1.0 means loss of grip.
+    private float tyreSlipAngleFrontRight = 0.0F;
+    private float tyreSlipAngleRearLeft = 0.0F;
+    private float tyreSlipAngleRearRight = 0.0F;
+    private float tyreCombinedSlipFrontLeft = 0.0F; // Tyre normalized combined slip, = 0 means 100% grip and |slip| > 1.0 means loss of grip.
+    private float tyreCombinedSlipFrontRight = 0.0F;
+    private float tyreCombinedSlipRearLeft = 0.0F;
+    private float tyreCombinedSlipRearRight = 0.0F;
+    private float tyreTempFrontLeft = 0.0F; // Tyre normalized combined slip, = 0 means 100% grip and |slip| > 1.0 means loss of grip.
+    private float tyreTempFrontRight = 0.0F;
+    private float tyreTempRearLeft = 0.0F;
+    private float tyreTempRearRight = 0.0F;
     // }} Variables
 
     // {{ Getters and Setters
     /**
-     * @return the tireSlipRatioFrontLeft
+     * @return the tyreSlipRatioFrontLeft
      */
-    public float getTireSlipRatioFrontLeft() {
-        return tireSlipRatioFrontLeft;
+    public float getTyreSlipRatioFrontLeft() {
+        return tyreSlipRatioFrontLeft;
     }
 
     /**
-     * @param tireSlipRatioFrontLeft the tireSlipRatioFrontLeft to set
+     * @param tyreSlipRatioFrontLeft the tyreSlipRatioFrontLeft to set
      */
-    public void setTireSlipRatioFrontLeft(float tireSlipRatioFrontLeft) {
-        this.tireSlipRatioFrontLeft = tireSlipRatioFrontLeft;
+    public void setTyreSlipRatioFrontLeft(float tyreSlipRatioFrontLeft) {
+        this.tyreSlipRatioFrontLeft = tyreSlipRatioFrontLeft;
     }
 
     /**
-     * @return the tireSlipRatioFrontRight
+     * @return the tyreSlipRatioFrontRight
      */
-    public float getTireSlipRatioFrontRight() {
-        return tireSlipRatioFrontRight;
+    public float getTyreSlipRatioFrontRight() {
+        return tyreSlipRatioFrontRight;
     }
 
     /**
-     * @param tireSlipRatioFrontRight the tireSlipRatioFrontRight to set
+     * @param tyreSlipRatioFrontRight the tyreSlipRatioFrontRight to set
      */
-    public void setTireSlipRatioFrontRight(float tireSlipRatioFrontRight) {
-        this.tireSlipRatioFrontRight = tireSlipRatioFrontRight;
+    public void setTyreSlipRatioFrontRight(float tyreSlipRatioFrontRight) {
+        this.tyreSlipRatioFrontRight = tyreSlipRatioFrontRight;
     }
 
     /**
-     * @return the tireSlipRatioRearLeft
+     * @return the tyreSlipRatioRearLeft
      */
-    public float getTireSlipRatioRearLeft() {
-        return tireSlipRatioRearLeft;
+    public float getTyreSlipRatioRearLeft() {
+        return tyreSlipRatioRearLeft;
     }
 
     /**
-     * @param tireSlipRatioRearLeft the tireSlipRatioRearLeft to set
+     * @param tyreSlipRatioRearLeft the tyreSlipRatioRearLeft to set
      */
-    public void setTireSlipRatioRearLeft(float tireSlipRatioRearLeft) {
-        this.tireSlipRatioRearLeft = tireSlipRatioRearLeft;
+    public void setTyreSlipRatioRearLeft(float tyreSlipRatioRearLeft) {
+        this.tyreSlipRatioRearLeft = tyreSlipRatioRearLeft;
     }
 
     /**
-     * @return the tireSlipRatioRearRight
+     * @return the tyreSlipRatioRearRight
      */
-    public float getTireSlipRatioRearRight() {
-        return tireSlipRatioRearRight;
+    public float getTyreSlipRatioRearRight() {
+        return tyreSlipRatioRearRight;
     }
 
     /**
-     * @param tireSlipRatioRearRight the tireSlipRatioRearRight to set
+     * @param tyreSlipRatioRearRight the tyreSlipRatioRearRight to set
      */
-    public void setTireSlipRatioRearRight(float tireSlipRatioRearRight) {
-        this.tireSlipRatioRearRight = tireSlipRatioRearRight;
+    public void setTyreSlipRatioRearRight(float tyreSlipRatioRearRight) {
+        this.tyreSlipRatioRearRight = tyreSlipRatioRearRight;
     }
 
 
     /**
-     * @return the tireSlipAngleFrontLeft
+     * @return the tyreSlipAngleFrontLeft
      */
-    public float getTireSlipAngleFrontLeft() {
-        return tireSlipAngleFrontLeft;
+    public float getTyreSlipAngleFrontLeft() {
+        return tyreSlipAngleFrontLeft;
     }
 
     /**
-     * @param tireSlipAngleFrontLeft the tireSlipAngleFrontLeft to set
+     * @param tyreSlipAngleFrontLeft the tyreSlipAngleFrontLeft to set
      */
-    public void setTireSlipAngleFrontLeft(float tireSlipAngleFrontLeft) {
-        this.tireSlipAngleFrontLeft = tireSlipAngleFrontLeft;
+    public void setTyreSlipAngleFrontLeft(float tyreSlipAngleFrontLeft) {
+        this.tyreSlipAngleFrontLeft = tyreSlipAngleFrontLeft;
     }
 
     /**
-     * @return the tireSlipAngleFrontRight
+     * @return the tyreSlipAngleFrontRight
      */
-    public float getTireSlipAngleFrontRight() {
-        return tireSlipAngleFrontRight;
+    public float getTyreSlipAngleFrontRight() {
+        return tyreSlipAngleFrontRight;
     }
 
     /**
-     * @param tireSlipAngleFrontRight the tireSlipAngleFrontRight to set
+     * @param tyreSlipAngleFrontRight the tyreSlipAngleFrontRight to set
      */
-    public void setTireSlipAngleFrontRight(float tireSlipAngleFrontRight) {
-        this.tireSlipAngleFrontRight = tireSlipAngleFrontRight;
+    public void setTyreSlipAngleFrontRight(float tyreSlipAngleFrontRight) {
+        this.tyreSlipAngleFrontRight = tyreSlipAngleFrontRight;
     }
 
     /**
-     * @return the tireSlipAngleRearLeft
+     * @return the tyreSlipAngleRearLeft
      */
-    public float getTireSlipAngleRearLeft() {
-        return tireSlipAngleRearLeft;
+    public float getTyreSlipAngleRearLeft() {
+        return tyreSlipAngleRearLeft;
     }
 
     /**
-     * @param tireSlipAngleRearLeft the tireSlipAngleRearLeft to set
+     * @param tyreSlipAngleRearLeft the tyreSlipAngleRearLeft to set
      */
-    public void setTireSlipAngleRearLeft(float tireSlipAngleRearLeft) {
-        this.tireSlipAngleRearLeft = tireSlipAngleRearLeft;
+    public void setTyreSlipAngleRearLeft(float tyreSlipAngleRearLeft) {
+        this.tyreSlipAngleRearLeft = tyreSlipAngleRearLeft;
     }
 
     /**
-     * @return the tireSlipAngleRearRight
+     * @return the tyreSlipAngleRearRight
      */
-    public float getTireSlipAngleRearRight() {
-        return tireSlipAngleRearRight;
+    public float getTyreSlipAngleRearRight() {
+        return tyreSlipAngleRearRight;
     }
 
     /**
-     * @param tireSlipAngleRearRight the tireSlipAngleRearRight to set
+     * @param tyreSlipAngleRearRight the tyreSlipAngleRearRight to set
      */
-    public void setTireSlipAngleRearRight(float tireSlipAngleRearRight) {
-        this.tireSlipAngleRearRight = tireSlipAngleRearRight;
+    public void setTyreSlipAngleRearRight(float tyreSlipAngleRearRight) {
+        this.tyreSlipAngleRearRight = tyreSlipAngleRearRight;
     }
 
     /**
-     * @return the tireCombinedSlipFrontLeft
+     * @return the tyreCombinedSlipFrontLeft
      */
-    public float getTireCombinedSlipFrontLeft() {
-        return tireCombinedSlipFrontLeft;
+    public float getTyreCombinedSlipFrontLeft() {
+        return tyreCombinedSlipFrontLeft;
     }
 
     /**
-     * @param tireCombinedSlipFrontLeft the tireCombinedSlipFrontLeft to set
+     * @param tyreCombinedSlipFrontLeft the tyreCombinedSlipFrontLeft to set
      */
-    public void setTireCombinedSlipFrontLeft(float tireCombinedSlipFrontLeft) {
-        this.tireCombinedSlipFrontLeft = tireCombinedSlipFrontLeft;
+    public void setTyreCombinedSlipFrontLeft(float tyreCombinedSlipFrontLeft) {
+        this.tyreCombinedSlipFrontLeft = tyreCombinedSlipFrontLeft;
     }
 
     /**
-     * @return the tireCombinedSlipFrontRight
+     * @return the tyreCombinedSlipFrontRight
      */
-    public float getTireCombinedSlipFrontRight() {
-        return tireCombinedSlipFrontRight;
+    public float getTyreCombinedSlipFrontRight() {
+        return tyreCombinedSlipFrontRight;
     }
 
     /**
-     * @param tireCombinedSlipFrontRight the tireCombinedSlipFrontRight to set
+     * @param tyreCombinedSlipFrontRight the tyreCombinedSlipFrontRight to set
      */
-    public void setTireCombinedSlipFrontRight(float tireCombinedSlipFrontRight) {
-        this.tireCombinedSlipFrontRight = tireCombinedSlipFrontRight;
+    public void setTyreCombinedSlipFrontRight(float tyreCombinedSlipFrontRight) {
+        this.tyreCombinedSlipFrontRight = tyreCombinedSlipFrontRight;
     }
 
     /**
-     * @return the tireCombinedSlipRearLeft
+     * @return the tyreCombinedSlipRearLeft
      */
-    public float getTireCombinedSlipRearLeft() {
-        return tireCombinedSlipRearLeft;
+    public float getTyreCombinedSlipRearLeft() {
+        return tyreCombinedSlipRearLeft;
     }
 
     /**
-     * @param tireCombinedSlipRearLeft the tireCombinedSlipRearLeft to set
+     * @param tyreCombinedSlipRearLeft the tyreCombinedSlipRearLeft to set
      */
-    public void setTireCombinedSlipRearLeft(float tireCombinedSlipRearLeft) {
-        this.tireCombinedSlipRearLeft = tireCombinedSlipRearLeft;
+    public void setTyreCombinedSlipRearLeft(float tyreCombinedSlipRearLeft) {
+        this.tyreCombinedSlipRearLeft = tyreCombinedSlipRearLeft;
     }
 
     /**
-     * @return the tireCombinedSlipRearRight
+     * @return the tyreCombinedSlipRearRight
      */
-    public float getTireCombinedSlipRearRight() {
-        return tireCombinedSlipRearRight;
+    public float getTyreCombinedSlipRearRight() {
+        return tyreCombinedSlipRearRight;
     }
 
     /**
-     * @param tireCombinedSlipRearRight the tireCombinedSlipRearRight to set
+     * @param tyreCombinedSlipRearRight the tyreCombinedSlipRearRight to set
      */
-    public void setTireCombinedSlipRearRight(float tireCombinedSlipRearRight) {
-        this.tireCombinedSlipRearRight = tireCombinedSlipRearRight;
+    public void setTyreCombinedSlipRearRight(float tyreCombinedSlipRearRight) {
+        this.tyreCombinedSlipRearRight = tyreCombinedSlipRearRight;
     }
     
 	/**
-	 * @return the tireTempFrontLeft
+	 * @return the tyreTempFrontLeft
 	 */
-	public float getTireTempFrontLeft() {
-		return tireTempFrontLeft;
+	public float getTyreTempFrontLeft() {
+		return tyreTempFrontLeft;
 	}
 
 	/**
-	 * @param tireTempFrontLeft the tireTempFrontLeft to set
+	 * @param tyreTempFrontLeft the tyreTempFrontLeft to set
 	 */
-	public void setTireTempFrontLeft(float tireTempFrontLeft) {
-		this.tireTempFrontLeft = tireTempFrontLeft;
+	public void setTyreTempFrontLeft(float tyreTempFrontLeft) {
+		this.tyreTempFrontLeft = tyreTempFrontLeft;
 	}
 
 	/**
-	 * @return the tireTempFrontRight
+	 * @return the tyreTempFrontRight
 	 */
-	public float getTireTempFrontRight() {
-		return tireTempFrontRight;
+	public float getTyreTempFrontRight() {
+		return tyreTempFrontRight;
 	}
 
 	/**
-	 * @param tireTempFrontRight the tireTempFrontRight to set
+	 * @param tyreTempFrontRight the tyreTempFrontRight to set
 	 */
-	public void setTireTempFrontRight(float tireTempFrontRight) {
-		this.tireTempFrontRight = tireTempFrontRight;
+	public void setTyreTempFrontRight(float tyreTempFrontRight) {
+		this.tyreTempFrontRight = tyreTempFrontRight;
 	}
 
 	/**
-	 * @return the tireTempRearLeft
+	 * @return the tyreTempRearLeft
 	 */
-	public float getTireTempRearLeft() {
-		return tireTempRearLeft;
+	public float getTyreTempRearLeft() {
+		return tyreTempRearLeft;
 	}
 
 	/**
-	 * @param tireTempRearLeft the tireTempRearLeft to set
+	 * @param tyreTempRearLeft the tyreTempRearLeft to set
 	 */
-	public void setTireTempRearLeft(float tireTempRearLeft) {
-		this.tireTempRearLeft = tireTempRearLeft;
+	public void setTyreTempRearLeft(float tyreTempRearLeft) {
+		this.tyreTempRearLeft = tyreTempRearLeft;
 	}
 
 	/**
-	 * @return the tireTempRearRight
+	 * @return the tyreTempRearRight
 	 */
-	public float getTireTempRearRight() {
-		return tireTempRearRight;
+	public float getTyreTempRearRight() {
+		return tyreTempRearRight;
 	}
 
 	/**
-	 * @param tireTempRearRight the tireTempRearRight to set
+	 * @param tyreTempRearRight the tyreTempRearRight to set
 	 */
-	public void setTireTempRearRight(float tireTempRearRight) {
-		this.tireTempRearRight = tireTempRearRight;
+	public void setTyreTempRearRight(float tyreTempRearRight) {
+		this.tyreTempRearRight = tyreTempRearRight;
 	}
     // }} Getters and Setters
 }
