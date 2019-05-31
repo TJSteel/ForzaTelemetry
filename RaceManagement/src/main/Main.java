@@ -16,7 +16,7 @@ public class Main {
      * @throws java.lang.Exception
      */
     public static void main(String[] args) {
-        RaceManagement forzaTelemetry = new RaceManagement();
+        RaceManagementPC forzaTelemetry = new RaceManagementPC();
         forzaTelemetry.initialize();
         forzaTelemetry.run();
     }

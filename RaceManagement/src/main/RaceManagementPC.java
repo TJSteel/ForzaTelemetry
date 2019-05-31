@@ -18,7 +18,7 @@ import ui.MainMenu;
 /**
  * @author Jay
  */
-public class RaceManagement {
+public class RaceManagementPC {
 	// {{ Variables
 	public PlayerDatabase playerDB;
 	@SuppressWarnings("unused")
