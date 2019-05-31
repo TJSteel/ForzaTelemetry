@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor. collaborator trying to push to master, should be denied!
  */
-package forza;
+package main;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -11,13 +11,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import database.CarTypeDatabase;
 import database.PlayerDatabase;
+import forza.Player;
 import network.TrafficReceiver;
 import ui.MainMenu;
 
 /**
  * @author Jay
  */
-public class ForzaTelemetry {
+public class RaceManagement {
 	// {{ Variables
 	public PlayerDatabase playerDB;
 	@SuppressWarnings("unused")

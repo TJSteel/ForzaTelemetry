@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import enums.Speed;
 import forza.Player;
 import gauges.GaugeRpm;
-import icons.DrivetrainIcon;
 import utility.Calc;
 
 import javax.swing.JLabel;
@@ -71,7 +70,6 @@ public class TelemetryUI extends DefaultUI {
 	private JLabel lblGearRatio;
 	private JButton btnReset;
 	
-	private DrivetrainIcon drivetrainIcon;
 	private BarChartSingle barAccel;
 	private BarChartSingle barBrake;
 	private BarChartSingle barClutch;
@@ -261,13 +259,6 @@ public class TelemetryUI extends DefaultUI {
 		});
 		btnReset.setBounds(170, 309, 120, 20);
 		contentPane.add(btnReset);
-		
-		drivetrainIcon = new DrivetrainIcon();
-		drivetrainIcon.setVisible(false);
-		drivetrainIcon.setOpaque(false);
-		drivetrainIcon.setBackground(Color.DARK_GRAY);
-		drivetrainIcon.setBounds(10, 304, 47, 128);
-		contentPane.add(drivetrainIcon);
 		
 		JPanel pnlRaceTiming = new JPanel();
 		pnlRaceTiming.setBackground(Color.DARK_GRAY);
@@ -569,7 +560,6 @@ public class TelemetryUI extends DefaultUI {
 			        this.gaugeRpm.setRpm((double)currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm());
 			        this.gaugeRpm.repaint();
 			        
-			        this.drivetrainIcon.setDrivetrain(currPlayer.getTelemetryPacket().getEngine().getDrivetrainType());
 			        this.txtCurrentLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getCurrentLap())));
 			        this.txtLastLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getLastLap())));
 			        this.txtBestLap.setText(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getBestLap())));

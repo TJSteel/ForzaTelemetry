@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package forza;
-
-import forza.ForzaTelemetry;
+package main;
 
 /**
  *
@@ -18,7 +16,7 @@ public class Main {
      * @throws java.lang.Exception
      */
     public static void main(String[] args) {
-        ForzaTelemetry forzaTelemetry = new ForzaTelemetry();
+        RaceManagement forzaTelemetry = new RaceManagement();
         forzaTelemetry.initialize();
         forzaTelemetry.run();
     }

@@ -41,32 +41,6 @@ public class MainMenu extends DefaultUI {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
-		JButton btnTelemetryDashboardjFreeChart = new JButton("Telemetry jFreeChart");
-		btnTelemetryDashboardjFreeChart.setBackground(Color.BLACK);
-		btnTelemetryDashboardjFreeChart.setForeground(Color.WHITE);
-		btnTelemetryDashboardjFreeChart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-				TelemetryUIjFreeChart ui = new TelemetryUIjFreeChart(getPlayers(), getPlayersReadWriteLock());
-				ui.setVisible(true);
-			}
-		});
-		btnTelemetryDashboardjFreeChart.setBounds(334, 11, 150, 196);
-		panel.add(btnTelemetryDashboardjFreeChart);
-
-		JButton btnTelemetryDashboardxChart = new JButton("Telemetry xChart");
-		btnTelemetryDashboardxChart.setBackground(Color.BLACK);
-		btnTelemetryDashboardxChart.setForeground(Color.WHITE);
-		btnTelemetryDashboardxChart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-				TelemetryUIxChart ui = new TelemetryUIxChart(getPlayers(), getPlayersReadWriteLock());
-				ui.setVisible(true);
-			}
-		});
-		btnTelemetryDashboardxChart.setBounds(497, 11, 150, 196);
-		panel.add(btnTelemetryDashboardxChart);
-
 		JButton btnRaceDashboard = new JButton("Race");
 		btnRaceDashboard.setForeground(Color.WHITE);
 		btnRaceDashboard.setBackground(Color.BLACK);
