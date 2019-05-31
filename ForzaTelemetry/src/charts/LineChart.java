@@ -12,39 +12,46 @@ import java.util.ArrayList;
 
 public class LineChart extends JPanel {
 
+	private static final long serialVersionUID = 1L;
+
     private Point2D min;
     private Point2D max;
     private ArrayList<Point2D> values;
     private Color lineColor;
     private Color borderColor;
-    private boolean inverted;
+    private boolean inverted = false;
+    private boolean maintainRatio = false;
+    private int borderSize = 0;
 
     public LineChart(Point2D min, Point2D max, Color lineColor, Color borderColor) {
     	this.setMin(min);
     	this.setMax(max);
-    	this.setValues(new ArrayList<Point2D>(), false);
+    	this.setValues(new ArrayList<Point2D>());
     	this.setLineColor(lineColor);
     	this.setBorderColor(borderColor);
     }
     public LineChart(Color lineColor, Color borderColor) {
     	this.setMin(new Point2D.Double(0,0));
     	this.setMax(new Point2D.Double(0,0));
-    	this.setValues(new ArrayList<Point2D>(), false);
+    	this.setValues(new ArrayList<Point2D>());
     	this.setLineColor(lineColor);
     	this.setBorderColor(borderColor);
     }
     public LineChart() {
     	this.setMin(new Point2D.Double(0,0));
     	this.setMax(new Point2D.Double(0,0));
-    	this.setValues(new ArrayList<Point2D>(), false);
+    	this.setValues(new ArrayList<Point2D>());
     	this.setLineColor(Color.WHITE);
     	this.setBorderColor(new Color(255,255,255,127));
     }
 	
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    public void setMaintainRatio(boolean maintainRatio) {
+    	this.maintainRatio = maintainRatio; 
+    }
+
+    public void setBorderSize(int borderSize) {
+    	this.borderSize = borderSize; 
+    }
 
 	public void paint(Graphics g1){
 		
@@ -63,10 +70,10 @@ public class LineChart extends JPanel {
 
         //loop through all points and draw a line for each
         for (int i = 0, size = this.getValues().size(); i < size-1; i++) {
-            x1 = (int) Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth(), this.getValues().get(i).getX(), true);
-            x2 = (int) Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth(), this.getValues().get(i+1).getX(), true);
-            y1 = (int) Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight(), this.getValues().get(i).getY(), this.isInverted());
-            y2 = (int) Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight(), this.getValues().get(i+1).getY(), this.isInverted());
+            x1 = (int) ((borderSize/2) + Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth()-borderSize, this.getValues().get(i).getX(), true));
+            x2 = (int) ((borderSize/2) + Calc.coordValue(this.getMin().getX(), this.getMax().getX(), this.getWidth()-borderSize, this.getValues().get(i+1).getX(), true));
+            y1 = (int) ((borderSize/2) + Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight()-borderSize, this.getValues().get(i).getY(), this.isInverted()));
+            y2 = (int) ((borderSize/2) + Calc.coordValue(this.getMin().getY(), this.getMax().getY(), this.getHeight()-borderSize, this.getValues().get(i+1).getY(), this.isInverted()));
         	g.drawLine(x1, y1, x2, y2);
         	if (i == size - 2) {
         		int dotSize = 10;
@@ -120,7 +127,6 @@ public class LineChart extends JPanel {
 	public void addValue(Point2D value) {
 		double x, y;
 		if (this.getValues().size() == 0) {
-			//this.getValues().remove(0);
 			this.getMin().setLocation(value);
 			this.getMax().setLocation(value);
 		}
@@ -133,7 +139,7 @@ public class LineChart extends JPanel {
 		x = value.getX() > this.getMax().getX() ? value.getX() : this.getMax().getX();
 		y = value.getY() > this.getMax().getY() ? value.getY() : this.getMax().getY();
 		this.getMax().setLocation(x, y);
-
+		updateMinMax();
 	}
 	
 	/**
@@ -142,11 +148,10 @@ public class LineChart extends JPanel {
 	public ArrayList<Point2D> getValues() {
 		return values;
 	}
-	public void setValues(ArrayList<Point2D> values, boolean scaleData) {
+	public void setValues(ArrayList<Point2D> values) {
 		this.values = values;
-		this.updateMinMax(values, scaleData);
 	}
-	private void updateMinMax(ArrayList<Point2D> values, boolean scaleData) {
+	private void updateMinMax() {
 		if (values.size()==0) return;
 		this.getMin().setLocation(values.get(0));; 
 		this.getMax().setLocation(values.get(0));;
@@ -161,7 +166,7 @@ public class LineChart extends JPanel {
 			y = value.getY() > this.getMax().getY() ? value.getY() : this.getMax().getY();
 			this.getMax().setLocation(x, y);
 		}
-		if (scaleData) {
+		if (maintainRatio) {
 			double xRange = this.getMax().getX() - this.getMin().getX(), 
 					yRange = this.getMax().getY() - this.getMin().getY(),
 					rangeDifference = xRange > yRange ? xRange - yRange : yRange - xRange;
@@ -202,7 +207,7 @@ public class LineChart extends JPanel {
 	public void reset() {
     	this.setMin(new Point2D.Double(0,0));
     	this.setMax(new Point2D.Double(0,0));
-    	this.setValues(new ArrayList<Point2D>(), false);
+    	this.setValues(new ArrayList<Point2D>());
 	}
 	/**
 	 * @return the inverted

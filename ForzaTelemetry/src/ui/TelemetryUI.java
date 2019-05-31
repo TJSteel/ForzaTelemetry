@@ -419,19 +419,16 @@ public class TelemetryUI extends DefaultUI {
 
 		barBrake = new BarChartSingle(0, 255, 0, new Color(200,0,0), new Color(200,0,0, 127));
 		barBrake.setOpaque(false);
-		barAccel.setOpaque(false);
 		barBrake.setBounds(60, 88, 40, 170);
 		pnlDriverInput.add(barBrake);
 		
 		barClutch = new BarChartSingle(0, 255, 0, new Color(200,200,0), new Color(200,200,0, 127));
 		barClutch.setOpaque(false);
-		barAccel.setOpaque(false);
 		barClutch.setBounds(110, 88, 40, 170);
 		pnlDriverInput.add(barClutch);
 		
 		barHandbrake = new BarChartSingle(0, 255, 0, new Color(0,0,200), new Color(0,0,200, 127));
 		barHandbrake.setOpaque(false);
-		barAccel.setOpaque(false);
 		barHandbrake.setBounds(160, 88, 40, 170);
 		pnlDriverInput.add(barHandbrake);
 
