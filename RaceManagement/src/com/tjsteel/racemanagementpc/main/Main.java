@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package com.tjsteel.racemanagementpc.main;
 
 /**
  *
@@ -16,8 +16,8 @@ public class Main {
      * @throws java.lang.Exception
      */
     public static void main(String[] args) {
-        RaceManagementPC forzaTelemetry = new RaceManagementPC();
-        forzaTelemetry.initialize();
-        forzaTelemetry.run();
+        RaceManagementPC raceManagement = new RaceManagementPC();
+        raceManagement.initialize();
+        raceManagement.run();
     }
 }

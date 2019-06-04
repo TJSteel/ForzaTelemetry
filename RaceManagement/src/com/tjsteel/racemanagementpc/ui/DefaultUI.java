@@ -1,17 +1,19 @@
-package ui;
+package com.tjsteel.racemanagementpc.ui;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import forza.Player;
+
 import java.io.IOException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 
 import javax.swing.border.BevelBorder;
+
+import com.tjsteel.racemanagementlibrary.forza.Player;
 
 public class DefaultUI extends JFrame {
 

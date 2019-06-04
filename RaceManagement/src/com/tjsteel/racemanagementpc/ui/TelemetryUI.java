@@ -1,4 +1,4 @@
-package ui;
+package com.tjsteel.racemanagementpc.ui;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -6,11 +6,6 @@ import java.util.TimerTask;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.JPanel;
-import enums.Speed;
-import forza.Player;
-import gauges.GaugeRpm;
-import utility.Calc;
-
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -29,9 +24,13 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.border.LineBorder;
 
-import charts.BarChartSingle;
-import charts.LineChart;
-import charts.ScatterChart;
+import com.tjsteel.racemanagementlibrary.charts.BarChartSingle;
+import com.tjsteel.racemanagementlibrary.charts.LineChart;
+import com.tjsteel.racemanagementlibrary.charts.ScatterChart;
+import com.tjsteel.racemanagementlibrary.enums.Speed;
+import com.tjsteel.racemanagementlibrary.forza.Player;
+import com.tjsteel.racemanagementlibrary.gauges.GaugeRpm;
+import com.tjsteel.racemanagementlibrary.utility.Calc;
 
 import javax.swing.JToggleButton;
 

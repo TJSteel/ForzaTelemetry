@@ -1,15 +1,15 @@
-package ui;
+package com.tjsteel.racemanagementpc.ui;
 
 import javax.swing.JFrame;
-
-import forza.Player;
-
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
+
+import com.tjsteel.racemanagementlibrary.forza.Player;
+
 import java.awt.Color;
 
 public class MainMenu extends DefaultUI {

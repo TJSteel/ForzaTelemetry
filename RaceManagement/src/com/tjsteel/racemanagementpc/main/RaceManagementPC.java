@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor. collaborator trying to push to master, should be denied!
  */
-package main;
+package com.tjsteel.racemanagementpc.main;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import database.CarTypeDatabase;
-import database.PlayerDatabase;
-import forza.Player;
-import network.TrafficReceiver;
-import ui.MainMenu;
+import com.tjsteel.racemanagementlibrary.database.CarTypeDatabase;
+import com.tjsteel.racemanagementlibrary.database.PlayerDatabase;
+import com.tjsteel.racemanagementlibrary.forza.Player;
+import com.tjsteel.racemanagementlibrary.network.TrafficReceiver;
+import com.tjsteel.racemanagementpc.ui.MainMenu;
 
 /**
  * @author Jay
