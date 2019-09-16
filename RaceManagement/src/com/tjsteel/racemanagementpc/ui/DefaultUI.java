@@ -34,13 +34,15 @@ public class DefaultUI extends JFrame {
 	public void initialize() {
 		//load fonts
 		try {
-			setDseg(Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResource("fonts/DSEG7Classic-Bold.ttf").openStream()).deriveFont(Font.BOLD, 30f));
+			setDseg(Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResource("com/tjsteel/racemanagementpc/fonts/DSEG7Classic-Bold.ttf").openStream()).deriveFont(Font.BOLD, 30f));
 		} catch (FontFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("other issue");
 		}
 
 		setTitle("Forza Telemetry");
