@@ -1,5 +1,5 @@
 package com.tjsteel.racemanagementpc.ui;
-//testing 
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
