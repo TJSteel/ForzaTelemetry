@@ -44,7 +44,7 @@ class ValueBox extends JPanel {
 
 	public ValueBox(String title, String value, int x, int y, int width, int height, int titleHeight, Layout layout) {
 		int titleFontHeight = (int) (titleHeight * 0.35);
-		int valueFontHeight = (int) ((height - titleHeight) * 0.4);
+		int valueFontHeight = (int) ((height - titleHeight) * 0.40);
 		this.setBorder(DashboardUI.defaultBorder);
 		this.setBackground(DashboardUI.defaultBackgroundColor);
 		this.setBounds(x, y, width, height);
@@ -128,6 +128,7 @@ public class DashboardUI extends DefaultUI {
 	private ValueBox vbTyreTempRearRight;
 	private ValueBox vbCurrentGear;
 	private ValueBox vbCurrentSpeed;
+	private ValueBox vbCurrentRPM;
 	private ValueBox vbFuelLapsRemaining;
 	private ValueBox vbFuel;
 	private ValueBox vbCurrentLap;
@@ -1215,69 +1216,74 @@ public class DashboardUI extends DefaultUI {
 		pnlDriverInput.add(lblDriverInputs);
 
 		lblSteer = new JLabel("N/A");
+		lblSteer.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblSteer.setBackground(defaultBackgroundColor);
 		lblSteer.setForeground(Color.WHITE);
 		lblSteer.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSteer.setBounds(10, 42, 55, 55);
+		lblSteer.setBounds(10, 42, 55, 32);
 		lblSteer.setBorder(defaultBorder);
 		pnlDriverInput.add(lblSteer);
 
-		lblAccel = new JLabel("0");
+		lblAccel = new JLabel("000");
+		lblAccel.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblAccel.setBackground(defaultBackgroundColor);
 		lblAccel.setForeground(Color.WHITE);
 		lblAccel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAccel.setBounds(10, 302, 55, 55);
+		lblAccel.setBounds(10, 325, 55, 32);
 		lblAccel.setBorder(defaultBorder);
 		pnlDriverInput.add(lblAccel);
 
-		lblBrake = new JLabel("0");
+		lblBrake = new JLabel("000");
+		lblBrake.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblBrake.setBackground(defaultBackgroundColor);
 		lblBrake.setForeground(Color.WHITE);
 		lblBrake.setHorizontalAlignment(SwingConstants.CENTER);
-		lblBrake.setBounds(75, 302, 55, 55);
+		lblBrake.setBounds(75, 325, 55, 32);
 		lblBrake.setBorder(defaultBorder);
 		pnlDriverInput.add(lblBrake);
 
-		lblClutch = new JLabel("0");
+		lblClutch = new JLabel("000");
+		lblClutch.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblClutch.setBackground(defaultBackgroundColor);
 		lblClutch.setForeground(Color.WHITE);
 		lblClutch.setHorizontalAlignment(SwingConstants.CENTER);
-		lblClutch.setBounds(140, 302, 55, 55);
+		lblClutch.setBounds(140, 325, 55, 32);
 		lblClutch.setBorder(defaultBorder);
 		pnlDriverInput.add(lblClutch);
 
-		lblHandbrake = new JLabel("0");
+		lblHandbrake = new JLabel("000");
+		lblHandbrake.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblHandbrake.setBackground(defaultBackgroundColor);
 		lblHandbrake.setForeground(Color.WHITE);
 		lblHandbrake.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHandbrake.setBounds(205, 302, 55, 55);
+		lblHandbrake.setBounds(205, 325, 55, 32);
 		lblHandbrake.setBorder(defaultBorder);
 		pnlDriverInput.add(lblHandbrake);
 
 		barSteer = new BarChartSingle(-127, 127, 0, new Color(0, 200, 200), new Color(0, 200, 200, 127));
 		barSteer.setOpaque(false);
-		barSteer.setBounds(75, 42, 185, 55);
+		barSteer.setBounds(75, 42, 185, 32);
 		barSteer.setHorizontal(true);
 		pnlDriverInput.add(barSteer);
 
-		barAccel = new BarChartSingle(0, 255, 0, new Color(0, 200, 0), new Color(0, 200, 0, 127));
+		barAccel = new BarChartSingle(0, 255, 0, new Color(0, 200, 200), new Color(0, 200, 0, 127));
 		barAccel.setOpaque(false);
-		barAccel.setBounds(10, 108, 55, 183);
+		barAccel.setBounds(10, 85, 55, 229);
 		pnlDriverInput.add(barAccel);
 
 		barBrake = new BarChartSingle(0, 255, 0, new Color(200, 0, 0), new Color(200, 0, 0, 127));
 		barBrake.setOpaque(false);
-		barBrake.setBounds(75, 108, 55, 183);
+		barBrake.setBounds(75, 85, 55, 229);
 		pnlDriverInput.add(barBrake);
 
 		barClutch = new BarChartSingle(0, 255, 0, new Color(200, 200, 0), new Color(200, 200, 0, 127));
 		barClutch.setOpaque(false);
-		barClutch.setBounds(140, 108, 55, 183);
+		barClutch.setBounds(140, 85, 55, 229);
 		pnlDriverInput.add(barClutch);
 
 		barHandbrake = new BarChartSingle(0, 255, 0, new Color(0, 0, 200), new Color(0, 0, 200, 127));
 		barHandbrake.setOpaque(false);
-		barHandbrake.setBounds(205, 108, 55, 183);
+		barHandbrake.setBounds(205, 85, 55, 229);
 		pnlDriverInput.add(barHandbrake);
 
 		pnlLap7 = new JPanel();
@@ -1376,24 +1382,28 @@ public class DashboardUI extends DefaultUI {
 		int tyreTempHigh = 225;
 		vbTyreTempFrontLeft = new ValueBox("Front Left Temp", "888.8", 10, 397, 120, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempFrontLeft.setLocation(11, 397);
 		vbTyreTempFrontLeft.setCriticalLow(tyreTempLow);
 		vbTyreTempFrontLeft.setCriticalHigh(tyreTempHigh);
 		pnlMain.add(vbTyreTempFrontLeft);
 
-		vbTyreTempFrontRight = new ValueBox("Front Right Temp", "888.8", 130, 397, 120, 120, 30,
+		vbTyreTempFrontRight = new ValueBox("Rear Left Temp", "888.8", 130, 397, 120, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempFrontRight.setLocation(11, 528);
 		vbTyreTempFrontRight.setCriticalLow(tyreTempLow);
 		vbTyreTempFrontRight.setCriticalHigh(tyreTempHigh);
 		pnlMain.add(vbTyreTempFrontRight);
 
-		vbTyreTempRearLeft = new ValueBox("Rear Left Temp", "888.8", 10, 528, 120, 120, 30,
+		vbTyreTempRearLeft = new ValueBox("Front Right Temp", "888.8", 10, 528, 120, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempRearLeft.setLocation(130, 397);
 		vbTyreTempRearLeft.setCriticalLow(tyreTempLow);
 		vbTyreTempRearLeft.setCriticalHigh(tyreTempHigh);
 		pnlMain.add(vbTyreTempRearLeft);
 
 		vbTyreTempRearRight = new ValueBox("Rear Right Temp", "888.8", 130, 528, 120, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempRearRight.setLocation(130, 528);
 		vbTyreTempRearRight.setCriticalLow(tyreTempLow);
 		vbTyreTempRearRight.setCriticalHigh(tyreTempHigh);
 		pnlMain.add(vbTyreTempRearRight);
@@ -1402,12 +1412,19 @@ public class DashboardUI extends DefaultUI {
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbCurrentGear);
 
-		vbCurrentSpeed = new com.tjsteel.racemanagementpc.ui.ValueBox("Current Speed", "888.88", 456, 397, 240, 120, 30,
+		vbCurrentSpeed = new com.tjsteel.racemanagementpc.ui.ValueBox("Current Speed", "888.88", 456, 397, 120, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentSpeed.setBounds(456, 397, 120, 120);
 		pnlMain.add(vbCurrentSpeed);
+
+		vbCurrentRPM = new com.tjsteel.racemanagementpc.ui.ValueBox("Current RPM", "88,888", 576, 397, 120, 120, 30,
+				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentRPM.setBounds(575, 397, 120, 120);
+		pnlMain.add(vbCurrentRPM);
 
 		vbFuel = new com.tjsteel.racemanagementpc.ui.ValueBox("Fuel %", "888.88", 576, 528, 120, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbFuel.setLocation(575, 528);
 		vbFuel.setCriticalLow(25);
 		vbFuel.setCriticalLowColour(Color.RED);
 		pnlMain.add(vbFuel);
@@ -1418,18 +1435,22 @@ public class DashboardUI extends DefaultUI {
 
 		vbCurrentLap = new ValueBox("Current Lap", "00:00:00.000", 10, 135, 342, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentLap.setLocation(11, 135);
 		pnlMain.add(vbCurrentLap);
 
-		vbLastLapDelta = new com.tjsteel.racemanagementpc.ui.ValueBox("Last Lap Delta", "00:00:00.000", 353, 135, 343,
-				120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbLastLapDelta = new com.tjsteel.racemanagementpc.ui.ValueBox("Last Lap Delta", "0.000", 353, 135, 343, 120, 30,
+				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbLastLapDelta.setLocation(352, 135);
 		pnlMain.add(vbLastLapDelta);
 
 		vbBestLap = new com.tjsteel.racemanagementpc.ui.ValueBox("Best Lap", "00:00:00.000", 10, 266, 342, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbBestLap.setLocation(11, 266);
 		pnlMain.add(vbBestLap);
 
 		vbRaceTime = new com.tjsteel.racemanagementpc.ui.ValueBox("Race Time", "00:00:00.000", 353, 266, 342, 120, 30,
 				com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbRaceTime.setLocation(352, 266);
 		pnlMain.add(vbRaceTime);
 
 		lineTrackMap = new LineChart(Color.WHITE, Color.WHITE);
@@ -1445,6 +1466,8 @@ public class DashboardUI extends DefaultUI {
 		super.updateFields();
 		getPlayersReadWriteLock().readLock().lock();
 		try {
+			DecimalFormat df3 = new DecimalFormat("0,000");
+			DecimalFormat df = new DecimalFormat("0");
 			DecimalFormat df1 = new DecimalFormat("0.0");
 			DecimalFormat df2 = new DecimalFormat("0.00");
 
@@ -1457,7 +1480,9 @@ public class DashboardUI extends DefaultUI {
 				this.vbRaceTime
 						.setValue(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentRaceTime()));
 				this.vbCurrentSpeed
-						.setValue(df2.format(currPlayer.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
+						.setValue(df.format(currPlayer.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
+				this.vbCurrentRPM
+						.setValue(df3.format(currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm()));
 				this.vbFuel.setValue(df2.format(currPlayer.getTelemetryPacket().getEngine().getFuel() * 100));
 
 				this.vbCurrentGear.setValue(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
