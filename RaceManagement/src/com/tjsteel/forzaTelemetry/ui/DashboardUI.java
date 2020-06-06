@@ -20,7 +20,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -259,8 +258,8 @@ public class DashboardUI extends DefaultUI {
 	/**
 	 * Create the frame. 
 	 */
-	public DashboardUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
-		super(players, playersReadWriteLock);
+	public DashboardUI(Player player, ReadWriteLock playersReadWriteLock) {
+		super(player, playersReadWriteLock);
 		this.initialize();
     	Timer timer = new Timer();
     	timer.scheduleAtFixedRate(new TimerTask() {
@@ -277,7 +276,7 @@ public class DashboardUI extends DefaultUI {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 		    	dispose();
-				MainMenu ui = new MainMenu(getPlayers(), getPlayersReadWriteLock());
+				MainMenu ui = new MainMenu(getPlayer(), getPlayersReadWriteLock());
 				ui.setVisible(true);
 		    }
 		});
@@ -1403,22 +1402,22 @@ public class DashboardUI extends DefaultUI {
         	DecimalFormat df1 = new DecimalFormat("0.0");
         	DecimalFormat df2 = new DecimalFormat("0.00");
         	
-        	Player currPlayer = getSelectedPlayer();
-    		if (currPlayer.getTelemetryPacket() != null) {
-		    	this.vbCurrentLap.setValue(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentLap()));
-		    	this.vbBestLap.setValue(Calc.secondsToTime((currPlayer.getTelemetryPacket().getTrack().getBestLap())));
-		    	this.vbLastLapDelta.setValue(Calc.secondsToTime(currPlayer.getLastLapDelta()));
-		    	this.vbRaceTime.setValue(Calc.secondsToTime(currPlayer.getTelemetryPacket().getTrack().getCurrentRaceTime()));
-		    	this.vbCurrentSpeed.setValue(df2.format(currPlayer.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
-		    	this.vbFuel.setValue(df2.format(currPlayer.getTelemetryPacket().getEngine().getFuel() * 100));
-		    	this.vbCurrentGear.setValue(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
-		    	this.vbTyreTempFrontLeft.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempFrontLeft()));
-		    	this.vbTyreTempFrontRight.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempFrontRight()));
-		    	this.vbTyreTempRearLeft.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempRearLeft()));
-		    	this.vbTyreTempRearRight.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempRearRight()));
-		    	this.vbFuelLapsRemaining.setValue(df1.format(currPlayer.getFuelLapsRemaining()));
+        	Player player = getPlayer();
+    		if (player.getTelemetryPacket() != null) {
+		    	this.vbCurrentLap.setValue(Calc.secondsToTime(player.getTelemetryPacket().getTrack().getCurrentLap()));
+		    	this.vbBestLap.setValue(Calc.secondsToTime((player.getTelemetryPacket().getTrack().getBestLap())));
+		    	this.vbLastLapDelta.setValue(Calc.secondsToTime(player.getLastLapDelta()));
+		    	this.vbRaceTime.setValue(Calc.secondsToTime(player.getTelemetryPacket().getTrack().getCurrentRaceTime()));
+		    	this.vbCurrentSpeed.setValue(df2.format(player.getTelemetryPacket().getVelocity().getSpeed(Speed.MPH)));
+		    	this.vbFuel.setValue(df2.format(player.getTelemetryPacket().getEngine().getFuel() * 100));
+		    	this.vbCurrentGear.setValue(Short.toString(player.getTelemetryPacket().getEngine().getGear()));
+		    	this.vbTyreTempFrontLeft.setValue(df1.format(player.getTelemetryPacket().getTyre().getTyreTempFrontLeft()));
+		    	this.vbTyreTempFrontRight.setValue(df1.format(player.getTelemetryPacket().getTyre().getTyreTempFrontRight()));
+		    	this.vbTyreTempRearLeft.setValue(df1.format(player.getTelemetryPacket().getTyre().getTyreTempRearLeft()));
+		    	this.vbTyreTempRearRight.setValue(df1.format(player.getTelemetryPacket().getTyre().getTyreTempRearRight()));
+		    	this.vbFuelLapsRemaining.setValue(df1.format(player.getFuelLapsRemaining()));
 
-		    	float currentRPM = currPlayer.getTelemetryPacket().getEngine().getCurrentEngineRpm();
+		    	float currentRPM = player.getTelemetryPacket().getEngine().getCurrentEngineRpm();
 		    	float redlineRPM = this.redlineRPM;
 		    	float redlineRange = this.redlineRange;
 		    	
@@ -1427,23 +1426,23 @@ public class DashboardUI extends DefaultUI {
 			    	ledRPM[i].repaint();
 		    	}
 
-		        this.lineTrackMap.addValue(new Point2D.Double(currPlayer.getTelemetryPacket().getTrack().getPositionX(), currPlayer.getTelemetryPacket().getTrack().getPositionZ()));
+		        this.lineTrackMap.addValue(new Point2D.Double(player.getTelemetryPacket().getTrack().getPositionX(), player.getTelemetryPacket().getTrack().getPositionZ()));
 		        this.lineTrackMap.repaint();
 		        
-		        this.lblAccel.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getAccel()));
-		        this.barAccel.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getAccel());
+		        this.lblAccel.setText(Short.toString(player.getTelemetryPacket().getPlayerInput().getAccel()));
+		        this.barAccel.setValue(player.getTelemetryPacket().getPlayerInput().getAccel());
 		        this.barAccel.repaint();
-		        this.lblBrake.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getBrake()));
-		        this.barBrake.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getBrake());
+		        this.lblBrake.setText(Short.toString(player.getTelemetryPacket().getPlayerInput().getBrake()));
+		        this.barBrake.setValue(player.getTelemetryPacket().getPlayerInput().getBrake());
 		        this.barBrake.repaint();
-		        this.lblClutch.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getClutch()));
-		        this.barClutch.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getClutch());
+		        this.lblClutch.setText(Short.toString(player.getTelemetryPacket().getPlayerInput().getClutch()));
+		        this.barClutch.setValue(player.getTelemetryPacket().getPlayerInput().getClutch());
 		        this.barClutch.repaint();
-		        this.lblHandbrake.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake()));
-		        this.barHandbrake.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getHandbrake());
+		        this.lblHandbrake.setText(Short.toString(player.getTelemetryPacket().getPlayerInput().getHandbrake()));
+		        this.barHandbrake.setValue(player.getTelemetryPacket().getPlayerInput().getHandbrake());
 		        this.barHandbrake.repaint();
-		        this.lblSteer.setText(Short.toString(currPlayer.getTelemetryPacket().getPlayerInput().getSteer()));
-		        this.barSteer.setValue(currPlayer.getTelemetryPacket().getPlayerInput().getSteer());
+		        this.lblSteer.setText(Short.toString(player.getTelemetryPacket().getPlayerInput().getSteer()));
+		        this.barSteer.setValue(player.getTelemetryPacket().getPlayerInput().getSteer());
 		        this.barSteer.repaint();
         	}
     	} finally {
@@ -1454,11 +1453,8 @@ public class DashboardUI extends DefaultUI {
     public void setReceivingTraffic(boolean receiving) {
     	
     }
-    private Player getSelectedPlayer() {
-    	return super.getSelectedPlayer(null);
-    }
     public void reset() {
-    	getSelectedPlayer().reset();
+    	getPlayer().reset();
     }
     private boolean getRPMLedOn(float currentRPM, float redlineRPM, float redlineRange, int ledNumber, int ledCount) {
     	float barMax = redlineRPM - redlineRange + ((redlineRange / ledCount) * ledNumber);

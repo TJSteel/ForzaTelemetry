@@ -5,12 +5,10 @@
  */
 package com.tjsteel.forzaTelemetry.main;
 
-import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.tjsteel.forzaTelemetry.database.CarTypeDatabase;
-import com.tjsteel.forzaTelemetry.database.PlayerDatabase;
 import com.tjsteel.forzaTelemetry.forza.Player;
 import com.tjsteel.forzaTelemetry.network.TrafficReceiver;
 import com.tjsteel.forzaTelemetry.ui.MainMenu;
@@ -20,66 +18,49 @@ import com.tjsteel.forzaTelemetry.ui.MainMenu;
  */
 public class RaceManagementPC {
 	// {{ Variables
-	public PlayerDatabase playerDB;
 	public CarTypeDatabase carTypeDB;
-	public ArrayList<Player> players;
+	public Player player;
 	private ReadWriteLock playersReadWriteLock = new ReentrantReadWriteLock();
 	public TrafficReceiver traffic;
 	public MainMenu ui;
 	// }} Variables
 
-    public void initialize() {
-    	
-        playerDB = new PlayerDatabase();
-        carTypeDB = new CarTypeDatabase();
-        players = playerDB.getPlayers();
+	public void initialize() {
 
-        traffic = new TrafficReceiver();
-        traffic.initialize(50000);
-        
-        ui = new MainMenu(this.players, this.getPlayersReadWriteLock());
-        ui.setVisible(true);
-    }
-    
-    public void run() {
-        while (true) {
-            traffic.receiveTraffic();
-            getPlayersReadWriteLock().writeLock().lock();
-            
-            try {
-                boolean playerExists = false;
-                
-                for (Player currPlayer : players) {
-                    if (traffic.getAddress().toString().contains(currPlayer.getIpAddress())) {
-                    	currPlayer.addTelemetryPacket();
-                        currPlayer.getTelemetryPacket().processDataPacket(traffic.getDataPack());
-                        if (!currPlayer.getTelemetryPacket().isRaceOn()) currPlayer.getTelemetryPackets().remove(currPlayer.getTelemetryPackets().size()-1);
-                        if (currPlayer.getTelemetryPacket()==null) break;
-                        playerExists = true;
-                        if (currPlayer.getTelemetryPacket().isRaceOn()) {
-                        	currPlayer.printValues();
+		carTypeDB = new CarTypeDatabase();
+		player = new Player();
 
-                        	//used for debugging
-                        	//System.out.println(currPlayer.getTelemetryPacket().getTrack().getLapNumber());
-                        }
-                        break;
-                    }
-                }
-                
-                //if you've checked all players and they don't exist, create a new player
-                if (!playerExists) {
-                    Player currPlayer;
-    				currPlayer = new Player(traffic.getDataPack().getAddress().toString(), "Driver " + traffic.getDataPack().getAddress().toString());
-                	currPlayer.addTelemetryPacket();
-                    currPlayer.getTelemetryPacket().processDataPacket(traffic.getDataPack());
-                    players.add(currPlayer);
-                }
-            	
-            } finally {
-            	getPlayersReadWriteLock().writeLock().unlock();
-            }
-        }
-    }
+		traffic = new TrafficReceiver();
+		traffic.initialize(50000);
+
+		ui = new MainMenu(this.player, this.getPlayersReadWriteLock());
+		ui.setVisible(true);
+	}
+
+	public void run() {
+		while (true) {
+			traffic.receiveTraffic();
+			getPlayersReadWriteLock().writeLock().lock();
+
+			try {
+				player.addTelemetryPacket();
+				player.getTelemetryPacket().processDataPacket(traffic.getDataPack());
+				if (!player.getTelemetryPacket().isRaceOn())
+					player.getTelemetryPackets().remove(player.getTelemetryPackets().size() - 1);
+				if (player.getTelemetryPacket() == null)
+					break;
+				if (player.getTelemetryPacket().isRaceOn()) {
+					player.printValues();
+
+					// used for debugging
+					// System.out.println(currPlayer.getTelemetryPacket().getTrack().getLapNumber());
+				}
+
+			} finally {
+				getPlayersReadWriteLock().writeLock().unlock();
+			}
+		}
+	}
 
 	/**
 	 * @return the playersReadWriteLock

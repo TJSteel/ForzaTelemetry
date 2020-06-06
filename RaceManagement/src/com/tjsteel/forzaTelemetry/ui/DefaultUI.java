@@ -1,6 +1,5 @@
 package com.tjsteel.forzaTelemetry.ui;
 
-import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import javax.swing.JFrame;
@@ -17,7 +16,7 @@ import com.tjsteel.forzaTelemetry.forza.Player;
 
 public class DefaultUI extends JFrame {
 
-	private ArrayList<Player> players;
+	private Player player;
 	protected static final long serialVersionUID = 1L;
 	public JPanel contentPane;
 	private Font dseg;
@@ -26,8 +25,8 @@ public class DefaultUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public DefaultUI(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
-		this.setPlayers(players);
+	public DefaultUI(Player player, ReadWriteLock playersReadWriteLock) {
+		this.setPlayer(player);
 		this.setPlayersReadWriteLock(playersReadWriteLock);
 	}
 
@@ -61,32 +60,19 @@ public class DefaultUI extends JFrame {
 	 */
     public void updateFields() {
     }
+
     public void setReceivingTraffic(boolean receiving) {
     }
-    public Player getSelectedPlayer(String gamertag) {
-    	Player returnPlayer = null;
-    	ArrayList<Player> players = this.getPlayers();
-    	
-    	if (gamertag == null && !players.isEmpty()) {
-    		return players.get(players.size()-1);
-    	}
-    	
-    	for (Player currPlayer : players) {
-    		if (gamertag.equals(currPlayer.getGamertag())) {
-    			returnPlayer = currPlayer;
-    		}
-    	}
-    	return returnPlayer;
-    }
+
     public void reset() {
     }
 
-	public ArrayList<Player> getPlayers() {
-		return players;
+	public Player getPlayer() {
+		return player;
 	}
 
-	private void setPlayers(ArrayList<Player> players) {
-		this.players = players;
+	private void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	/**

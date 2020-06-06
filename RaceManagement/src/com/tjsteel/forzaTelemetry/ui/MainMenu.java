@@ -16,8 +16,8 @@ public class MainMenu extends DefaultUI {
 
 	private static final long serialVersionUID = 1L;
 
-	public MainMenu(ArrayList<Player> players, ReadWriteLock playersReadWriteLock) {
-		super(players, playersReadWriteLock);
+	public MainMenu(Player player, ReadWriteLock playersReadWriteLock) {
+		super(player, playersReadWriteLock);
 		this.setBounds(100, 100, 689, 582);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(null);
@@ -28,7 +28,7 @@ public class MainMenu extends DefaultUI {
 		btnTelemetryDashboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				TelemetryUI ui = new TelemetryUI(getPlayers(), getPlayersReadWriteLock());
+				TelemetryUI ui = new TelemetryUI(getPlayer(), getPlayersReadWriteLock());
 				ui.setVisible(true);
 			}
 		});
@@ -47,7 +47,7 @@ public class MainMenu extends DefaultUI {
 		btnRaceDashboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				DashboardUI ui = new DashboardUI(getPlayers(), getPlayersReadWriteLock());
+				DashboardUI ui = new DashboardUI(getPlayer(), getPlayersReadWriteLock());
 				ui.setVisible(true);
 			}
 		});

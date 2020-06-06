@@ -1,0 +1,19 @@
+[
+	{
+		"location": "Le Mans Circuit de la Sarthe",
+		"variation": "Le Mans Full Circuit",
+		"length": 8.48,
+		"conditions": [
+			"day",
+			"night",
+			"rain"
+		],
+		"trackCoordsOuter": [
+			{
+				"x": 1,
+				"y": 1,
+				"z": 1
+			}
+		]
+	}
+]
