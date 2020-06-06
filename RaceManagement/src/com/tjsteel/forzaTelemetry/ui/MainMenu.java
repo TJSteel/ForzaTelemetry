@@ -1,4 +1,4 @@
-package com.tjsteel.racemanagementpc.ui;
+package com.tjsteel.forzaTelemetry.ui;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 
-import com.tjsteel.racemanagementlibrary.forza.Player;
+import com.tjsteel.forzaTelemetry.forza.Player;
 
 import java.awt.Color;
 

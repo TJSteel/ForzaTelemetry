@@ -1,4 +1,4 @@
-package com.tjsteel.racemanagementpc.ui;
+package com.tjsteel.forzaTelemetry.ui;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -9,12 +9,12 @@ import java.awt.Dimension;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
-import com.tjsteel.racemanagementlibrary.charts.BarChartSingle;
-import com.tjsteel.racemanagementlibrary.charts.LedRound;
-import com.tjsteel.racemanagementlibrary.charts.LineChart;
-import com.tjsteel.racemanagementlibrary.enums.Speed;
-import com.tjsteel.racemanagementlibrary.forza.Player;
-import com.tjsteel.racemanagementlibrary.utility.Calc;
+import com.tjsteel.forzaTelemetry.charts.BarChartSingle;
+import com.tjsteel.forzaTelemetry.charts.LedRound;
+import com.tjsteel.forzaTelemetry.charts.LineChart;
+import com.tjsteel.forzaTelemetry.enums.Speed;
+import com.tjsteel.forzaTelemetry.forza.Player;
+import com.tjsteel.forzaTelemetry.utility.Calc;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -1352,40 +1352,40 @@ public class DashboardUI extends DefaultUI {
 			ledXpos += 49;
 		}
 		
-		vbTyreTempFrontLeft = new ValueBox("Front Left Temp", "888.8", 10, 397, 120, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempFrontLeft = new ValueBox("Front Left Temp", "888.8", 10, 397, 120, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbTyreTempFrontLeft);
 		
-		vbTyreTempFrontRight = new ValueBox("Front Right Temp", "888.8", 130, 397, 120, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempFrontRight = new ValueBox("Front Right Temp", "888.8", 130, 397, 120, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbTyreTempFrontRight);
 		
-		vbTyreTempRearLeft = new ValueBox("Rear Left Temp", "888.8", 10, 528, 120, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempRearLeft = new ValueBox("Rear Left Temp", "888.8", 10, 528, 120, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbTyreTempRearLeft);
 		
-		vbTyreTempRearRight = new ValueBox("Rear Right Temp", "888.8", 130, 528, 120, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbTyreTempRearRight = new ValueBox("Rear Right Temp", "888.8", 130, 528, 120, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbTyreTempRearRight);
 		
-		vbCurrentGear = new ValueBox("Current Gear", "N", 260, 397, 186, 251, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentGear = new ValueBox("Current Gear", "N", 260, 397, 186, 251, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbCurrentGear);
 		
-		vbCurrentSpeed = new com.tjsteel.racemanagementpc.ui.ValueBox("Current Speed", "888.88", 456, 397, 240, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentSpeed = new com.tjsteel.forzaTelemetry.ui.ValueBox("Current Speed", "888.88", 456, 397, 240, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbCurrentSpeed);
 		
-		vbFuel = new com.tjsteel.racemanagementpc.ui.ValueBox("Fuel %", "888.88", 576, 528, 120, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbFuel = new com.tjsteel.forzaTelemetry.ui.ValueBox("Fuel %", "888.88", 576, 528, 120, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbFuel);
 		
-		vbFuelLapsRemaining = new ValueBox("Fuel, Laps Left", "888.8", 456, 528, 120, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbFuelLapsRemaining = new ValueBox("Fuel, Laps Left", "888.8", 456, 528, 120, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbFuelLapsRemaining);
 		
-		vbCurrentLap = new ValueBox("Current Lap", "00:00:00.000", 10, 135, 342, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbCurrentLap = new ValueBox("Current Lap", "00:00:00.000", 10, 135, 342, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbCurrentLap);
 		
-		vbLastLapDelta = new com.tjsteel.racemanagementpc.ui.ValueBox("Last Lap Delta", "00:00:00.000", 353, 135, 343, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbLastLapDelta = new com.tjsteel.forzaTelemetry.ui.ValueBox("Last Lap Delta", "00:00:00.000", 353, 135, 343, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbLastLapDelta);
 		
-		vbBestLap = new com.tjsteel.racemanagementpc.ui.ValueBox("Best Lap", "00:00:00.000", 10, 266, 342, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbBestLap = new com.tjsteel.forzaTelemetry.ui.ValueBox("Best Lap", "00:00:00.000", 10, 266, 342, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbBestLap);
 		
-		vbRaceTime = new com.tjsteel.racemanagementpc.ui.ValueBox("Race Time", "00:00:00.000", 353, 266, 342, 120, 30, com.tjsteel.racemanagementpc.ui.ValueBox.Layout.VALUE_BELOW);
+		vbRaceTime = new com.tjsteel.forzaTelemetry.ui.ValueBox("Race Time", "00:00:00.000", 353, 266, 342, 120, 30, com.tjsteel.forzaTelemetry.ui.ValueBox.Layout.VALUE_BELOW);
 		pnlMain.add(vbRaceTime);
 		
 		lineTrackMap = new LineChart(Color.WHITE, Color.WHITE);
@@ -1413,8 +1413,8 @@ public class DashboardUI extends DefaultUI {
 		    	this.vbFuel.setValue(df2.format(currPlayer.getTelemetryPacket().getEngine().getFuel() * 100));
 		    	this.vbCurrentGear.setValue(Short.toString(currPlayer.getTelemetryPacket().getEngine().getGear()));
 		    	this.vbTyreTempFrontLeft.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempFrontLeft()));
-		    	this.vbTyreTempFrontRight.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempRearLeft()));
-		    	this.vbTyreTempRearLeft.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempFrontRight()));
+		    	this.vbTyreTempFrontRight.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempFrontRight()));
+		    	this.vbTyreTempRearLeft.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempRearLeft()));
 		    	this.vbTyreTempRearRight.setValue(df1.format(currPlayer.getTelemetryPacket().getTyre().getTyreTempRearRight()));
 		    	this.vbFuelLapsRemaining.setValue(df1.format(currPlayer.getFuelLapsRemaining()));
 

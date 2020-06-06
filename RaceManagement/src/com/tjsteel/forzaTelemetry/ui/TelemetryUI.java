@@ -1,4 +1,4 @@
-package com.tjsteel.racemanagementpc.ui;
+package com.tjsteel.forzaTelemetry.ui;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -24,13 +24,13 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.border.LineBorder;
 
-import com.tjsteel.racemanagementlibrary.charts.BarChartSingle;
-import com.tjsteel.racemanagementlibrary.charts.LineChart;
-import com.tjsteel.racemanagementlibrary.charts.ScatterChart;
-import com.tjsteel.racemanagementlibrary.enums.Speed;
-import com.tjsteel.racemanagementlibrary.forza.Player;
-import com.tjsteel.racemanagementlibrary.gauges.GaugeRpm;
-import com.tjsteel.racemanagementlibrary.utility.Calc;
+import com.tjsteel.forzaTelemetry.charts.BarChartSingle;
+import com.tjsteel.forzaTelemetry.charts.LineChart;
+import com.tjsteel.forzaTelemetry.charts.ScatterChart;
+import com.tjsteel.forzaTelemetry.enums.Speed;
+import com.tjsteel.forzaTelemetry.forza.Player;
+import com.tjsteel.forzaTelemetry.gauges.GaugeRpm;
+import com.tjsteel.forzaTelemetry.utility.Calc;
 
 import javax.swing.JToggleButton;
 
@@ -611,7 +611,7 @@ public class TelemetryUI extends DefaultUI {
 			        getSelectedPlayer().setRecording(this.tglbtnRecordData.isSelected());
 	
 	    		
-			        this.txtTest.setText(Float.toString(currPlayer.getTelemetryPacket().getVelocity().getAccelerationX()));
+			        this.txtTest.setText(Float.toString(currPlayer.getTelemetryPacket().getTrack().getDistanceTraveled()));
 	    		}
 	    	}
     	} finally {

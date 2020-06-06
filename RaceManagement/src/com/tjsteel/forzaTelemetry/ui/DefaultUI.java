@@ -1,4 +1,4 @@
-package com.tjsteel.racemanagementpc.ui;
+package com.tjsteel.forzaTelemetry.ui;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -13,7 +13,7 @@ import java.awt.FontFormatException;
 
 import javax.swing.border.BevelBorder;
 
-import com.tjsteel.racemanagementlibrary.forza.Player;
+import com.tjsteel.forzaTelemetry.forza.Player;
 
 public class DefaultUI extends JFrame {
 
@@ -34,7 +34,7 @@ public class DefaultUI extends JFrame {
 	public void initialize() {
 		//load fonts
 		try {
-			setDseg(Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResource("com/tjsteel/racemanagementpc/fonts/DSEG7Classic-Bold.ttf").openStream()).deriveFont(Font.BOLD, 30f));
+			setDseg(Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResource("com/tjsteel/forzaTelemetry/fonts/DSEG7Classic-Bold.ttf").openStream()).deriveFont(Font.BOLD, 30f));
 		} catch (FontFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
